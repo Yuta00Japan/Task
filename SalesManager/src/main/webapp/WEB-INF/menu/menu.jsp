@@ -15,13 +15,14 @@
 <h1><button class="button" name="state" value="list" formaction="EmployeeController">従業員一覧</button></h1>
 
 <%--システム管理者のみ実行可能 ～--%>
-		<c:if test='${user.userRole.equals("0000000001") }'>
+		<%--システム管理者である0000000001の最後の文字を取りだし比較する --%>
+		<c:set var="authority" value="${Character.toString(user.userRole.charAt(9)) }"/>
+		<c:if test="${authority=='1' }">
 			<h2><button class="button" name="state" value="new" formaction="EmployeeController">従業員登録</button></h2>
 		</c:if>
 <%--～＞ --%>
 
 <h3><button class="button" name="state" value="new" formaction="ItemController">商品登録</button></h3>
-
 
 
 <h4><button class="button" name="state" value="logout" formaction="EmployeeController">ログアウト</button></h4>
