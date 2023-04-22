@@ -23,13 +23,11 @@ public class MST_EmployeeDao implements Crud{
 	 */
 	public Employee login(String loginID,String password) throws Exception{
 		
-		String sql = "select * from MST_employee where loginID=? and password = ?";
-		
+		String sql = String.format("select * from MST_employee where loginID='%s' and password = '%s'",loginID,password);
+		System.out.println(sql);
 		Employee emp = null;
 		
 		try(Connection con = Pool.getConnection(); PreparedStatement pps = con.prepareStatement(sql)){
-			pps.setString(1,loginID);
-			pps.setString(2,password);
 			ResultSet rs = pps.executeQuery();
 			if(rs.next()) {
 				emp = new Employee();
@@ -47,7 +45,20 @@ public class MST_EmployeeDao implements Crud{
 				emp.setPwupDay(rs.getTimestamp("pwupday"));
 				emp.setBossId(rs.getInt("bossID"));
 			}
-			return emp;
+			//大文字、小文字判定を行う
+			
+			if(emp != null) {
+				//大文字、小文字一致
+				if(loginID.equalsIgnoreCase(emp.getLoginId())&& password.equalsIgnoreCase(emp.getPassword())) {
+					return emp;
+				}else {
+				//大文字、小文字が不一致
+					System.out.println("大文字・小文字判定　不一致");
+					return null;
+				}
+			}
+				return null;
+			
 		}
 	}
 	/**

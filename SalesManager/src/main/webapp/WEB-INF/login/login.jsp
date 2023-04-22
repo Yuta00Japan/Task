@@ -39,9 +39,6 @@
 <%--ここまで --%>
 
 <script>
-function inputCheck(){
-	
-}
 
 </script>
 </body>

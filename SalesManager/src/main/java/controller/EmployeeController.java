@@ -106,6 +106,7 @@ public class EmployeeController extends HttpServlet {
 			
 		if(emp != null) {
 			//ログイン成功
+			System.out.println("login Success");
 			session.setAttribute("user", emp);
 			//メニュー画面へ遷移する
 			getServletContext().getRequestDispatcher("/WEB-INF/home/home.jsp").forward(request, response);
