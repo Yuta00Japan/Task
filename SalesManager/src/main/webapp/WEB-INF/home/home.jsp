@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,9 +15,9 @@
 <h1><button class="button" formaction="EmployeeConroller">従業員一覧</button></h1>
 
 <%--システム管理者のみ実行可能 ～--%>
-
-<h2><button class="button" formaction="EmployeeController">従業員登録</button></h2>
-
+		<c:if test='${user.userRole.equals("0000000001") }'>
+			<h2><button class="button" formaction="EmployeeController">従業員登録</button></h2>
+		</c:if>
 <%--～＞ --%>
 
 <h3><button class="button" formaction="ItemController">商品登録</button></h3>

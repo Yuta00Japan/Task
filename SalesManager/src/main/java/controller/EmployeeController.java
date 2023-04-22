@@ -70,6 +70,12 @@ public class EmployeeController extends HttpServlet {
 			case "logout":
 				proc_Logout(request,response,session);
 				break;
+			//従業員一覧
+			case "search":
+				break;
+			//従業員登録
+			case "new":
+				break;
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
