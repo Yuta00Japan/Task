@@ -12,15 +12,15 @@
 
 <form method="post">
 
-<h1><button class="button" formaction="EmployeeConroller">従業員一覧</button></h1>
+<h1><button class="button" name="state" value="list" formaction="EmployeeController">従業員一覧</button></h1>
 
 <%--システム管理者のみ実行可能 ～--%>
 		<c:if test='${user.userRole.equals("0000000001") }'>
-			<h2><button class="button" formaction="EmployeeController">従業員登録</button></h2>
+			<h2><button class="button" name="state" value="new" formaction="EmployeeController">従業員登録</button></h2>
 		</c:if>
 <%--～＞ --%>
 
-<h3><button class="button" formaction="ItemController">商品登録</button></h3>
+<h3><button class="button" name="state" value="new" formaction="ItemController">商品登録</button></h3>
 
 
 
