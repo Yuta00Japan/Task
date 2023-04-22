@@ -7,6 +7,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import model.util.LoginCheck;
 
 /**
  * Servlet implementation class Item
@@ -38,11 +41,27 @@ public class ItemController extends HttpServlet {
 		// TODO Auto-generated method stub
 		String state = request.getParameter("state");
 		
-		switch(state) {
-		//商品新規登録フォーム
-		case "new":
-			proc_New(request,response);
-			break;
+		HttpSession session = request.getSession();
+		
+		//sessionがユーザー情報を保持しているかどうかを確認する
+		if(LoginCheck.check(session)) {
+			try {
+				switch(state) {
+				//商品新規登録フォーム
+				case "new":
+					proc_New(request,response);
+					break;
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}else {
+			session.invalidate();
+			session = request.getSession();
+			//ログイン回数記録用の値を保存
+			session.setAttribute("tryCount", 0);
+			//ログイン画面へ遷移する
+			getServletContext().getRequestDispatcher("/WEB-INF/login/login.jsp").forward(request, response);
 		}
 	}
 	/**

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 import model.employee.Employee;
 import model.employee.EmployeeLogic;
 import model.util.AntiXss;
+import model.util.LoginCheck;
 
 /**
  * Servlet implementation class User
@@ -56,32 +57,61 @@ public class EmployeeController extends HttpServlet {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession();
 		String state = request.getParameter("state");
-		try {
-			switch(state) {
-			//ログインフォームを表示する
-			case "loginForm":
-				proc_LoginForm(request,response);
-				break;
-			//ログイン試行
-			case "try_Login":
-				proc_Login(request,response,session);
-				break;
-			//ログアウト
-			case "logout":
-				proc_Logout(request,response,session);
-				break;
-			//従業員一覧
-			case "list":
-				proc_List(request,response);
-				break;
-			//従業員登録
-			case "new":
-				proc_New(request,response);
-				break;
+		
+		//sessionがユーザー情報を保持しているかどうかを確認する
+		
+			try {
+				switch(state) {
+				//ログインフォームを表示する
+				case "loginForm":
+					proc_LoginForm(request,response);
+					break;
+					//ログイン試行
+				case "try_Login":
+					proc_Login(request,response,session);
+					break;
+					//ログアウト
+				case "logout":
+					proc_Logout(request,response,session);
+					break;
+					//従業員一覧
+				case "list":
+					if(LoginCheck.check(session)) {
+						proc_List(request,response);
+					}else {
+						proc_SessionError(request,response,session);
+					}
+					break;
+					//従業員登録
+				case "new":
+					if(LoginCheck.check(session)) {
+						proc_New(request,response);
+					}else {
+						proc_SessionError(request,response,session);
+					}
+					break;
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
 			}
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
+	
+	}
+	/**
+	 * session切れによりユーザー情報が欠損していた場合ログイン画面に戻す
+	 * @param request HTTP request
+	 * @param response HTTP response
+	 * @param session ユーザー情報が欠損したsession
+	 * @throws ServletException error
+	 * @throws IOException error
+	 */
+	protected void proc_SessionError(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws ServletException, IOException {
+		System.out.println(getServletName()+"# session Error");
+		session.invalidate();
+		session = request.getSession();
+		//ログイン回数記録用の値を保存
+		session.setAttribute("tryCount", 0);
+		//ログイン画面へ遷移する
+		getServletContext().getRequestDispatcher("/WEB-INF/login/login.jsp").forward(request, response);
 	}
 	
 	/**
