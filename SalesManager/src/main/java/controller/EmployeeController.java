@@ -71,10 +71,12 @@ public class EmployeeController extends HttpServlet {
 				proc_Logout(request,response,session);
 				break;
 			//従業員一覧
-			case "search":
+			case "list":
+				proc_List(request,response);
 				break;
 			//従業員登録
 			case "new":
+				proc_New(request,response);
 				break;
 			}
 		}catch(Exception e) {
@@ -115,7 +117,7 @@ public class EmployeeController extends HttpServlet {
 			System.out.println("login Success");
 			session.setAttribute("user", emp);
 			//メニュー画面へ遷移する
-			getServletContext().getRequestDispatcher("/WEB-INF/home/home.jsp").forward(request, response);
+			getServletContext().getRequestDispatcher("/WEB-INF/menu/menu.jsp").forward(request, response);
 			
 		}else {
 			//ログインに失敗した場合
@@ -124,9 +126,11 @@ public class EmployeeController extends HttpServlet {
 			//カウントを＋１
 			int tryCount = (int)session.getAttribute("tryCount");
 			tryCount++;
+			
 			System.out.println("試行回数"+(tryCount-1)+"->"+tryCount);
+			
 			session.setAttribute("tryCount", tryCount);
-			//ログイン失敗回数が５を超えた場合
+			
 			if(!(tryCount <= 5)) {
 				System.out.println("ログインエラー！");
 				//ログインエラー画面を表示する
@@ -155,6 +159,30 @@ public class EmployeeController extends HttpServlet {
 		session.setAttribute("tryCount", 0);
 		//ログイン画面へ遷移する
 		getServletContext().getRequestDispatcher("/WEB-INF/login/login.jsp").forward(request, response);
+	}
+	
+	/**
+	 * 従業員一覧を表示する
+	 * @param request HTTP request
+	 * @param response HTTP response
+	 * @throws ServletException error
+	 * @throws IOException error
+	 */
+	protected void proc_List(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println(getServletName()+"# list");
+		getServletContext().getRequestDispatcher("/WEB-INF/employee/list.jsp").forward(request, response);
+	}
+	
+	/**
+	 * 従業員を新規登録する
+	 * @param request HTTP request
+	 * @param response HTTP response
+	 * @throws ServletException error
+	 * @throws IOException error
+	 */
+	protected void proc_New(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println(getServletName()+"# new");
+		getServletContext().getRequestDispatcher("/WEB-INF/employee/new.jsp").forward(request, response);
 	}
 
 }
