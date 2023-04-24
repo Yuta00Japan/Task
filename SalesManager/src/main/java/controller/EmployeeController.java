@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import model.employee.Employee;
 import model.employee.EmployeeLogic;
+import model.node.NodeStart;
 import model.util.AntiXss;
 import model.util.LoginCheck;
 
@@ -41,6 +42,10 @@ public class EmployeeController extends HttpServlet {
 		if(session.getAttribute("user") != null) {
 			session.removeAttribute("user");
 		}
+		
+		//node express server 起動
+		Thread node = new NodeStart();
+		node.start();
 		
 		//ログイン回数記録用の値を保存
 		session.setAttribute("tryCount", 0);
