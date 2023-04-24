@@ -11,13 +11,13 @@ import java.sql.Timestamp;
 public class Employee implements Serializable{
 
 	/**従業員ID*/
-	private int EmpId;
+	private int empId;
 	/**支店ID*/
-	private int BranchId;
+	private int branchId;
 	/**部署ID*/
 	private int departmentId;
 	/**従業員No*/
-	private int EmpNo;
+	private int empNo;
 	/**従業員名*/
 	private String fullName;
 	/**従業員かな*/
@@ -42,19 +42,19 @@ public class Employee implements Serializable{
 	}
 
 	public int getEmpId() {
-		return EmpId;
+		return empId;
 	}
 
 	public void setEmpId(int empId) {
-		EmpId = empId;
+		this.empId = empId;
 	}
 
 	public int getBranchId() {
-		return BranchId;
+		return branchId;
 	}
 
 	public void setBranchId(int branchId) {
-		BranchId = branchId;
+		this.branchId = branchId;
 	}
 
 	public int getDepartmentId() {
@@ -66,11 +66,11 @@ public class Employee implements Serializable{
 	}
 
 	public int getEmpNo() {
-		return EmpNo;
+		return empNo;
 	}
 
 	public void setEmpNo(int empNo) {
-		EmpNo = empNo;
+		this.empNo = empNo;
 	}
 
 	public String getFullName() {

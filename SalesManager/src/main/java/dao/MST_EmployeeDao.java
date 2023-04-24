@@ -3,9 +3,13 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import model.connectionPool.Pool;
 import model.employee.Employee;
+import model.employee.EmployeeDetail;
+import model.employee.EmployeeList;
 
 /**
  * 従業員の検索、登録、更新、削除を行う
@@ -61,6 +65,63 @@ public class MST_EmployeeDao implements Crud{
 			
 		}
 	}
+	
+	/**
+	 * 従業員情報をすべて取得する
+	 * @return 全従業員情報
+	 * @throws Exception 取得失敗
+	 */
+	public EmployeeList loadAll() throws Exception{
+		
+		String sql ="select emp.empId,emp.branchId,branch.branchName,emp.departmentId,dpm.departmentName,emp.empNo,emp.fullname,emp.kananame,emp.loginID,emp.password,"
+				+ "emp.enable,emp.email,emp.userRole,emp.Pwupday,emp.bossId,emp2.fullName from MST_Employee as emp "
+				+ " inner join MST_Branch as branch on emp.branchId = branch.branchId  "
+				+ " inner join MST_Department as dpm on emp.departmentId = dpm.departmentID "
+				+ " inner join MST_Employee as emp2 on emp.bossId = emp2.EmpId;";
+		
+		Employee emp = null;
+		
+		EmployeeDetail empDetail = null;
+		
+		List<Employee> info = new ArrayList<>();
+		List<EmployeeDetail>detail = new ArrayList<>();
+		
+		EmployeeList list = new EmployeeList();
+		
+		try(Connection con = Pool.getConnection(); PreparedStatement pps = con.prepareStatement(sql)){
+			ResultSet rs = pps.executeQuery();
+			while(rs.next()) {
+				emp = new Employee();
+				emp.setEmpId(rs.getInt("emp.empId"));
+				emp.setBranchId(rs.getInt("emp.branchId"));
+				emp.setDepartmentId(rs.getInt("emp.departmentID"));
+				emp.setEmpNo(rs.getInt("emp.empNo"));
+				emp.setFullName(rs.getString("emp.fullName"));
+				emp.setKanaName(rs.getString("emp.kanaName"));
+				emp.setLoginId(rs.getString("emp.loginID"));
+				emp.setPassword(rs.getString("emp.password"));
+				emp.setEnable(rs.getBoolean("emp.enable"));
+				emp.setEmail(rs.getString("emp.email"));
+				emp.setUserRole(rs.getString("emp.userRole"));
+				emp.setPwupDay(rs.getTimestamp("emp.pwupday"));
+				emp.setBossId(rs.getInt("emp.bossID"));
+				
+				info.add(emp);
+				
+				empDetail = new EmployeeDetail();
+				empDetail.setBranchName(rs.getString("branch.branchName"));
+				empDetail.setDepartmentName(rs.getString("dpm.departmentName"));
+				empDetail.setBossName(rs.getString("emp2.fullName"));
+				
+				detail.add(empDetail);
+			}
+			
+			list.setList(info);
+			list.setDetail(detail);
+			return list;
+		}
+	}
+	
 	/**
 	 * 従業員を登録
 	 * @param o 従業員情報

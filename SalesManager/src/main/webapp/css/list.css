@@ -30,7 +30,7 @@ h2{
 
 #result{
 	margin: auto;
-	width: 500px;
+	width: 600px;
 }
 
 .start{
@@ -45,3 +45,7 @@ h2{
 	
 }
 
+.content{
+	text-align: center;
+	height: 30px;
+}

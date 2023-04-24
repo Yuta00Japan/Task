@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import model.employee.Employee;
+import model.employee.EmployeeList;
 import model.employee.EmployeeLogic;
 import model.node.NodeStart;
 import model.util.AntiXss;
@@ -82,7 +83,7 @@ public class EmployeeController extends HttpServlet {
 					//従業員一覧
 				case "list":
 					if(LoginCheck.check(session)) {
-						proc_List(request,response);
+						proc_List(request,response,session);
 					}else {
 						proc_SessionError(request,response,session);
 					}
@@ -197,14 +198,15 @@ public class EmployeeController extends HttpServlet {
 	}
 	
 	/**
-	 * 従業員一覧を表示する
+	 * すべてのユーザー情報を取得し従業員一覧を表示する
 	 * @param request HTTP request
 	 * @param response HTTP response
-	 * @throws ServletException error
-	 * @throws IOException error
+	 * @throws Exception ロード失敗
 	 */
-	protected void proc_List(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void proc_List(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws Exception {
 		System.out.println(getServletName()+"# list");
+		EmployeeList empList = EmployeeLogic.loadAll();
+		session.setAttribute("empList", empList);
 		getServletContext().getRequestDispatcher("/WEB-INF/employee/list.jsp").forward(request, response);
 	}
 	

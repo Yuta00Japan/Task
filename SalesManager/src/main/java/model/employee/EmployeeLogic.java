@@ -26,4 +26,14 @@ public class EmployeeLogic {
 		
 		return dao.login(loginID, password);
 	}
+	/**
+	 * すべての従業員情報を取得する
+	 * @return 全従業員情報
+	 */
+	public static EmployeeList loadAll() throws Exception{
+		
+		MST_EmployeeDao dao = new MST_EmployeeDao();
+		
+		return dao.loadAll();
+	}
 }

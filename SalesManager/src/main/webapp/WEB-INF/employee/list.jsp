@@ -25,7 +25,7 @@
 	<h2>(名前、仮名の部分一致)</h2>
 	
 	<div id="result">
-		<table border="1">
+		<table>
 			<tr>
 				<th class="start"></th>
 				<th class="head">No</th>
@@ -37,12 +37,37 @@
 			<%--ここでforを使い検索結果を表示する --%>
 			<c:choose>
 				<%--検索結果なし --%>
-				<c:when test="${2%2==0 }">
-					
+				<c:when test="${empList.list.size() <=0}">
+					<h1>まだユーザーが登録されていません</h1>
 				</c:when>
 				<%--検索結果あり --%>
 				<c:otherwise>
-					
+					<c:forEach var="i" begin="0" end="${empList.list.size()-1 }" step="1">
+					<tr>
+						<td class="content">
+						<%--システム管理者のみ実行可能 --%>
+							<c:set var="authority" value="${Character.toString(user.userRole.charAt(9)) }"/>
+							<c:if test="${authority == '1' }">
+								<button class="">選択</button>
+							</c:if>
+						</td>
+						<td class="content">
+							<c:out value="${empList.list.get(i).empNo}"/>
+						</td>
+						<td class="content">
+							<c:out value="${empList.list.get(i).fullName }"/>
+						</td>
+						<td class="content">
+							<c:out value="${empList.detail.get(i).branchName }"/>
+						</td>
+						<td class="content">
+							<c:out value="${empList.detail.get(i).departmentName }"/>
+						</td>
+						<td class="content">
+							<c:out value="${empList.detail.get(i).bossName }"/>
+						</td>
+					</tr>
+					</c:forEach>
 				</c:otherwise>
 			</c:choose>
 			<%--ここまで --%>

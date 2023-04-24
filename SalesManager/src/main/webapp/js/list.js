@@ -63,3 +63,4 @@ const timeoutId = setTimeout(() => {
 	 	 clearTimeout(timeoutId); // タイムアウトをクリアする
 	});
  }
+ 
