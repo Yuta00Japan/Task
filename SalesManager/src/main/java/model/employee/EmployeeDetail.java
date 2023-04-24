@@ -13,6 +13,8 @@ public class EmployeeDetail implements Serializable{
 	private String branchName;
 	/**部署名*/
 	private String departmentName;
+	/**上司有効*/
+	private boolean bossEnable;
 	/**上司名*/
 	private String bossName;
 	
@@ -34,6 +36,14 @@ public class EmployeeDetail implements Serializable{
 
 	public void setDepartmentName(String departmentName) {
 		this.departmentName = departmentName;
+	}
+	
+	public boolean isBossEnable() {
+		return bossEnable;
+	}
+
+	public void setBossEnable(boolean bossEnable) {
+		this.bossEnable = bossEnable;
 	}
 
 	public String getBossName() {

@@ -27,7 +27,7 @@ public class Employee implements Serializable{
 	/**パスワード*/
 	private String password;
 	/**有効無効*/
-	private boolean Enable;
+	private boolean enable;
 	/**メールアドレス*/
 	private String email;
 	/**権限*/
@@ -106,11 +106,11 @@ public class Employee implements Serializable{
 	}
 
 	public boolean isEnable() {
-		return Enable;
+		return enable;
 	}
 
 	public void setEnable(boolean enable) {
-		Enable = enable;
+		this.enable = enable;
 	}
 
 	public String getEmail() {

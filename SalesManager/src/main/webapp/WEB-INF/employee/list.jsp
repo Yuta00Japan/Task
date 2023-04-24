@@ -43,30 +43,36 @@
 				<%--検索結果あり --%>
 				<c:otherwise>
 					<c:forEach var="i" begin="0" end="${empList.list.size()-1 }" step="1">
-					<tr>
-						<td class="content">
-						<%--システム管理者のみ実行可能 --%>
-							<c:set var="authority" value="${Character.toString(user.userRole.charAt(9)) }"/>
-							<c:if test="${authority == '1' }">
-								<button class="">選択</button>
-							</c:if>
-						</td>
-						<td class="content">
-							<c:out value="${empList.list.get(i).empNo}"/>
-						</td>
-						<td class="content">
-							<c:out value="${empList.list.get(i).fullName }"/>
-						</td>
-						<td class="content">
-							<c:out value="${empList.detail.get(i).branchName }"/>
-						</td>
-						<td class="content">
-							<c:out value="${empList.detail.get(i).departmentName }"/>
-						</td>
-						<td class="content">
-							<c:out value="${empList.detail.get(i).bossName }"/>
-						</td>
-					</tr>
+					<%--従業員が有効なら実行させる --%>
+					<c:if test="${empList.list.get(i).enable==true }">
+						<tr>
+							<td class="content">
+							<%--システム管理者のみ実行可能 --%>
+								<c:set var="authority" value="${Character.toString(user.userRole.charAt(9)) }"/>
+								<c:if test="${authority == '1' }">
+									<button class="">選択</button>
+								</c:if>
+							</td>
+							<td class="content">
+								<c:out value="${empList.list.get(i).empNo}"/>
+							</td>
+							<td class="content">
+								<c:out value="${empList.list.get(i).fullName }"/>
+							</td>
+							<td class="content">
+								<c:out value="${empList.detail.get(i).branchName }"/>
+							</td>
+							<td class="content">
+								<c:out value="${empList.detail.get(i).departmentName }"/>
+							</td>
+							<td class="content">
+								<%--上司が有効なら表示する --%>
+								<c:if test="${empList.detail.get(i).bossEnable==true }">
+									<c:out value="${empList.detail.get(i).bossName }"/>
+								</c:if>
+							</td>
+						</tr>
+					</c:if>
 					</c:forEach>
 				</c:otherwise>
 			</c:choose>

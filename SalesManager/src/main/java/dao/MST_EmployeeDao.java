@@ -74,7 +74,7 @@ public class MST_EmployeeDao implements Crud{
 	public EmployeeList loadAll() throws Exception{
 		
 		String sql ="select emp.empId,emp.branchId,branch.branchName,emp.departmentId,dpm.departmentName,emp.empNo,emp.fullname,emp.kananame,emp.loginID,emp.password,"
-				+ "emp.enable,emp.email,emp.userRole,emp.Pwupday,emp.bossId,emp2.fullName from MST_Employee as emp "
+				+ "emp.enable,emp.email,emp.userRole,emp.Pwupday,emp.bossId,emp2.fullName,emp2.enable from MST_Employee as emp "
 				+ " inner join MST_Branch as branch on emp.branchId = branch.branchId  "
 				+ " inner join MST_Department as dpm on emp.departmentId = dpm.departmentID "
 				+ " inner join MST_Employee as emp2 on emp.bossId = emp2.EmpId;";
@@ -111,6 +111,7 @@ public class MST_EmployeeDao implements Crud{
 				empDetail = new EmployeeDetail();
 				empDetail.setBranchName(rs.getString("branch.branchName"));
 				empDetail.setDepartmentName(rs.getString("dpm.departmentName"));
+				empDetail.setBossEnable(rs.getBoolean("emp2.enable"));
 				empDetail.setBossName(rs.getString("emp2.fullName"));
 				
 				detail.add(empDetail);
