@@ -232,7 +232,7 @@ public class EmployeeController extends HttpServlet {
 		String department = request.getParameter("department");
 		String trueFalse = request.getParameter("enable");
 		
-		System.out.println(name+" "+branch+" "+department+" "+trueFalse);
+		System.out.println("入力値ー＞ "+name+" "+branch+" "+department+" "+trueFalse);
 		
 		EmployeeList emplist = EmployeeLogic.search(name, branch, department, trueFalse);
 		session.setAttribute("empList", emplist);

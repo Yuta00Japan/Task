@@ -16,8 +16,16 @@
 
 	<div id="form">
 		<span class="form">名前検索 <input type="textbox" name="name"  id="textBox"></span>
-		<span class="form">所属 <select id="branch" name="branch"></select></span>
-		<span class="form">部署<select id="department" name="department"></select></span>
+		<span class="form">所属 
+			<select id="branch" name="branch">
+				<option value=""></option>
+			</select>
+		</span>
+		<span class="form">部署
+			<select id="department" name="department">
+				<option value=""></option>
+			</select>
+		</span>
 						<%--おそらくenableが有効な人間を検索するものだと思われる --%>
 		<span class="form">削除者<input type="radio" name="enable" value="true"></span>
 		<span class="form"><button class="button" name="state" value="search" formaction="EmployeeController">検索</button></span>
