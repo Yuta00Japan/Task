@@ -17,7 +17,26 @@ import model.employee.EmployeeList;
  *
  */
 public class MST_EmployeeDao implements Crud{
-
+	
+	public String createSql(String name,String branchID,String departmentId,String trueFalse) {
+		
+		if(trueFalse == null) {
+			return String.format(" select emp.empId,emp.branchId,branch.branchName,emp.departmentId,dpm.departmentName,emp.empNo,emp.fullname,emp.kananame,emp.loginID,emp.password,"
+					 + "emp.enable,emp.email,emp.userRole,emp.Pwupday,emp.bossId,emp2.fullName,emp2.enable from MST_Employee as emp "
+					 + " inner join MST_Branch as branch on emp.branchId = branch.branchId  "
+					 + " inner join MST_Department as dpm on emp.departmentId = dpm.departmentID "
+					 + " inner join MST_Employee as emp2 on emp.bossId = emp2.EmpId where (emp.fullName like '%%%s%%' or emp.kananame like '%%%s%%') and emp.branchId=%s and emp.departmentId=%s "
+					 + " and emp.enable =true",name,name,branchID,departmentId);
+		}else {
+			return String.format(" select emp.empId,emp.branchId,branch.branchName,emp.departmentId,dpm.departmentName,emp.empNo,emp.fullname,emp.kananame,emp.loginID,emp.password,"
+					 + "emp.enable,emp.email,emp.userRole,emp.Pwupday,emp.bossId,emp2.fullName,emp2.enable from MST_Employee as emp "
+					 + " inner join MST_Branch as branch on emp.branchId = branch.branchId  "
+					 + " inner join MST_Department as dpm on emp.departmentId = dpm.departmentID "
+					 + " inner join MST_Employee as emp2 on emp.bossId = emp2.EmpId "
+					 + " where (emp.fullName like '%%%s%%' or  emp.kananame like '%%%s%%') and emp.branchId=%s and emp.departmentId=%s",name,name,branchID,departmentId);
+		}
+	}
+	
 	/**
 	 * ログインIDとパスワードによるログイン認証を行う
 	 * @param loginID ログインＩＤ
@@ -77,7 +96,7 @@ public class MST_EmployeeDao implements Crud{
 				+ "emp.enable,emp.email,emp.userRole,emp.Pwupday,emp.bossId,emp2.fullName,emp2.enable from MST_Employee as emp "
 				+ " inner join MST_Branch as branch on emp.branchId = branch.branchId  "
 				+ " inner join MST_Department as dpm on emp.departmentId = dpm.departmentID "
-				+ " inner join MST_Employee as emp2 on emp.bossId = emp2.EmpId;";
+				+ " inner join MST_Employee as emp2 on emp.bossId = emp2.EmpId where emp.enable=true;";
 		
 		Employee emp = null;
 		
@@ -117,6 +136,61 @@ public class MST_EmployeeDao implements Crud{
 				detail.add(empDetail);
 			}
 			
+			list.setList(info);
+			list.setDetail(detail);
+			return list;
+		}
+	}
+	/**
+	 * 従業員検索を行う
+	 * @param name 名前
+	 * @param branch 支社ID
+	 * @param department 部署ID
+	 * @param trueFalse 削除者
+	 * @return 従業員検索結果
+	 */
+	public EmployeeList search(String name,String branch,String department,String trueFalse) throws Exception{
+		
+		
+		String sql = createSql(name,branch,department,trueFalse);
+		System.out.println(sql);
+		Employee emp = null;
+		
+		EmployeeDetail empDetail = null;
+		
+		List<Employee> info = new ArrayList<>();
+		List<EmployeeDetail>detail = new ArrayList<>();
+		
+		EmployeeList list = new EmployeeList();
+		
+		try(Connection con = Pool.getConnection(); PreparedStatement pps = con.prepareStatement(sql)){
+			ResultSet rs = pps.executeQuery();
+			while(rs.next()) {
+				emp = new Employee();
+				emp.setEmpId(rs.getInt("emp.empId"));
+				emp.setBranchId(rs.getInt("emp.branchId"));
+				emp.setDepartmentId(rs.getInt("emp.departmentID"));
+				emp.setEmpNo(rs.getInt("emp.empNo"));
+				emp.setFullName(rs.getString("emp.fullName"));
+				emp.setKanaName(rs.getString("emp.kanaName"));
+				emp.setLoginId(rs.getString("emp.loginID"));
+				emp.setPassword(rs.getString("emp.password"));
+				emp.setEnable(rs.getBoolean("emp.enable"));
+				emp.setEmail(rs.getString("emp.email"));
+				emp.setUserRole(rs.getString("emp.userRole"));
+				emp.setPwupDay(rs.getTimestamp("emp.pwupday"));
+				emp.setBossId(rs.getInt("emp.bossID"));
+				
+				info.add(emp);
+				
+				empDetail = new EmployeeDetail();
+				empDetail.setBranchName(rs.getString("branch.branchName"));
+				empDetail.setDepartmentName(rs.getString("dpm.departmentName"));
+				empDetail.setBossEnable(rs.getBoolean("emp2.enable"));
+				empDetail.setBossName(rs.getString("emp2.fullName"));
+				
+				detail.add(empDetail);
+			}
 			list.setList(info);
 			list.setDetail(detail);
 			return list;

@@ -74,7 +74,6 @@ isPortInUse(port)
 app.get('/setBranch',(req,res)=>{
 	connection.query('select BranchID,BranchName from MST_Branch',(err,result,field)=>{
 		if (err) throw err;
-		console.log(result);
 		res.json(result);
 	});
 });
@@ -85,7 +84,6 @@ app.get('/setBranch',(req,res)=>{
 app.get('/setDepartment',(req,res)=>{
 	connection.query('select DepartmentID,DepartmentName from MST_Department',(err,result,field)=>{
 		if(err) throw err;
-		console.log(result);
 		res.json(result);
 	});
 });

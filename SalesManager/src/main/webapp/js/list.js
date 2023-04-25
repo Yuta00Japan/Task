@@ -25,13 +25,14 @@ const timeoutId = setTimeout(() => {
 	 fetch('http://localhost:3000/setBranch',{signal})
 	 .then(response => response.json())
 	 .then(data =>{
-		  console.log(data);
-		 let select = '';
+		 let select = document.getElementById('branch');
 		for(let i = 0; i < data.length; i++){
-			select += '<option value'+data[i].BranchID+'>'+data[i].BranchName+'</option>';
+			console.log(data[i].BranchID+" "+data[i].BranchName);
+			 var option = document.createElement("option");
+      		 option.value = data[i].BranchID;
+             option.text = data[i].BranchName;
+     		 select.add(option);
 		} 
-		console.log(select);
-		document.getElementById('branch').innerHTML = select;
 	 })
 	 .catch(error => {
   		console.error(error); // エラーを処理する
@@ -48,13 +49,14 @@ const timeoutId = setTimeout(() => {
 	  fetch('http://localhost:3000/setDepartment',{signal})
 	 .then(response => response.json())
 	 .then(data =>{
-		 console.log(data);
-		 let select = '';
+		 let select = document.getElementById('department');
 		for(let i = 0; i < data.length; i++){
-			select += '<option value'+data[i].DepartmentID+'>'+data[i].DepartmentName+'</option>';
+			console.log(data[i].DepartmentID+" "+data[i].DepartmentName);
+			var option = document.createElement("option");
+      		option.value =data[i].DepartmentID;
+            option.text = data[i].DepartmentName;
+     		select.add(option);
 		} 
-		console.log(select);
-		document.getElementById('department').innerHTML = select;
 	 })
 	 .catch(error => {
  		 console.error(error); // エラーを処理する

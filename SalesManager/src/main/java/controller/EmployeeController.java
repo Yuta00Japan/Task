@@ -88,6 +88,14 @@ public class EmployeeController extends HttpServlet {
 						proc_SessionError(request,response,session);
 					}
 					break;
+					//従業員検索
+				case "search":
+					if(LoginCheck.check(session)) {
+						proc_Search(request,response,session);
+					}else {
+					    proc_SessionError(request,response,session);
+					}
+					break;
 					//従業員登録
 				case "new":
 					if(LoginCheck.check(session)) {
@@ -198,7 +206,7 @@ public class EmployeeController extends HttpServlet {
 	}
 	
 	/**
-	 * すべてのユーザー情報を取得し従業員一覧を表示する
+	 * すべての従業員情報を取得し従業員一覧を表示する
 	 * @param request HTTP request
 	 * @param response HTTP response
 	 * @throws Exception ロード失敗
@@ -207,6 +215,27 @@ public class EmployeeController extends HttpServlet {
 		System.out.println(getServletName()+"# list");
 		EmployeeList empList = EmployeeLogic.loadAll();
 		session.setAttribute("empList", empList);
+		getServletContext().getRequestDispatcher("/WEB-INF/employee/list.jsp").forward(request, response);
+	}
+	/**
+	 * 従業員情報を検索する
+	 * @param request HTTP request
+	 * @param response HTTP response
+	 * @param session 従業員情報を入れるsession
+	 * @throws Exception 検索失敗
+	 */
+	protected void proc_Search(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws Exception {
+		System.out.println(getServletName()+"# search");
+		
+		String name = request.getParameter("name");
+		String branch= request.getParameter("branch");
+		String department = request.getParameter("department");
+		String trueFalse = request.getParameter("enable");
+		
+		System.out.println(name+" "+branch+" "+department+" "+trueFalse);
+		
+		EmployeeList emplist = EmployeeLogic.search(name, branch, department, trueFalse);
+		session.setAttribute("empList", emplist);
 		getServletContext().getRequestDispatcher("/WEB-INF/employee/list.jsp").forward(request, response);
 	}
 	
