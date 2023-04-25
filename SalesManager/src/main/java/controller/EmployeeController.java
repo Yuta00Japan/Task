@@ -227,13 +227,13 @@ public class EmployeeController extends HttpServlet {
 	protected void proc_Search(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws Exception {
 		System.out.println(getServletName()+"# search");
 		
-		String name = request.getParameter("name");
+		String name = AntiXss.antiXss(request.getParameter("name"));
 		String branch= request.getParameter("branch");
 		String department = request.getParameter("department");
 		String trueFalse = request.getParameter("enable");
 		
 		System.out.println("入力値ー＞ "+name+" "+branch+" "+department+" "+trueFalse);
-		
+		//検索を行う
 		EmployeeList emplist = EmployeeLogic.search(name, branch, department, trueFalse);
 		session.setAttribute("empList", emplist);
 		getServletContext().getRequestDispatcher("/WEB-INF/employee/list.jsp").forward(request, response);

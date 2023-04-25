@@ -58,7 +58,7 @@
 								<%--システム管理者のみ実行可能 --%>
 									<c:set var="authority" value="${Character.toString(user.userRole.charAt(9)) }"/>
 									<c:if test="${authority == '1' }">
-										<button class="">選択</button>
+										<button name="state" value="">選択</button>
 									</c:if>
 								</td>
 								<td class="content">
