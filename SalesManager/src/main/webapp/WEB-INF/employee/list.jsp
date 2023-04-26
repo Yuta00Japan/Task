@@ -11,9 +11,16 @@
 <body>
 
 <form method="post">
-
-<h1><button  formaction="MenuController" class="button">戻る</button></h1>
-
+	<c:choose>
+		<%--登録画面から遷移した場合 --%>
+		<c:when test="${from=='New' }">
+			<h1><button formaction="EmployeeController" name="state" value="new" class="button">戻る</button></h1>
+		</c:when>
+		<c:otherwise>
+			<h1><button formaction="MenuController" class="button">戻る</button></h1>
+		</c:otherwise>
+	</c:choose>
+		
 	<div id="form">
 		<span class="form">名前検索 <input type="textbox" name="name"  id="textBox"></span>
 		<span class="form">所属 
@@ -58,7 +65,7 @@
 								<%--システム管理者のみ実行可能 --%>
 									<c:set var="authority" value="${Character.toString(user.userRole.charAt(9)) }"/>
 									<c:if test="${authority == '1' }">
-										<button name="state" value="">選択</button>
+										<button name="state" value="detail,${empList.list.get(i).empId }" formaction="EmployeeController">選択</button>
 									</c:if>
 								</td>
 								<td class="content">

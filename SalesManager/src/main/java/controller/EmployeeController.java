@@ -62,12 +62,12 @@ public class EmployeeController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession();
-		String state = request.getParameter("state");
+		String state[] = request.getParameter("state").split(",");
 		
 		//sessionがユーザー情報を保持しているかどうかを確認する
 		
 			try {
-				switch(state) {
+				switch(state[0]) {
 				//ログインフォームを表示する
 				case "loginForm":
 					proc_LoginForm(request,response);
@@ -99,12 +99,21 @@ public class EmployeeController extends HttpServlet {
 					//従業員登録
 				case "new":
 					if(LoginCheck.check(session)) {
-						proc_New(request,response);
+						proc_New(request,response,session);
+					}else {
+						proc_SessionError(request,response,session);
+					}
+					break;
+					//従業員詳細
+				case "detail":
+					if(LoginCheck.check(session)) {
+						proc_Detail(request,response,session,state[1]);
 					}else {
 						proc_SessionError(request,response,session);
 					}
 					break;
 				}
+				
 			}catch(Exception e) {
 				e.printStackTrace();
 			}
@@ -213,8 +222,13 @@ public class EmployeeController extends HttpServlet {
 	 */
 	protected void proc_List(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws Exception {
 		System.out.println(getServletName()+"# list");
+		
+		//登録、編集、削除画面から遷移した場合の処理
+		EmployeeLogic.setEmployeeFromRequest(request);
+		//全従業員情報を取りだす
 		EmployeeList empList = EmployeeLogic.loadAll();
 		session.setAttribute("empList", empList);
+		
 		getServletContext().getRequestDispatcher("/WEB-INF/employee/list.jsp").forward(request, response);
 	}
 	/**
@@ -232,7 +246,7 @@ public class EmployeeController extends HttpServlet {
 		String department = request.getParameter("department");
 		String trueFalse = request.getParameter("enable");
 		
-		System.out.println("入力値ー＞ "+name+" "+branch+" "+department+" "+trueFalse);
+		System.out.println("入力値ー＞ 氏名："+name+" | 支社ID: "+branch+" | 部署ID: "+department+" | 削除者検索 "+trueFalse);
 		//検索を行う
 		EmployeeList emplist = EmployeeLogic.search(name, branch, department, trueFalse);
 		session.setAttribute("empList", emplist);
@@ -246,8 +260,35 @@ public class EmployeeController extends HttpServlet {
 	 * @throws ServletException error
 	 * @throws IOException error
 	 */
-	protected void proc_New(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void proc_New(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws ServletException, IOException {
 		System.out.println(getServletName()+"# new");
+		//システム管理者かどうかチェックする
+		Employee emp = (Employee) session.getAttribute("user");
+		if(Character.toString(emp.getUserRole().charAt(9)).equals("1")) {
+			//管理者の場合
+			
+			//どこから来たかを記録する
+			session.setAttribute("from", "New");
+			getServletContext().getRequestDispatcher("/WEB-INF/employee/new.jsp").forward(request, response);
+		}else {
+			getServletContext().getRequestDispatcher("/WEB-INF/menu/menu.jsp").forward(request, response);
+		}
+	}
+	/**
+	 * 従業員情報を取得し画面に表示する
+	 * @param request HTTP request
+	 * @param response HTTP response
+	 * @param session 従業員情報を含むsession
+	 * @param employeeId 従業員ID
+	 * @throws Exception 
+	 */
+	protected void proc_Detail(HttpServletRequest request, HttpServletResponse response,HttpSession session,String employeeId) throws Exception {
+		System.out.println(getServletName()+"# detail");
+		
+		Employee emp = EmployeeLogic.loadSingle(employeeId);
+		session.setAttribute("employee", emp);
+		//どこから来たかを記録する
+		session.setAttribute("from", "New");
 		getServletContext().getRequestDispatcher("/WEB-INF/employee/new.jsp").forward(request, response);
 	}
 

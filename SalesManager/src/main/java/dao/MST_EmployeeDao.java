@@ -150,6 +150,41 @@ public class MST_EmployeeDao implements Crud{
 	}
 	
 	/**
+	 * 従業員IDをもとに従業員情報をロードします
+	 * @param employeeId 従業員ID
+	 * @return 従業員情報
+	 * @throws Exception ロード失敗
+	 */
+	public Employee loadSingle(String employeeId) throws Exception{
+		
+		String sql = "select * from MST_employee where empId = ?";
+		
+		Employee emp = null;
+		
+		try(Connection con = Pool.getConnection(); PreparedStatement pps = con.prepareStatement(sql)){
+			pps.setInt(1, Integer.parseInt(employeeId));
+			ResultSet rs = pps.executeQuery();
+			if(rs.next()) {
+				emp = new Employee();
+				emp.setEmpId(rs.getInt("empId"));
+				emp.setBranchId(rs.getInt("departmentId"));
+				emp.setDepartmentId(rs.getInt("departmentID"));
+				emp.setEmpNo(rs.getInt("empNo"));
+				emp.setFullName(rs.getString("fullName"));
+				emp.setKanaName(rs.getString("kanaName"));
+				emp.setLoginId(rs.getString("loginID"));
+				emp.setPassword(rs.getString("password"));
+				emp.setEnable(rs.getBoolean("enable"));
+				emp.setEmail(rs.getString("email"));
+				emp.setUserRole(rs.getString("userRole"));
+				emp.setPwupDay(rs.getTimestamp("pwupday"));
+				emp.setBossId(rs.getInt("bossID"));
+			}
+			return emp;
+		}
+	}
+	
+	/**
 	 * 従業員情報をすべて取得する
 	 * @return 全従業員情報
 	 * @throws Exception 取得失敗

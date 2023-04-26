@@ -1,6 +1,10 @@
 package model.employee;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import dao.MST_EmployeeDao;
+import model.util.AntiXss;
 
 /**
  * 従業員関係の処理を担当する
@@ -26,6 +30,21 @@ public class EmployeeLogic {
 		
 		return dao.login(loginID, password);
 	}
+	
+	/**
+	 * 従業員IDをもとに従業員情報を取得する
+	 * @param employeeId 従業員ID
+	 * @return 従業員情報
+	 * @throws Exception ロード失敗
+	 */
+	public static Employee loadSingle(String employeeId) throws Exception{
+		
+		MST_EmployeeDao dao = new MST_EmployeeDao();
+		
+		return dao.loadSingle(employeeId);
+	}
+	
+	
 	/**
 	 * すべての従業員情報を取得する
 	 * @return 全従業員情報
@@ -51,5 +70,63 @@ public class EmployeeLogic {
 		MST_EmployeeDao dao = new MST_EmployeeDao();
 		
 		return dao.search(name, branch, department, trueFalse);
+	}
+	
+	/**
+	 * 新規登録、編集の情報をsessionに保存する
+	 * @param request フォームで入力された内容
+	 */
+	public static void setEmployeeFromRequest(HttpServletRequest request) throws Exception{
+		
+		HttpSession session = request.getSession();
+		
+		Employee emp = (Employee)session.getAttribute("employee");
+		
+		String empNo = AntiXss.antiXss(request.getParameter("empNo"));
+		String fullName = AntiXss.antiXss(request.getParameter("fullName"));
+		String kanaName = AntiXss.antiXss(request.getParameter("kanaName"));
+		String loginId= AntiXss.antiXss(request.getParameter("loginId"));
+		String mail = AntiXss.antiXss(request.getParameter("email"));
+		String password = AntiXss.antiXss(request.getParameter("password"));
+		
+		String branchId= request.getParameter("branchId");
+		String departmentId = request.getParameter("departmentId");
+		String bossId= AntiXss.antiXss(request.getParameter("bossId"));
+		
+		if(empNo == null) {
+			empNo = "0";
+		}else if(!empNo.matches("^[0-9]+$")) {
+			empNo = "0";
+		}
+		
+		if(branchId == "" || branchId == null) {
+			branchId ="0";
+		}
+		
+		if(departmentId =="" || departmentId == null) {
+			departmentId ="0";
+		}
+		
+		if(bossId == null) {
+			bossId="0";
+		}//bossIdの値が数字かどうかを確認する
+		else if(!bossId.matches("^[0-9]+$")) {
+			bossId = "0";
+		}
+		
+		if(emp == null) {
+			emp = new Employee();
+		}
+		emp.setEmpNo(Integer.parseInt(empNo));
+		emp.setFullName(fullName);
+		emp.setKanaName(kanaName);
+		emp.setLoginId(loginId);
+		emp.setEmail(mail);
+		emp.setBranchId(Integer.parseInt(branchId));
+		emp.setDepartmentId(Integer.parseInt(departmentId));
+		emp.setBossId(Integer.parseInt(bossId));
+		emp.setPassword(password);
+		
+		session.setAttribute("employee",emp);
 	}
 }

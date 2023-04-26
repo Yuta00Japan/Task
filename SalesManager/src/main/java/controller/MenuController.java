@@ -41,6 +41,7 @@ public class MenuController extends HttpServlet {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession();
 		if(LoginCheck.check(session)) {
+			System.out.println(getServletName()+"# menu");
 			getServletContext().getRequestDispatcher("/WEB-INF/menu/menu.jsp").forward(request, response);
 		}else {
 			session.invalidate();
