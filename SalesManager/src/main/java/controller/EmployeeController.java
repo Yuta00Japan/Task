@@ -237,14 +237,14 @@ public class EmployeeController extends HttpServlet {
 				
 		}//従業員検索
 		else if(method.equals("employee")) {
+			System.out.println("従業員検索開始");
 			session.setAttribute("method",method);
 		}//上司検索
 		else {
+			System.out.println("上司検索開始");
 			session.setAttribute("method", method);
 		}
 		
-		//登録、編集、削除画面から遷移した場合の処理
-		EmployeeLogic.setEmployeeFromRequest(request);
 		//全従業員情報を取りだす
 		EmployeeList empList = EmployeeLogic.loadAll();
 		session.setAttribute("empList", empList);
@@ -301,9 +301,13 @@ public class EmployeeController extends HttpServlet {
 	 */
 	protected void proc_Detail(HttpServletRequest request, HttpServletResponse response,HttpSession session,String employeeId) throws Exception {
 		System.out.println(getServletName()+"# detail");
-		
-		EmployeeList emp = EmployeeLogic.loadSingle(employeeId);
-		session.setAttribute("empList", emp);
+		System.out.println("従業員ID:"+employeeId);
+		//従業員情報
+		Employee emp = EmployeeLogic.loadSingle(employeeId);
+		//従業員の上司情報
+		Employee boss = EmployeeLogic.searchBoss(emp.getBossId()+"");
+		session.setAttribute("employee", emp);
+		session.setAttribute("boss", boss);
 		getServletContext().getRequestDispatcher("/WEB-INF/employee/new.jsp").forward(request, response);
 	}
 	/**
@@ -311,20 +315,14 @@ public class EmployeeController extends HttpServlet {
 	 * @param request HTTP request
 	 * @param response HTTP response
 	 * @param session 従業員情報を含むsession
-	 * @param employeeId 従業員ID
+	 * @param employeeId 上司ID
 	 * @throws Exception ロード失敗
 	 */
 	protected void proc_BossSelect(HttpServletRequest request, HttpServletResponse response,HttpSession session,String employeeId) throws Exception {
 		System.out.println(getServletName()+"# bossSelect");
-		EmployeeList boss = EmployeeLogic.loadSingle(employeeId);
-		//上司の情報を取得
-		int bossId = boss.getList().get(0).getBossId();
-		String bossName = boss.getDetail().get(0).getBossName();
-		//登録、編集中の従業員情報の上司情報を変更する
-		EmployeeList emp = (EmployeeList)session.getAttribute("empList");
-		emp.getList().get(0).setBossId(bossId);
-		emp.getDetail().get(0).setBossName(bossName);
-		
+		System.out.println( "bossID :"+employeeId);
+		Employee boss = EmployeeLogic.searchBoss(employeeId);
+		session.setAttribute("boss", boss);
 		getServletContext().getRequestDispatcher("/WEB-INF/employee/new.jsp").forward(request, response);
 	}
 

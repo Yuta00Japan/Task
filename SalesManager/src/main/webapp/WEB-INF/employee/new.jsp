@@ -16,18 +16,18 @@
 	<div id="container">
 		<div id="form">
 			<table>
-				<tr><td class="header">No</td><td class="content"><input type="textBox" name="txtEmpNo" value="${empList.list.get(0).empNo }"></td></tr>
-				<tr><td class="header">名前</td><td class="content"><input type="textBox" name="txtName" value="${empList.list.get(0).fullName }"></td>
+				<tr><td class="header">No</td><td class="content"><input type="textBox" name="txtEmpNo" value="${employee.empNo }"></td></tr>
+				<tr><td class="header">名前</td><td class="content"><input type="textBox" name="txtName" value="${employee.fullName }"></td>
 					<td><%--従業員検索 --%>
 						<button name="state" value="list,employee" formaction="EmployeeController" class="button">検索</button>
 					</td>
 				</tr>
-				<tr><td class="header">名前(カナ)</td><td class="content"><input type="textBox" name="txtKanaName" value="${empList.list.get(0).kanaName }"></td></tr>
-				<tr><td class="header">LogInID</td><td class="content"><input type="textBox" name="txtLogInID" value="${empList.list.get(0).loginId }"></td></tr>
-				<tr><td class="header">メール</td><td class="content"><input type="textBox" name="txtMail" value="${empList.list.get(0).email }"></td></tr>
+				<tr><td class="header">名前(カナ)</td><td class="content"><input type="textBox" name="txtKanaName" value="${employee.kanaName }"></td></tr>
+				<tr><td class="header">LogInID</td><td class="content"><input type="textBox" name="txtLogInID" value="${employee.loginId }"></td></tr>
+				<tr><td class="header">メール</td><td class="content"><input type="textBox" name="txtMail" value="${employee.email }"></td></tr>
 				<tr><td class="header">所属</td>
 					<td class="content">
-						<input type="hidden" id="branchValue" value="${empList.list.get(0).branchId }">
+						<input type="hidden" id="branchValue" value="${employee.branchId }">
 						<select name="branchId" id="branch">
 							<option value=""></option>
 						</select>
@@ -35,13 +35,13 @@
 				</tr>
 				<tr><td class="header">部署</td>
 					<td class="content">
-						<input type="hidden" id="departmentValue" value="${empList.list.get(0).departmentId}">
+						<input type="hidden" id="departmentValue" value="${employee.departmentId}">
 					<select name="departmentId" id="department">
 						<option value=""></option>
 					</select>
 					</td>
 				</tr><%--上司検索 --%>
-				<tr><td class="header">上司</td><td class="content"><input type="textBox" name="txtBoss" value="${empList.detail.get(0).bossName}"></td>
+				<tr><td class="header">上司</td><td class="content"><input type="textBox" name="txtBoss" value="${ boss.fullName}"></td>
 					<td>
 						<button name="state" value="list,boss" formaction="EmployeeController" class="button">上司検索</button>
 					</td>
@@ -59,7 +59,7 @@
 					</td>
 				</tr>
 				<tr><td class="header">パスワード</td>
-					<td><input type="textBox" name="txtPW" value="${empList.list.get(0).password }"></td>
+					<td><input type="textBox" name="txtPW" value="${employee.password }"></td>
 					<td><button class="button" type="button" id="password">パスワード登録</button></td>
 				</tr>
 			</table>
@@ -74,9 +74,9 @@
 				<%--ここまで --%>
 				
 				<%--非表示従業員ID　上司ID --%>
-				<label class="hidden">${empList.list.get(0).empId }</label>
+				<label class="hidden">${employee.empId }</label>
 				<br>
-				<label class="hidden">${empList.list.get(0).bossId }</label>
+				<label class="hidden">${boss.empId }</label>
 		</div>
 		
 		<div id="password">
