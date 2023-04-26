@@ -87,6 +87,39 @@ app.get('/setDepartment',(req,res)=>{
 		res.json(result);
 	});
 });
-
+/**
+ * 従業員IDを格納する
+ */
+app.post('/setEmpId',(req,res)=>{
+	let empId = req.body.empId;
+	console.log("from setEmpId "+empId);
+	localStorage.setItem('empId',empId);
+});
+/**
+ * 現在編集中のパスワードを取得する
+ */
+app.get('/getPass',(req,res)=>{
+	let empId = Number(localStorage.getItem('empId'));
+	console.log("from getPass  "+empId);
+	connection.query(`select password from MST_Employee where empId=${empId}`,(err,result,field)=>{
+		if (err) throw err;
+		console.log(result);
+		res.json(result);
+	})
+});
+/**
+ * パスワードを変更する
+ */
+app.post('/getNewPass',(req,res)=>{
+	console.log('now /getNewPass');
+	let chPassword = req.body.changePass;
+	let empId = Number(localStorage.getItem('empId'));
+	console.log('new　password'+ chPassword + '　empID '+ empId);
+	connection.query(`update MST_Employee set password='${chPassword}' where empId=${empId}`,(err,result,field)=>{
+		if (err) throw err;
+		console.log("from getNewPass"+result);
+		
+	});
+});
 
 

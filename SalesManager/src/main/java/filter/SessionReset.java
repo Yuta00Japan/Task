@@ -46,6 +46,7 @@ public class SessionReset extends HttpFilter implements Filter {
 		 
 		 session.removeAttribute("employee");
 		 session.removeAttribute("empList");
+		 session.removeAttribute("method");
 		 System.out.println("従業員検索結果・従業員ロード情報をリセットしました");
 		// pass the request along the filter chain
 		chain.doFilter(request, response);

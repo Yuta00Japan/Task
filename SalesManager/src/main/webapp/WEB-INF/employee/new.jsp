@@ -74,7 +74,7 @@
 				<%--ここまで --%>
 				
 				<%--非表示従業員ID　上司ID --%>
-				<label class="hidden">${employee.empId }</label>
+				<label class="hidden" id="empId">${employee.empId }</label>
 				<br>
 				<label class="hidden">${boss.empId }</label>
 		</div>
@@ -84,6 +84,8 @@
 			<span id="passTable"></span>
 			<span id="passButton1"></span>
 			<span id="passButton2"></span>
+			<br>
+			<span id="passwordError"></span>
 		</div>
 	</div>
 	
