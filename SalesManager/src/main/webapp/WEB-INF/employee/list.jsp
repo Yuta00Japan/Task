@@ -11,15 +11,10 @@
 <body>
 
 <form method="post">
-	<c:choose>
-		<%--登録画面から遷移した場合 --%>
-		<c:when test="${from=='New' }">
-			<h1><button formaction="EmployeeController" name="state" value="new" class="button">戻る</button></h1>
-		</c:when>
-		<c:otherwise>
-			<h1><button formaction="MenuController" class="button">戻る</button></h1>
-		</c:otherwise>
-	</c:choose>
+		
+		
+		<h1><button type="button" onClick='history.back()' class="button">戻る</button></h1>
+		
 		
 	<div id="form">
 		<span class="form">名前検索 <input type="textbox" name="name"  id="textBox"></span>

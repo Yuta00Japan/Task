@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<form method="post">
+<form method="post" id="Main">
 
 <h1><button class="button" name="state" value="logout" formaction="EmployeeController">ログアウト</button></h1>
 
@@ -25,14 +25,17 @@
 				<tr><td class="header">名前(カナ)</td><td class="content"><input type="textBox" name="txtKanaName" value="${employee.kanaName }"></td></tr>
 				<tr><td class="header">LogInID</td><td class="content"><input type="textBox" name="txtLogInID" value="${employee.loginId }"></td></tr>
 				<tr><td class="header">メール</td><td class="content"><input type="textBox" name="txtMail" value="${employee.email }"></td></tr>
-				<tr><td class="header">所属</td><td class="content">
-					<select name="branchId" id="branch">
-						<option value=""></option>
-					</select>
+				<tr><td class="header">所属</td>
+					<td class="content">
+						<input type="hidden" id="branchValue" value="${employee.branchId }">
+						<select name="branchId" id="branch">
+							<option value=""></option>
+						</select>
 					</td>
 				</tr>
 				<tr><td class="header">部署</td>
 					<td class="content">
+						<input type="hidden" id="departmentValue" value="${employee.departmentId }">
 					<select name="departmentId" id="department">
 						<option value=""></option>
 					</select>
@@ -55,12 +58,13 @@
 							経理<input type="checkbox" name="chRole">
 					</td>
 				</tr>
-				<tr><td class="header">パスワード</td><td><input type="textBox" name="txtPW"></td><td><button class="button">パスワード登録</button></td></tr>
+				<tr><td class="header">パスワード</td><td><input type="textBox" name="txtPW" value="${employee.password }"></td><td><button class="button">パスワード登録</button></td></tr>
 			</table>
 			  	<div id="buttonPart">
 					<button class="button2">登録</button>
 					<button class="button2">削除</button>
-					<button class="button2">クリア</button>
+				
+					<input type="reset" class="button2" value="リセット">
 				</div>
 				<%--エラーなどを表示する領域 --%>
 		</div>

@@ -266,9 +266,6 @@ public class EmployeeController extends HttpServlet {
 		Employee emp = (Employee) session.getAttribute("user");
 		if(Character.toString(emp.getUserRole().charAt(9)).equals("1")) {
 			//管理者の場合
-			
-			//どこから来たかを記録する
-			session.setAttribute("from", "New");
 			getServletContext().getRequestDispatcher("/WEB-INF/employee/new.jsp").forward(request, response);
 		}else {
 			getServletContext().getRequestDispatcher("/WEB-INF/menu/menu.jsp").forward(request, response);
@@ -287,8 +284,6 @@ public class EmployeeController extends HttpServlet {
 		
 		Employee emp = EmployeeLogic.loadSingle(employeeId);
 		session.setAttribute("employee", emp);
-		//どこから来たかを記録する
-		session.setAttribute("from", "New");
 		getServletContext().getRequestDispatcher("/WEB-INF/employee/new.jsp").forward(request, response);
 	}
 

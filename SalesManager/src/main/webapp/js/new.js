@@ -16,14 +16,17 @@ const timeoutId = setTimeout(() => {
  * 画面ロード時に所属と部署をセットする
  */
  window.addEventListener('load',()=>{
-	 setBranch();
-	 setDepartment();
- });
- 
- /**
-  * 所属をセットする
+	setBranch();
+	setDepartment();
+});
+  
+ /*
+  * 所属と従業員ごとに初期選択をセットする
   */
  function setBranch(){
+	 
+	 var branchValue = document.getElementById('branchValue').value;
+	 
 	 fetch('http://localhost:3000/setBranch',{signal})
 	 .then(response => response.json())
 	 .then(data =>{
@@ -34,20 +37,25 @@ const timeoutId = setTimeout(() => {
       		 option.value = data[i].BranchID;
              option.text = data[i].BranchName;
      		 select.add(option);
-		} 
-	 })
+		}
+		 select.selectedIndex=(branchValue); 
+	 }) 
 	 .catch(error => {
   		console.error(error); // エラーを処理する
 	 })
 	 .finally(() => {
 	 	 clearTimeout(timeoutId); // タイムアウトをクリアする
 	 });
+	
  }
  
  /**
-  * 部署をセットする
+  * 部署と従業員ごとに初期選択をセット
   */
  function setDepartment(){
+	 
+	 var departmentValue = document.getElementById('departmentValue').value;
+	 
 	  fetch('http://localhost:3000/setDepartment',{signal})
 	 .then(response => response.json())
 	 .then(data =>{
@@ -58,7 +66,8 @@ const timeoutId = setTimeout(() => {
       		option.value =data[i].DepartmentID;
             option.text = data[i].DepartmentName;
      		select.add(option);
-		} 
+		}
+		select.selectedIndex=(departmentValue) ;
 	 })
 	 .catch(error => {
  		 console.error(error); // エラーを処理する
@@ -67,5 +76,7 @@ const timeoutId = setTimeout(() => {
 	 	 clearTimeout(timeoutId); // タイムアウトをクリアする
 	});
  }
+ 
+
  
  
