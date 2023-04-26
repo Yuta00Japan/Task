@@ -16,18 +16,18 @@
 	<div id="container">
 		<div id="form">
 			<table>
-				<tr><td class="header">No</td><td class="content"><input type="textBox" name="txtEmpNo" value="${employee.empNo }"></td></tr>
-				<tr><td class="header">名前</td><td class="content"><input type="textBox" name="txtName" value="${employee.fullName }"></td>
-					<td>
-						<button name="state" value="list" formaction="EmployeeController" class="button">検索</button>
+				<tr><td class="header">No</td><td class="content"><input type="textBox" name="txtEmpNo" value="${empList.list.get(0).empNo }"></td></tr>
+				<tr><td class="header">名前</td><td class="content"><input type="textBox" name="txtName" value="${empList.list.get(0).fullName }"></td>
+					<td><%--従業員検索 --%>
+						<button name="state" value="list,employee" formaction="EmployeeController" class="button">検索</button>
 					</td>
 				</tr>
-				<tr><td class="header">名前(カナ)</td><td class="content"><input type="textBox" name="txtKanaName" value="${employee.kanaName }"></td></tr>
-				<tr><td class="header">LogInID</td><td class="content"><input type="textBox" name="txtLogInID" value="${employee.loginId }"></td></tr>
-				<tr><td class="header">メール</td><td class="content"><input type="textBox" name="txtMail" value="${employee.email }"></td></tr>
+				<tr><td class="header">名前(カナ)</td><td class="content"><input type="textBox" name="txtKanaName" value="${empList.list.get(0).kanaName }"></td></tr>
+				<tr><td class="header">LogInID</td><td class="content"><input type="textBox" name="txtLogInID" value="${empList.list.get(0).loginId }"></td></tr>
+				<tr><td class="header">メール</td><td class="content"><input type="textBox" name="txtMail" value="${empList.list.get(0).email }"></td></tr>
 				<tr><td class="header">所属</td>
 					<td class="content">
-						<input type="hidden" id="branchValue" value="${employee.branchId }">
+						<input type="hidden" id="branchValue" value="${empList.list.get(0).branchId }">
 						<select name="branchId" id="branch">
 							<option value=""></option>
 						</select>
@@ -35,15 +35,15 @@
 				</tr>
 				<tr><td class="header">部署</td>
 					<td class="content">
-						<input type="hidden" id="departmentValue" value="${employee.departmentId }">
+						<input type="hidden" id="departmentValue" value="${empList.list.get(0).departmentId}">
 					<select name="departmentId" id="department">
 						<option value=""></option>
 					</select>
 					</td>
-				</tr>
-				<tr><td class="header">上司</td><td class="content"><input type="textBox" name="txtBoss" value="${employee.bossId }"></td>
+				</tr><%--上司検索 --%>
+				<tr><td class="header">上司</td><td class="content"><input type="textBox" name="txtBoss" value="${empList.detail.get(0).bossName}"></td>
 					<td>
-						<button name="state" value="list" formaction="EmployeeController" class="button">上司検索</button>
+						<button name="state" value="list,boss" formaction="EmployeeController" class="button">上司検索</button>
 					</td>
 				</tr>
 				<tr>
@@ -58,19 +58,32 @@
 							経理<input type="checkbox" name="chRole">
 					</td>
 				</tr>
-				<tr><td class="header">パスワード</td><td><input type="textBox" name="txtPW" value="${employee.password }"></td><td><button class="button">パスワード登録</button></td></tr>
+				<tr><td class="header">パスワード</td>
+					<td><input type="textBox" name="txtPW" value="${empList.list.get(0).password }"></td>
+					<td><button class="button" type="button" id="password">パスワード登録</button></td>
+				</tr>
 			</table>
 			  	<div id="buttonPart">
 					<button class="button2">登録</button>
 					<button class="button2">削除</button>
 				
-					<input type="reset" class="button2" value="リセット">
+					<input type="reset" class="button2" form="Main" value="リセット">
 				</div>
 				<%--エラーなどを表示する領域 --%>
+				
+				<%--ここまで --%>
+				
+				<%--非表示従業員ID　上司ID --%>
+				<label class="hidden">${empList.list.get(0).empId }</label>
+				<br>
+				<label class="hidden">${empList.list.get(0).bossId }</label>
 		</div>
 		
 		<div id="password">
 			<%--パスワード設定画面を設置する --%>
+			<span id="passTable"></span>
+			<span id="passButton1"></span>
+			<span id="passButton2"></span>
 		</div>
 	</div>
 	

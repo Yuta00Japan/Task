@@ -60,7 +60,16 @@
 								<%--システム管理者のみ実行可能 --%>
 									<c:set var="authority" value="${Character.toString(user.userRole.charAt(9)) }"/>
 									<c:if test="${authority == '1' }">
-										<button name="state" value="detail,${empList.list.get(i).empId }" formaction="EmployeeController">選択</button>
+										<c:choose>
+										<%--従業員検索の場合 --%>
+											<c:when test="${method=='employee' }">		
+												<button name="state" value="detail,${empList.list.get(i).empId }" formaction="EmployeeController">選択</button>
+											</c:when>
+										<%--上司検索の場合 --%>
+											<c:otherwise>
+												<button name="state" value="selectBoss,${empList.list.get(i).empId }" formaction="EmployeeController">選択</button>
+											</c:otherwise>
+										</c:choose>
 									</c:if>
 								</td>
 								<td class="content">

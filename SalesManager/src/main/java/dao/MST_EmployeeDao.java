@@ -155,32 +155,54 @@ public class MST_EmployeeDao implements Crud{
 	 * @return 従業員情報
 	 * @throws Exception ロード失敗
 	 */
-	public Employee loadSingle(String employeeId) throws Exception{
+	public EmployeeList loadSingle(String employeeId) throws Exception{
 		
-		String sql = "select * from MST_employee where empId = ?";
+		String sql ="select emp.empId,emp.branchId,branch.branchName,emp.departmentId,dpm.departmentName,emp.empNo,emp.fullname,emp.kananame,emp.loginID,emp.password,"
+				+ "emp.enable,emp.email,emp.userRole,emp.Pwupday,emp.bossId,emp2.fullName,emp2.enable from MST_Employee as emp "
+				+ " inner join MST_Branch as branch on emp.branchId = branch.branchId  "
+				+ " inner join MST_Department as dpm on emp.departmentId = dpm.departmentID "
+				+ " inner join MST_Employee as emp2 on emp.bossId = emp2.EmpId where emp.enable=true and emp.empId=?;";
 		
 		Employee emp = null;
+		EmployeeDetail empDetail = null;
+		List<Employee> info = new ArrayList<>();
+		List<EmployeeDetail>detail = new ArrayList<>();
+		
+		EmployeeList list = new EmployeeList();
 		
 		try(Connection con = Pool.getConnection(); PreparedStatement pps = con.prepareStatement(sql)){
 			pps.setInt(1, Integer.parseInt(employeeId));
 			ResultSet rs = pps.executeQuery();
 			if(rs.next()) {
 				emp = new Employee();
-				emp.setEmpId(rs.getInt("empId"));
-				emp.setBranchId(rs.getInt("departmentId"));
-				emp.setDepartmentId(rs.getInt("departmentID"));
-				emp.setEmpNo(rs.getInt("empNo"));
-				emp.setFullName(rs.getString("fullName"));
-				emp.setKanaName(rs.getString("kanaName"));
-				emp.setLoginId(rs.getString("loginID"));
-				emp.setPassword(rs.getString("password"));
-				emp.setEnable(rs.getBoolean("enable"));
-				emp.setEmail(rs.getString("email"));
-				emp.setUserRole(rs.getString("userRole"));
-				emp.setPwupDay(rs.getTimestamp("pwupday"));
-				emp.setBossId(rs.getInt("bossID"));
+				emp.setEmpId(rs.getInt("emp.empId"));
+				emp.setBranchId(rs.getInt("emp.branchId"));
+				emp.setDepartmentId(rs.getInt("emp.departmentID"));
+				emp.setEmpNo(rs.getInt("emp.empNo"));
+				emp.setFullName(rs.getString("emp.fullName"));
+				emp.setKanaName(rs.getString("emp.kanaName"));
+				emp.setLoginId(rs.getString("emp.loginID"));
+				emp.setPassword(rs.getString("emp.password"));
+				emp.setEnable(rs.getBoolean("emp.enable"));
+				emp.setEmail(rs.getString("emp.email"));
+				emp.setUserRole(rs.getString("emp.userRole"));
+				emp.setPwupDay(rs.getTimestamp("emp.pwupday"));
+				emp.setBossId(rs.getInt("emp.bossID"));
+				
+				info.add(emp);
+				
+				empDetail = new EmployeeDetail();
+				empDetail.setBranchName(rs.getString("branch.branchName"));
+				empDetail.setDepartmentName(rs.getString("dpm.departmentName"));
+				empDetail.setBossEnable(rs.getBoolean("emp2.enable"));
+				empDetail.setBossName(rs.getString("emp2.fullName"));
+				
+				detail.add(empDetail);
 			}
-			return emp;
+			list.setList(info);
+			list.setDetail(detail);
+			
+			return list;
 		}
 	}
 	

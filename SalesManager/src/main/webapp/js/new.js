@@ -77,6 +77,56 @@ const timeoutId = setTimeout(() => {
 	});
  }
  
+ document.getElementById('password').addEventListener('click',appearForm);
+ 
+ var form = document.getElementById('Main');
+ 
+ const inputs = form.querySelectorAll('input, select, textarea');
+/**
+ * パスワード設定フォームを表示させる
+ */
+function appearForm(){
+	//フォームを編集不可にする
+	form.disabled = true;
+	inputs.forEach((input) => {
+  	input.disabled = true;
+	});
+	
+	let table = document.getElementById('passTable');
+	let button1 = document.getElementById('passButton1');
+	let button2 = document.getElementById('passButton2');
+	table.innerHTML = 
+	'<table>'
+	+'<tr><td class="header2">新パスワード</td><td class="content"><input type="text"></td></tr>'
+	+'<tr><td class="header">確認</td><td class="content"><input type="text"></td></tr>'
+	+'</table>';
+	
+	button1.innerHTML='<button class="button2" type="button">登録</button>';
+	button2.innerHTML='<button class="button2" type="button" id="cancelPass">閉じる</button>';
+	
+	//フォーム削除のリスナーを設置
+	document.getElementById('cancelPass').addEventListener('click',deleteForm);
+}
 
+/**
+ * パスワード設定フォームを消して入力できるようにする
+ */
+function deleteForm(){
+	//編集可能にする
+	form.disabled=false;
+	inputs.forEach((input) => {
+ 	 input.disabled = false;
+	});
+	
+	let table = document.getElementById('passTable');
+	let button1 = document.getElementById('passButton1');
+	let button2 = document.getElementById('passButton2');
+	
+	table.innerHTML="";
+	button1.innerHTML="";
+	button2.innerHTML="";
+}
+ 
+ 
  
  

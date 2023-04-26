@@ -83,7 +83,7 @@ public class EmployeeController extends HttpServlet {
 					//従業員一覧
 				case "list":
 					if(LoginCheck.check(session)) {
-						proc_List(request,response,session);
+						proc_List(request,response,session,state[1]);
 					}else {
 						proc_SessionError(request,response,session);
 					}
@@ -108,6 +108,14 @@ public class EmployeeController extends HttpServlet {
 				case "detail":
 					if(LoginCheck.check(session)) {
 						proc_Detail(request,response,session,state[1]);
+					}else {
+						proc_SessionError(request,response,session);
+					}
+					break;
+					//上司選択
+				case "selectBoss":
+					if(LoginCheck.check(session)) {
+						proc_BossSelect(request,response,session,state[1]);
 					}else {
 						proc_SessionError(request,response,session);
 					}
@@ -218,10 +226,22 @@ public class EmployeeController extends HttpServlet {
 	 * すべての従業員情報を取得し従業員一覧を表示する
 	 * @param request HTTP request
 	 * @param response HTTP response
+	 * @param method 用途　例）上司検索、従業員検索、閲覧
 	 * @throws Exception ロード失敗
 	 */
-	protected void proc_List(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws Exception {
+	protected void proc_List(HttpServletRequest request, HttpServletResponse response,HttpSession session,String method) throws Exception {
 		System.out.println(getServletName()+"# list");
+		
+		//通常の閲覧であれば何もしない
+		if(method =="normal") {
+				
+		}//従業員検索
+		else if(method.equals("employee")) {
+			session.setAttribute("method",method);
+		}//上司検索
+		else {
+			session.setAttribute("method", method);
+		}
 		
 		//登録、編集、削除画面から遷移した場合の処理
 		EmployeeLogic.setEmployeeFromRequest(request);
@@ -277,13 +297,34 @@ public class EmployeeController extends HttpServlet {
 	 * @param response HTTP response
 	 * @param session 従業員情報を含むsession
 	 * @param employeeId 従業員ID
-	 * @throws Exception 
+	 * @throws Exception ロード失敗
 	 */
 	protected void proc_Detail(HttpServletRequest request, HttpServletResponse response,HttpSession session,String employeeId) throws Exception {
 		System.out.println(getServletName()+"# detail");
 		
-		Employee emp = EmployeeLogic.loadSingle(employeeId);
-		session.setAttribute("employee", emp);
+		EmployeeList emp = EmployeeLogic.loadSingle(employeeId);
+		session.setAttribute("empList", emp);
+		getServletContext().getRequestDispatcher("/WEB-INF/employee/new.jsp").forward(request, response);
+	}
+	/**
+	 * 従業員IDをもとに上司を検索しセットする。
+	 * @param request HTTP request
+	 * @param response HTTP response
+	 * @param session 従業員情報を含むsession
+	 * @param employeeId 従業員ID
+	 * @throws Exception ロード失敗
+	 */
+	protected void proc_BossSelect(HttpServletRequest request, HttpServletResponse response,HttpSession session,String employeeId) throws Exception {
+		System.out.println(getServletName()+"# bossSelect");
+		EmployeeList boss = EmployeeLogic.loadSingle(employeeId);
+		//上司の情報を取得
+		int bossId = boss.getList().get(0).getBossId();
+		String bossName = boss.getDetail().get(0).getBossName();
+		//登録、編集中の従業員情報の上司情報を変更する
+		EmployeeList emp = (EmployeeList)session.getAttribute("empList");
+		emp.getList().get(0).setBossId(bossId);
+		emp.getDetail().get(0).setBossName(bossName);
+		
 		getServletContext().getRequestDispatcher("/WEB-INF/employee/new.jsp").forward(request, response);
 	}
 

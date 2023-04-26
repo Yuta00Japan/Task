@@ -12,7 +12,7 @@
 
 <form method="post">
 
-<h1><button class="button" name="state" value="list" formaction="EmployeeController">従業員一覧</button></h1>
+<h1><button class="button" name="state" value="list,normal" formaction="EmployeeController">従業員一覧</button></h1>
 
 <%--システム管理者のみ実行可能 ～--%>
 		<%--システム管理者である0000000001の最後の文字を取りだし比較する --%>

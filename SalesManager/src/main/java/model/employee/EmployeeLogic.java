@@ -37,7 +37,7 @@ public class EmployeeLogic {
 	 * @return 従業員情報
 	 * @throws Exception ロード失敗
 	 */
-	public static Employee loadSingle(String employeeId) throws Exception{
+	public static EmployeeList loadSingle(String employeeId) throws Exception{
 		
 		MST_EmployeeDao dao = new MST_EmployeeDao();
 		
