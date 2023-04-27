@@ -96,10 +96,18 @@ public class EmployeeController extends HttpServlet {
 					    proc_SessionError(request,response,session);
 					}
 					break;
-					//従業員登録
+					//従業員登録フォーム
 				case "new":
 					if(LoginCheck.check(session)) {
 						proc_New(request,response,session);
+					}else {
+						proc_SessionError(request,response,session);
+					}
+					break;
+					//従業員登録
+				case "add":
+					if(LoginCheck.check(session)) {
+						
 					}else {
 						proc_SessionError(request,response,session);
 					}

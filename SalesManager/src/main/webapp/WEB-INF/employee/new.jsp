@@ -51,15 +51,11 @@
 						権限
 					</td>
 					<td>
-							システム管理<input type="checkbox" name="chRole">
-							管理<input type="checkbox" name="chRole">
-							 <br>
-							総務<input type="checkbox" name="chRole">
-							経理<input type="checkbox" name="chRole">
+						<span id="role"></span>
 					</td>
 				</tr>
 				<tr><td class="header">パスワード</td>
-					<td><input type="textBox" name="txtPW" value="${employee.password }"></td>
+					<td><input type="textBox" name="txtPW" value="${employee.password }" id="passValue"></td>
 					<td><button class="button" type="button" id="password">パスワード登録</button></td>
 				</tr>
 			</table>

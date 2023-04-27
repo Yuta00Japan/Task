@@ -77,6 +77,16 @@ app.get('/setBranch',(req,res)=>{
 		res.json(result);
 	});
 });
+/**
+ * 権限を検索し返す
+ */
+app.get('/setRole',(req,res)=>{
+	connection.query('select roleNo,roleName from MST_Role ',(err,result,field)=>{
+		if (err) throw err;
+		console.log(result);
+		res.json(result);
+	});
+});
 
 /**
  *部署を検索し返す
@@ -114,7 +124,7 @@ app.post('/getNewPass',(req,res)=>{
 	console.log('now /getNewPass');
 	let chPassword = req.body.changePass;
 	let empId = Number(localStorage.getItem('empId'));
-	console.log('new　password'+ chPassword + '　empID '+ empId);
+	console.log('new　password'+ chPassword + '->　empID '+ empId);
 	connection.query(`update MST_Employee set password='${chPassword}' where empId=${empId}`,(err,result,field)=>{
 		if (err) throw err;
 		console.log("from getNewPass"+result);

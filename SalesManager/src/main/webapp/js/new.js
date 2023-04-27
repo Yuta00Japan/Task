@@ -18,8 +18,29 @@ const timeoutId = setTimeout(() => {
  window.addEventListener('load',()=>{
 	setBranch();
 	setDepartment();
+	setRole();
 });
-  
+
+/**
+ * 役割をセットする
+ */
+function setRole(){
+	
+	fetch('http://localhost:3000/setRole')
+	.then(response => response.json())
+	.then(data =>{
+		let role = document.getElementById('role');
+		let content = '';
+		for(let i = 0; i < data.length; i++){
+			content += data[i].roleName+'<input type="checkbox" name="role" value='+data[i].roleNo+'">　';
+			if((i +1) % 2 == 0 ){
+				content += '<br>';
+			}
+		}
+		role.innerHTML = content;
+	});
+}
+
  /*
   * 所属と従業員ごとに初期選択をセットする
   */
@@ -132,16 +153,14 @@ function deleteForm(){
 	button2.innerHTML="";
 	error.textContent ="";
 }
-
+/**現在編集中の従業員パスワード　変更前 */
 var truePass = 0;
 
-
-
-function changePassword(){
-	
+ function changePassword(){
+	/**変更後パスワード */
 	let changePass = document.getElementById('chPassword').value;
+	/**確認パスワード */
 	let confirmPass = document.getElementById('confirmPass').value;
-	
 	let error = document.getElementById('passwordError');
 	
 	//パスワードと確認が同じかどうかを確認
@@ -151,102 +170,74 @@ function changePassword(){
 	}
 	let pattern = /^[a-zA-Z0-9]+$/;
 	//半角英数字出ない場合
-	if(!pattern.test(changePass) && pattern.test(confirmPass)){
+	if(!(pattern.test(changePass)) &&!(pattern.test(confirmPass))){
 		error.textContent='半角英数字で入力してください';
 		return ;
 	}
-	//前回と同じパスワードの場合
-	waitEmpPass().then(() => {
-  		checkPassword(changePass);
-	});
+	//現在編集中の従業員IDを送信する
+	return new Promise(resolve =>{
+		let empId = document.getElementById('empId').textContent;
 	
-	//新しい従業員パスワードに更新する
-	fetch('http://localhost:3000/getNewPass',{
-	  method: 'POST',
-	  headers: { 'Content-Type': 'application/json' },
-	  signal:signal,
-	  body: JSON.stringify({changePass:changePass})
-	})
-	.then(response => response.json())
-	.then(data => {
-  		console.log('Success:', data);
-	})
-	.catch((error) => {
-  		console.error('Error:', error);
-	})
-	.finally(() => {
-		clearTimeout(timeoutId); 
-	});
-	
-	let table = document.getElementById('passTable');
-	let button1 = document.getElementById('passButton1');
-	let button2 = document.getElementById('passButton2');
-	
-	table.innerHTML="";
-	button1.innerHTML="";
-	button2.innerHTML="";
-	error.innerHTML="";
-	
-}
-/**
- * 編集中の従業員IDを送信する
- */
-function postEmpId(){
-	let empId = document.getElementById('empId').textContent;
-	
-	fetch('http://localhost:3000/setEmpId',{
-	  method: 'POST',
-	  headers: { 'Content-Type': 'application/json' },
-	  signal:signal,
-	  body: JSON.stringify({empId:empId})
-	})
-	.then(response => response.json())
-	.then(data => {
-  		console.log('Success:', data);
-	})
-	.catch((error) => {
-  		console.error('Error:', error);
-	})
-	.finally(() => {
-		clearTimeout(timeoutId); 
-	});
-}
+		fetch('http://localhost:3000/setEmpId',{
+	  		method: 'POST',
+	  		headers: { 'Content-Type': 'application/json' },
+	  		signal:signal,
+	  		body: JSON.stringify({empId:empId})
+		})
+		.then(response => response.json())
+		.then(data => {
+  			console.log('Success:', data);
+		})
+			clearTimeout(timeoutId); 
+			console.log("OK");
+			resolve();
+	}).then(()=>{
+		//送信した従業員IDから現在のパスワードを取得する
+            return new Promise(resolve => {
 
-/**
- * 送信した従業員IDをもとにパスワードを取得する
- */
-function getEmpPass(){
-	
-	postEmpId();
-	
-	fetch('http://localhost:3000/getPass')
-	.then(response => response.json())
-	.then(data =>{
-		console.log("javascrip getEmpPass  "+data);
-		truePass = data[0].password;
-	});
-} 
-/**
- * empIdの処理が完了するまで待つ
- */
-function waitEmpPass(){
-	console.log("waitEmpPass");
-	return new Promise(resolve => {
-    getEmpPass();
-    resolve();
-  	});
+               fetch('http://localhost:3000/getPass')
+                  .then(response => response.json())
+                  .then(data => {
+                       truePass = data[0].password;
+                       console.log(truePass);
+                       resolve(truePass);
+                  });
+                  clearTimeout(timeoutId);
+                });
+	}).then((truePass)=>{
+		return new Promise(resolve=>{
+				console.log('from checkPassword '+truePass+" "+changePass);
+  			if(truePass == changePass) {
+    			error.textContent = '前回と同じパスワードは設定できません';
+    			return ;
+  			}
+  			resolve();
+		})
+	}).then(()=>{
+		return new Promise(resolve =>{
+			//新しい従業員パスワードに更新する
+		fetch('http://localhost:3000/getNewPass',{
+	 	 	method: 'POST',
+	  		headers: { 'Content-Type': 'application/json' },
+	  		signal:signal,
+	  		body: JSON.stringify({changePass:changePass})
+		})
+		.then(response => response.json())
+		.then(data => {
+  			console.log('Success:', data);
+  			//成功した場合
+  			resolve();
+		})
+		.catch((error) => {
+  			console.error('Error:', error);
+  			//失敗した場合
+		})
+			clearTimeout(timeoutId); 
+			deleteForm();
+			//変更後のパスに変更する
+			let pass = document.getElementById('passValue');
+			pass.value = changePass;
+		})
+		
+	})
 }
-/**
- * 前回と同じパスワード出ないかどうかを比較する
- */
-async function checkPassword(changePass) {
-  await waitEmpPass();
-  	console.log('from checkPassword'+truePass+" "+changePass);
-  	if(truePass == changePass) {
-    	error.textContent = '前回と同じパスワードは設定できません';
-    	return false;
-  	}
-}
-
-
-
