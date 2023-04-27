@@ -300,6 +300,18 @@ public class EmployeeController extends HttpServlet {
 		}
 	}
 	/**
+	 * 従業員を新規登録する
+	 * @param request HTTP requst
+	 * @param response HTTP response
+	 * @param session 従業員登録情報を含むsession
+	 * @throws Exception 登録失敗
+	 */
+	protected void proc_Add(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws Exception {
+		System.out.println(getServletName()+"# add");
+		EmployeeLogic.setEmployeeFromRequest(request);
+	}
+	
+	/**
 	 * 従業員情報を取得し画面に表示する
 	 * @param request HTTP request
 	 * @param response HTTP response

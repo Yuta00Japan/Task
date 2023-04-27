@@ -150,6 +150,18 @@ public class MST_EmployeeDao implements Crud{
 	}
 	
 	/**
+	 * 従業員番号empNoの最終番号を取得する
+	 * @return 従業員最終番号
+	 * @throws Exception 取得失敗
+	 */
+	public int getLastEmpNo() throws Exception{
+		try(Connection con = Pool.getConnection(); PreparedStatement pps = con.prepareStatement("select MAX(empNo) as maxEmpNo from MST_Employee")){
+			ResultSet rs = pps.executeQuery();
+			return rs.getInt("maxEmpNo");
+		}
+	}
+	
+	/**
 	 * 従業員情報の上司IDから上司情報を取りだします
 	 * @param employeeId 上司ID
 	 * @return 上司名、ID

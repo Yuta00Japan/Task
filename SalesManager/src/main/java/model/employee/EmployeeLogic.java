@@ -18,6 +18,18 @@ public class EmployeeLogic {
 	}
 	
 	/**
+	 * 最後の従業員番号を取得する
+	 * @return 従業員最終番号
+	 * @throws Exception 取得失敗
+	 */
+	public static int getLastEmpNumber() throws Exception {
+		
+		MST_EmployeeDao dao = new MST_EmployeeDao();
+		
+		return dao.getLastEmpNo();
+	}
+	
+	/**
 	 * ログイン処理を行いユーザー情報を取得する
 	 * @param loginID ログインID
 	 * @param password 暗証番号
@@ -103,12 +115,25 @@ public class EmployeeLogic {
 		
 		String branchId= request.getParameter("branchId");
 		String departmentId = request.getParameter("departmentId");
-		String role = request.getParameter("role");
+		String [] role = request.getParameterValues("role");
 		
 		String bossId= AntiXss.antiXss(request.getParameter("txtBossId"));
 		
-		if(empNo == "") {
-			empNo = "0";
+		//権限を表す文字列を作成
+		String userRole="0000000000";
+		for(int i = 0; i < role.length; i++) {
+			int index = Integer.parseInt(role[i]);
+			userRole.substring(index-1);
+			System.out.println(userRole);
+		}
+		//反転させる
+		StringBuilder sb = new StringBuilder(userRole);
+		userRole = sb.reverse().toString();
+		System.out.println(userRole);
+		
+		if(empNo == "" || empNo == null) {
+			empNo = getLastEmpNumber()+"";
+			System.out.println(empNo);
 		}
 		
 		if(branchId == "") {
@@ -119,16 +144,14 @@ public class EmployeeLogic {
 			departmentId ="0";
 		}
 		
-		if(bossId == null) {
+		if(bossId == null || bossId=="") {
 			bossId="0";
-		}//bossIdの値が数字かどうかを確認する
-		else if(!bossId.matches("^[0-9]+$")) {
-			bossId = "0";
 		}
 		
 		if(emp == null) {
 			emp = new Employee();
 		}
+		
 		emp.setEmpNo(Integer.parseInt(empNo));
 		emp.setFullName(fullName);
 		emp.setKanaName(kanaName);
@@ -137,7 +160,7 @@ public class EmployeeLogic {
 		emp.setBranchId(Integer.parseInt(branchId));
 		emp.setDepartmentId(Integer.parseInt(departmentId));
 		emp.setBossId(Integer.parseInt(bossId));
-		emp.setUserRole(role);
+		emp.setUserRole(userRole);
 		emp.setPassword(password);	
 		
 		session.setAttribute("employee",emp);
