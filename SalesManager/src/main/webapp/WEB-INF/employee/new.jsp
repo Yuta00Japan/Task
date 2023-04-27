@@ -16,15 +16,15 @@
 	<div id="container">
 		<div id="form">
 			<table>
-				<tr><td class="header">No</td><td class="content"><input type="textBox" name="txtEmpNo" value="${employee.empNo }"></td></tr>
+				<tr><td class="header">No</td><td class="content"><input type="textBox" name="txtEmpNo" value="${employee.empNo }" id="empNo"></td></tr>
 				<tr><td class="header">名前</td><td class="content"><input type="textBox" name="txtName" value="${employee.fullName }"></td>
 					<td><%--従業員検索 --%>
 						<button name="state" value="list,employee" formaction="EmployeeController" class="button">検索</button>
 					</td>
 				</tr>
 				<tr><td class="header">名前(カナ)</td><td class="content"><input type="textBox" name="txtKanaName" value="${employee.kanaName }"></td></tr>
-				<tr><td class="header">LogInID</td><td class="content"><input type="textBox" name="txtLogInID" value="${employee.loginId }"></td></tr>
-				<tr><td class="header">メール</td><td class="content"><input type="textBox" name="txtMail" value="${employee.email }"></td></tr>
+				<tr><td class="header">LogInID</td><td class="content"><input type="textBox" name="txtLogInID" value="${employee.loginId }" id="loginId"></td></tr>
+				<tr><td class="header">メール</td><td class="content"><input type="textBox" name="txtMail" value="${employee.email }" id="mail"></td></tr>
 				<tr><td class="header">所属</td>
 					<td class="content">
 						<input type="hidden" id="branchValue" value="${employee.branchId }">
@@ -41,7 +41,7 @@
 					</select>
 					</td>
 				</tr><%--上司検索 --%>
-				<tr><td class="header">上司</td><td class="content"><input type="textBox" name="txtBoss" value="${ boss.fullName}"></td>
+				<tr><td class="header">上司</td><td class="content"><input type="textBox" name="txtBoss" value="${ boss.fullName}" id="bossName"></td>
 					<td>
 						<button name="state" value="list,boss" formaction="EmployeeController" class="button">上司検索</button>
 					</td>
@@ -60,19 +60,19 @@
 				</tr>
 			</table>
 			  	<div id="buttonPart">
-					<button class="button2">登録</button>
-					<button class="button2">削除</button>
+					<button class="button2" type="button" id="submit">登録</button>
+					<button class="button2" type="button">削除</button>
 				
 					<input type="reset" class="button2" form="Main" value="リセット">
 				</div>
 				<%--エラーなどを表示する領域 --%>
-				
+				<span id="formError"></span>
 				<%--ここまで --%>
 				
 				<%--非表示従業員ID　上司ID --%>
 				<label class="hidden" id="empId">${employee.empId }</label>
 				<br>
-				<label class="hidden">${boss.empId }</label>
+				<label class="hidden" id="bossId">${boss.empId }</label>
 		</div>
 		
 		<div id="password">

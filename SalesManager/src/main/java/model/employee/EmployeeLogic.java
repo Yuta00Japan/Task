@@ -94,28 +94,28 @@ public class EmployeeLogic {
 		
 		Employee emp = (Employee)session.getAttribute("employee");
 		
-		String empNo = AntiXss.antiXss(request.getParameter("empNo"));
-		String fullName = AntiXss.antiXss(request.getParameter("fullName"));
-		String kanaName = AntiXss.antiXss(request.getParameter("kanaName"));
-		String loginId= AntiXss.antiXss(request.getParameter("loginId"));
-		String mail = AntiXss.antiXss(request.getParameter("email"));
-		String password = AntiXss.antiXss(request.getParameter("password"));
+		String empNo = AntiXss.antiXss(request.getParameter("txtEmpNo"));
+		String fullName = AntiXss.antiXss(request.getParameter("txtName"));
+		String kanaName = AntiXss.antiXss(request.getParameter("txtKanaName"));
+		String loginId= AntiXss.antiXss(request.getParameter("txtLogInID"));
+		String mail = AntiXss.antiXss(request.getParameter("txtMail"));
+		String password = AntiXss.antiXss(request.getParameter("txtPW"));
 		
 		String branchId= request.getParameter("branchId");
 		String departmentId = request.getParameter("departmentId");
-		String bossId= AntiXss.antiXss(request.getParameter("bossId"));
+		String role = request.getParameter("role");
 		
-		if(empNo == null) {
-			empNo = "0";
-		}else if(!empNo.matches("^[0-9]+$")) {
+		String bossId= AntiXss.antiXss(request.getParameter("txtBossId"));
+		
+		if(empNo == "") {
 			empNo = "0";
 		}
 		
-		if(branchId == "" || branchId == null) {
+		if(branchId == "") {
 			branchId ="0";
 		}
 		
-		if(departmentId =="" || departmentId == null) {
+		if(departmentId =="" ) {
 			departmentId ="0";
 		}
 		
@@ -137,7 +137,8 @@ public class EmployeeLogic {
 		emp.setBranchId(Integer.parseInt(branchId));
 		emp.setDepartmentId(Integer.parseInt(departmentId));
 		emp.setBossId(Integer.parseInt(bossId));
-		emp.setPassword(password);
+		emp.setUserRole(role);
+		emp.setPassword(password);	
 		
 		session.setAttribute("employee",emp);
 	}

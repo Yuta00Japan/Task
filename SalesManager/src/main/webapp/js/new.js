@@ -32,7 +32,7 @@ function setRole(){
 		let role = document.getElementById('role');
 		let content = '';
 		for(let i = 0; i < data.length; i++){
-			content += data[i].roleName+'<input type="checkbox" name="role" value='+data[i].roleNo+'">　';
+			content += data[i].roleName+'<input type="checkbox" name="role" value="'+data[i].roleNo+'" id="'+data[i].roleNo+'">';
 			if((i +1) % 2 == 0 ){
 				content += '<br>';
 			}
@@ -170,7 +170,7 @@ var truePass = 0;
 	}
 	let pattern = /^[a-zA-Z0-9]+$/;
 	//半角英数字出ない場合
-	if(!(pattern.test(changePass)) &&!(pattern.test(confirmPass))){
+	if(!(pattern.test(changePass)) || !(pattern.test(confirmPass))){
 		error.textContent='半角英数字で入力してください';
 		return ;
 	}
@@ -241,3 +241,152 @@ var truePass = 0;
 		
 	})
 }
+
+document.getElementById('submit').addEventListener('click',function(event){ formCheck(event)});
+
+let error = document.getElementById('formError');
+
+function formCheck(event){
+
+	let pattern =  /^[a-zA-Z0-9]+$/;
+	
+	let loginId = document.getElementById('loginId').value;
+	let password = document.getElementById('passValue').value;
+	let mail = document.getElementById('mail').value;
+	
+	let empId = document.getElementById('empId').textContent;
+	let empNo = document.getElementById('empNo').value;
+	
+	let userRole = '';
+	
+	//もしどちらか入力されていなければ
+	if(loginId=="" || password==""){
+		event.preventDefault();
+		error.textContent ='ログインID・パスワードは必須です';
+		return ;
+	}
+	//半角英数字出なければ
+	if(!(pattern.test(loginId)) || !(pattern.test(password))){
+		event.preventDefault();
+		error.textContent = '半角英数字で入力してください';
+		return ;
+	}
+	//mailが半角英数字と記号でない場合
+	let pattern2 = /^[!-~]*$/;
+	if(!pattern2.test(mail)){
+		event.preventDefault();
+		error.textContent='mailは半角英数字・記号で入力してください';
+		return ;
+	}
+	//入力されたEMPNOを送信し重複してないかを判定する
+	new Promise(resolve =>{
+
+		fetch('http://localhost:3000/judgeEmpNo',{
+			method: 'POST',
+	  		headers: { 'Content-Type': 'application/json' },
+	  		signal:signal,
+	  		body: JSON.stringify({empNo:empNo})
+		})
+		.then(response => response.json())
+		.then(data =>{
+			console.log(data);
+			//empNoで検索し得たempIDが一致しなければ登録、一致すれば更新、もし被った場合エラーを出す
+			if(!data.length <= 0){
+				
+				if(!(Number(data[0].empId) == Number(empId))){
+					event.preventDefault();
+					error.textContent='そのempNoはすでに登録されています';
+				}else{
+					error.textContent='';
+					resolve();
+				}
+			}else{
+				error.textContent='';
+				resolve();
+			}
+		})
+		
+	}).then(()=>{
+		//上司IDと上司名が一致するかどうかをチェックする
+		let bossId = document.getElementById('bossId').textContent;
+		let bossName = document.getElementById('bossName').value;
+		
+		return new Promise(resolve =>{
+			
+		 	fetch('http://localhost:3000/checkBoss',{
+				method :'POST',
+				headers: { 'Content-Type': 'application/json' },
+	  			signal:signal,
+	  			body: JSON.stringify({bossId:bossId})
+			})
+			.then(response => response.json())
+			.then(data =>{
+				console.log(data);
+				//上司名が違っていた場合
+				if(!(data[0].fullName == bossName)){
+					event.preventDefault();
+					error.textContent='上司名が不一致です';
+				}else{
+					error.textContent='';
+					resolve();
+				}
+			})	
+		})
+		
+	}).then(()=>{
+		//システム管理者の情報を変更する場合　システム管理者がほかにいるかどうかをチェック
+		
+		//まず編集中の従業員権限情報を取得する
+		return new Promise(resolve =>{
+			
+			fetch('http://localhost:3000/getUserRole',{
+				method :'POST',
+				headers: { 'Content-Type': 'application/json' },
+	  			signal:signal,
+	  			body: JSON.stringify({empId:empId})
+			})
+			.then(response => response.json())
+			.then(data =>{
+				console.log(data);
+				userRole = data[0].userRole;
+				//システム管理者かどうかをチェックする
+				console.log(userRole.charAt(9));
+				if(userRole.charAt(9)== '1'){
+					console.log('システム管理者');
+					resolve();
+				}else{
+					console.log('非システム管理者');
+				}
+			})
+		})
+	}).then(()=>{
+		//checkboxのIDがチェックされているか確認
+		let system = document.getElementById('1');
+		
+		//チェックされていなければほかにシステム管理者がいるかどうかを確認する
+		if(!system.checked == true){
+			
+			fetch('http://localhost:3000/allUserRole')
+			.then(response => response.json())
+			.then(data =>{
+				console.log(data);
+				for(let i = 0; i < data.length; i++){
+					if(data[i].userRole.charAt(9) =='1'){
+						break;
+					}
+					//最後までシステム管理者と一致しなかった場合エラーを出す
+					if((data.length-1) == i){
+						error.textContent='他システム管理者が存在しないため変更不可';
+					}
+				}
+				
+			});
+		}
+		
+	})
+		
+	
+}
+
+
+

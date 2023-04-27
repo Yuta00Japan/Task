@@ -131,5 +131,56 @@ app.post('/getNewPass',(req,res)=>{
 		
 	});
 });
+/**
+ * empNoが重複してないかチェックする
+ */
+app.post('/judgeEmpNo',(req,res)=>{
+	console.log('from / judgeEmpNo');
+	let empNo = req.body.empNo;
+	empNo = Number(empNo);
+	connection.query(`select empId from MST_Employee where empNo=${empNo}`,(err,result,field)=>{
+		if (err) throw err;
+		console.log(result);
+		res.json(result);
+	});
+	
+});
 
+/**
+ * 上司IDと上司名が一致しているかどうかを検証する
+ */
+app.post('/checkBoss',(req,res)=>{
+	console.log('from /checkBoss');
+	let bossId = req.body.bossId;
+	bossId=Number(bossId);
+	console.log(bossId);
+	connection.query(`select fullName from MST_Employee where empId=${bossId}`,(err,result,field)=>{
+		if (err) throw err;
+		console.log(" result "+result);
+		res.json(result);
+	})
+})
+
+/**
+ * 編集中の従業員がシステム管理者かどうかを確認＋ほかにシステム管理者がいるかどうかをチェックする
+ */
+app.get('/allUserRole',(req,res)=>{
+	
+	connection.query('select userRole from MST_Employee',(err,result,field)=>{
+		if (err) throw err;
+		console.log(result);
+		
+	});
+});
+
+app.post('/getUserRole',(req,res)=>{
+	console.log('from getUserRole');
+	let empId = req.body.empId;
+	empId=Number(empId);
+	connection.query(`select userRole from MST_Employee where empId=${empId}`,(err,result,field)=>{
+		if (err) throw err;
+		console.log(result)
+		res.json(result);
+	});
+});
 
