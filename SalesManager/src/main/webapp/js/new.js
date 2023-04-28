@@ -264,7 +264,7 @@ function formCheck(event){
 	let userRole = '';
 	
 	//新規登録
-		if(empId=="" || empId== null){
+		if(empId==0 || empId== null || empId==""){
 			document.getElementById('submit').value="add"
 		}else{
 		//編集

@@ -349,7 +349,7 @@ public class MST_EmployeeDao implements Crud{
 		String sql = "insert into MST_Employee(branchId,departmentId,empNo,fullName,kanaName,loginId,password,email,userRole,bossId) "
 				+ "values(?,?,?,?,?,?,?,?,?,?)";
 		
-		try(Connection con = Pool.getConnection(); PreparedStatement pps = con.prepareStatement("")){
+		try(Connection con = Pool.getConnection(); PreparedStatement pps = con.prepareStatement(sql)){
 			pps.setInt(1,emp.getBranchId());
 			pps.setInt(2,emp.getDepartmentId());
 			pps.setInt(3,emp.getEmpNo());
@@ -361,6 +361,9 @@ public class MST_EmployeeDao implements Crud{
 			pps.setString(9, emp.getUserRole());
 			pps.setInt(10, emp.getBossId());
 			pps.executeUpdate();
+			
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -373,7 +376,7 @@ public class MST_EmployeeDao implements Crud{
 		// TODO 自動生成されたメソッド・スタブ
 		Employee emp = (Employee)o;
 		
-		String sql="update MST_Employee set branchId=?,departmentId=?,empNo=?,fullname=?,kanaName=?,loginId=?,password=?,email=?,userRole=?,bossId=? "
+		String sql="update MST_Employee set branchId=?,departmentId=?,empNo=?,fullname=?,kanaName=?,loginId=?,password=?,email=?,userRole=?,bossId=?,pwupday=now() "
 				+" where empId=?";
 		
 		try(Connection con = Pool.getConnection(); PreparedStatement pps= con.prepareStatement(sql)){
@@ -389,6 +392,9 @@ public class MST_EmployeeDao implements Crud{
 			pps.setInt(10, emp.getBossId());
 			pps.setInt(11, emp.getEmpId());
 			pps.executeUpdate();
+			
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 
