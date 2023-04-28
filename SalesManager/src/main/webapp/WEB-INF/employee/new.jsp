@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<form method="post" id="Main">
+<form method="post" action="EmployeeController" id="Main"  >
 
 <h1><button class="button" name="state" value="logout" formaction="EmployeeController">ログアウト</button></h1>
 
@@ -60,7 +60,7 @@
 				</tr>
 			</table>
 			  	<div id="buttonPart">
-					<button class="button2" name="state" value="" id="submit" formaction="EmployeeController">登録</button>
+					<button class="button2"  name="state" value="" id="submit" formaction="EmployeeController">登録</button>
 					<button class="button2" type="button">削除</button>
 				
 					<input type="reset" class="button2" form="Main" value="リセット">

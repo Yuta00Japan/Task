@@ -30,9 +30,9 @@ public class MST_EmployeeDao implements Crud{
 		
 		String baseSQL = " select emp.empId,emp.branchId,branch.branchName,emp.departmentId,dpm.departmentName,emp.empNo,emp.fullname,emp.kananame,emp.loginID,emp.password,"
 				 + "emp.enable,emp.email,emp.userRole,emp.Pwupday,emp.bossId,emp2.fullName,emp2.enable from MST_Employee as emp "
-				 + " inner join MST_Branch as branch on emp.branchId = branch.branchId  "
-				 + " inner join MST_Department as dpm on emp.departmentId = dpm.departmentID "
-				 + " inner join MST_Employee as emp2 on emp.bossId = emp2.EmpId ";
+				 + " left join MST_Branch as branch on emp.branchId = branch.branchId  "
+				 + " left join MST_Department as dpm on emp.departmentId = dpm.departmentID "
+				 + " left join MST_Employee as emp2 on emp.bossId = emp2.EmpId ";
 		
 		//何も入力せず検索
 		if(name == "" && branchID== "" && departmentId=="" && trueFalse ==null) {
@@ -235,9 +235,9 @@ public class MST_EmployeeDao implements Crud{
 		
 		String sql ="select emp.empId,emp.branchId,branch.branchName,emp.departmentId,dpm.departmentName,emp.empNo,emp.fullname,emp.kananame,emp.loginID,emp.password,"
 				+ "emp.enable,emp.email,emp.userRole,emp.Pwupday,emp.bossId,emp2.fullName,emp2.enable from MST_Employee as emp "
-				+ " inner join MST_Branch as branch on emp.branchId = branch.branchId  "
-				+ " inner join MST_Department as dpm on emp.departmentId = dpm.departmentID "
-				+ " inner join MST_Employee as emp2 on emp.bossId = emp2.EmpId where emp.enable=true;";
+				+ " left join MST_Branch as branch on emp.branchId = branch.branchId  "
+				+ " left join MST_Department as dpm on emp.departmentId = dpm.departmentID "
+				+ " left join MST_Employee as emp2 on emp.bossId = emp2.EmpId where emp.enable=true;";
 		
 		Employee emp = null;
 		

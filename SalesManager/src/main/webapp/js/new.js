@@ -2,6 +2,7 @@
  * 
  */
 
+
 const controller = new AbortController();
 const signal = controller.signal;
 
@@ -100,8 +101,8 @@ function setRole(){
  
  document.getElementById('password').addEventListener('click',appearForm);
  
- var form = document.getElementById('Main');
- 
+ const form = document.getElementById('Main');
+ console.log("form tagName " +form.tagName);
  const inputs = form.querySelectorAll('input, select, textarea');
 /**
  * パスワード設定フォームを表示させる
@@ -242,12 +243,16 @@ var truePass = 0;
 	})
 }
 
-document.getElementById('submit').addEventListener('click',function(event){ formCheck(event)});
+let submitButton= document.getElementById('submit');
+
+submitButton.addEventListener('click',function(event){formCheck(event)});
 
 let error = document.getElementById('formError');
 
 function formCheck(event){
-
+	//一度画面遷移を停止
+	event.preventDefault();
+	
 	let pattern =  /^[a-zA-Z0-9]+$/;
 	
 	let loginId = document.getElementById('loginId').value;
@@ -267,7 +272,7 @@ function formCheck(event){
 		if(empId==0 || empId== null || empId==""){
 			document.getElementById('submit').value="add"
 		}else{
-		//編集
+	//編集
 			document.getElementById('submit').value="update";
 		}
 	
@@ -298,7 +303,7 @@ function formCheck(event){
 	}
 	
 	//入力されたEMPNOを送信し重複してないかを判定する
-	new Promise(resolve =>{
+	return new Promise(resolve =>{
 
 		fetch('http://localhost:3000/judgeEmpNo',{
 			method: 'POST',
@@ -308,12 +313,10 @@ function formCheck(event){
 		})
 		.then(response => response.json())
 		.then(data =>{
-			console.log(data);
 			//empNoで検索し得たempIDが一致しなければ登録、一致すれば更新、もし被った場合エラーを出す
 			if(!data.length <= 0){
 				
 				if(!(Number(data[0].empId) == Number(empId))){
-					event.preventDefault();
 					error.textContent='そのempNoはすでに登録されています';
 				}else{
 					error.textContent='';
@@ -339,11 +342,14 @@ function formCheck(event){
 			.then(data =>{
 				console.log(data);
 				//上司名が違っていた場合
-				if(!(data[0].fullName == bossName)){
-					event.preventDefault();
-					error.textContent='上司名が不一致です';
+				if(data.length != 0){
+					if(!(data[0].fullName == bossName)){
+						error.textContent='上司名が不一致です';
+					}else{
+						error.textContent='';
+						resolve();
+					}
 				}else{
-					error.textContent='';
 					resolve();
 				}
 			})	
@@ -372,34 +378,51 @@ function formCheck(event){
 					resolve();
 				}else{
 					console.log('非システム管理者');
+					//フォーム送信を再開させる
+					document.querySelector('#Main').requestSubmit(submitButton);
 				}
 			})
 		})
 	}).then(()=>{
+		console.log(form.tagName);
 		//checkboxのIDがチェックされているか確認
 		let system = document.getElementById('1');
 		
 		//チェックされていなければほかにシステム管理者がいるかどうかを確認する
-		if(!system.checked == true){
+		if(!(system.checked == true)){
 			
-			fetch('http://localhost:3000/allUserRole')
+			fetch('http://localhost:3000/allUserRole',{
+				method:'POST',
+				headers: { 'Content-Type': 'application/json' },
+	  			signal:signal,
+	  			body: JSON.stringify({empId:empId})
+			})
 			.then(response => response.json())
 			.then(data =>{
-				console.log(data);
+				
 				for(let i = 0; i < data.length; i++){
-					if(data[i].userRole.charAt(9) =='1'){
+					
+					let output = data[i].userRole;
+					console.log(output);
+					if(output.charAt(9)=="1"){
+						//フォーム送信を再開させる
+						document.querySelector('#Main').requestSubmit(submitButton);
 						break;
 					}
 					//最後までシステム管理者と一致しなかった場合エラーを出す
-					if((data.length-1) == i){
+					if(i== (data.length-1)){
 						error.textContent='他システム管理者が存在しないため変更不可';
 					}
 				}
 				
 			})
+		}else{
+			
+			//フォーム送信を再開させる
+			document.querySelector('#Main').requestSubmit(submitButton);
 		}
 		
-	})
+	});
 }
 
 

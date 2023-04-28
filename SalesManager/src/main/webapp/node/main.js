@@ -164,12 +164,14 @@ app.post('/checkBoss',(req,res)=>{
 /**
  * 編集中の従業員がシステム管理者かどうかを確認＋ほかにシステム管理者がいるかどうかをチェックする
  */
-app.get('/allUserRole',(req,res)=>{
-	
-	connection.query('select userRole from MST_Employee',(err,result,field)=>{
+app.post('/allUserRole',(req,res)=>{
+	console.log('form allUserRole');
+	let empId= req.body.empId;
+	empId=Number(empId);
+	connection.query(`select userRole from MST_Employee where empId !=${empId}`,(err,result,field)=>{
 		if (err) throw err;
 		console.log(result);
-		
+		res.json(result);
 	});
 });
 
