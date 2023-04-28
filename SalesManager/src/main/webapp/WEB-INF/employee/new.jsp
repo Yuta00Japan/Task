@@ -61,7 +61,7 @@
 			</table>
 			  	<div id="buttonPart">
 					<button class="button2"  name="state" value="" id="submit" formaction="EmployeeController">登録</button>
-					<button class="button2" type="button">削除</button>
+					<button class="button2" type="button" id="delete">削除</button><span id="modal"></span>
 				
 					<input type="reset" class="button2" form="Main" value="リセット">
 				</div>

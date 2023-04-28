@@ -389,5 +389,10 @@ public class EmployeeController extends HttpServlet {
 		session.setAttribute("boss", boss);
 		getServletContext().getRequestDispatcher("/WEB-INF/employee/new.jsp").forward(request, response);
 	}
+	
+	protected void proc_Delete(HttpServletRequest request, HttpServletResponse response,HttpSession session) {
+		System.out.println(getServletName()+"# delete");
+		
+	}
 
 }

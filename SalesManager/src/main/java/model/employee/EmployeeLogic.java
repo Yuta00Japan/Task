@@ -119,7 +119,17 @@ public class EmployeeLogic {
 		
 		dao.update(employee);
 	}
-	
+	/**
+	 * 従業員を削除する　論理
+	 * @param employeeId 従業員ID
+	 * @throws Exception 削除失敗
+	 */
+	public static void delete(String employeeId) throws Exception{
+		
+		MST_EmployeeDao dao = new MST_EmployeeDao();
+		
+		
+	}
 	
 	/**
 	 * 新規登録、編集の情報をsessionに保存する

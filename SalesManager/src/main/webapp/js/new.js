@@ -249,6 +249,9 @@ submitButton.addEventListener('click',function(event){formCheck(event)});
 
 let error = document.getElementById('formError');
 
+/**
+ * フォームの入力内容を確認する。
+ */
 function formCheck(event){
 	//一度画面遷移を停止
 	event.preventDefault();
@@ -340,7 +343,6 @@ function formCheck(event){
 			})
 			.then(response => response.json())
 			.then(data =>{
-				console.log(data);
 				//上司名が違っていた場合
 				if(data.length != 0){
 					if(!(data[0].fullName == bossName)){
@@ -369,7 +371,6 @@ function formCheck(event){
 			})
 			.then(response => response.json())
 			.then(data =>{
-				console.log(data);
 				userRole = data[0].userRole;
 				//システム管理者かどうかをチェックする
 				console.log(userRole.charAt(9));
@@ -384,7 +385,6 @@ function formCheck(event){
 			})
 		})
 	}).then(()=>{
-		console.log(form.tagName);
 		//checkboxのIDがチェックされているか確認
 		let system = document.getElementById('1');
 		
@@ -403,7 +403,6 @@ function formCheck(event){
 				for(let i = 0; i < data.length; i++){
 					
 					let output = data[i].userRole;
-					console.log(output);
 					if(output.charAt(9)=="1"){
 						//フォーム送信を再開させる
 						document.querySelector('#Main').requestSubmit(submitButton);
@@ -424,6 +423,21 @@ function formCheck(event){
 		
 	});
 }
+
+document.getElementById('delete').addEventListener('click',createModal);
+
+/**
+ * 削除ボタンをクリックしたときにモーダルを作成する
+ */
+ modalBtn.addEventListener('click', () => {
+     modalOverlay.style.display = 'block';
+     modal.style.display = 'block';
+ });
+
+ modalClose.addEventListener('click', () => {
+     modalOverlay.style.display = 'none';
+     modal.style.display = 'none';
+ });
 
 
 
