@@ -157,7 +157,11 @@ public class MST_EmployeeDao implements Crud{
 	public int getLastEmpNo() throws Exception{
 		try(Connection con = Pool.getConnection(); PreparedStatement pps = con.prepareStatement("select MAX(empNo) as maxEmpNo from MST_Employee")){
 			ResultSet rs = pps.executeQuery();
-			return rs.getInt("maxEmpNo");
+			int lastNum=0;
+			if(rs.next()) {
+			   lastNum= rs.getInt("maxEmpNo");
+			}
+			return lastNum;
 		}
 	}
 	
@@ -339,9 +343,25 @@ public class MST_EmployeeDao implements Crud{
 	 * @param o 従業員情報
 	 */
 	@Override
-	public void add(Object o) {
-		// TODO 自動生成されたメソッド・スタブ
+	public void add(Object o) throws Exception{
+		Employee emp = (Employee)o;
 		
+		String sql = "insert into MST_Employee(branchId,departmentId,empNo,fullName,kanaName,loginId,password,email,userRole,bossId) "
+				+ "values(?,?,?,?,?,?,?,?,?,?)";
+		
+		try(Connection con = Pool.getConnection(); PreparedStatement pps = con.prepareStatement("")){
+			pps.setInt(1,emp.getBranchId());
+			pps.setInt(2,emp.getDepartmentId());
+			pps.setInt(3,emp.getEmpNo());
+			pps.setString(4,emp.getFullName());
+			pps.setString(5, emp.getKanaName());
+			pps.setString(6,emp.getLoginId());
+			pps.setString(7, emp.getPassword());
+			pps.setString(8,emp.getEmail());
+			pps.setString(9, emp.getUserRole());
+			pps.setInt(10, emp.getBossId());
+			pps.executeUpdate();
+		}
 	}
 
 	/**
@@ -349,9 +369,27 @@ public class MST_EmployeeDao implements Crud{
 	 * @param o 更新対象従業員情報
 	 */
 	@Override
-	public void update(Object o) {
+	public void update(Object o) throws Exception{
 		// TODO 自動生成されたメソッド・スタブ
+		Employee emp = (Employee)o;
 		
+		String sql="update MST_Employee set branchId=?,departmentId=?,empNo=?,fullname=?,kanaName=?,loginId=?,password=?,email=?,userRole=?,bossId=? "
+				+" where empId=?";
+		
+		try(Connection con = Pool.getConnection(); PreparedStatement pps= con.prepareStatement(sql)){
+			pps.setInt(1,emp.getBranchId());
+			pps.setInt(2,emp.getDepartmentId());
+			pps.setInt(3,emp.getEmpNo());
+			pps.setString(4,emp.getFullName());
+			pps.setString(5, emp.getKanaName());
+			pps.setString(6,emp.getLoginId());
+			pps.setString(7, emp.getPassword());
+			pps.setString(8,emp.getEmail());
+			pps.setString(9, emp.getUserRole());
+			pps.setInt(10, emp.getBossId());
+			pps.setInt(11, emp.getEmpId());
+			pps.executeUpdate();
+		}
 	}
 
 	/**

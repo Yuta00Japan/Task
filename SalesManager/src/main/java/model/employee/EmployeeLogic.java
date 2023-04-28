@@ -97,6 +97,31 @@ public class EmployeeLogic {
 	}
 	
 	/**
+	 * 新規従業員登録
+	 * @param employee 登録情報
+	 * @throws Exception 
+	 */
+	public static void add(Employee employee) throws Exception {
+		
+		MST_EmployeeDao dao = new MST_EmployeeDao();
+		
+		dao.add(employee);
+	}
+	
+	/**
+	 * 既存従業員情報を更新
+	 * @param employee 更新情報
+	 * @throws Exception 
+	 */
+	public static void update(Employee employee) throws Exception {
+		
+		MST_EmployeeDao dao = new MST_EmployeeDao();
+		
+		dao.update(employee);
+	}
+	
+	
+	/**
 	 * 新規登録、編集の情報をsessionに保存する
 	 * @param request フォームで入力された内容
 	 */
@@ -119,28 +144,45 @@ public class EmployeeLogic {
 		
 		String bossId= AntiXss.antiXss(request.getParameter("txtBossId"));
 		
+		System.out.println("入力値-> "+empNo +" "+fullName+" "+kanaName+" "+loginId+" "+mail+" "+password+" "+branchId+" "+departmentId+" "+ role+" "+bossId);
+		
+		String reverseRole="";
 		//権限を表す文字列を作成
-		String userRole="0000000000";
-		for(int i = 0; i < role.length; i++) {
-			int index = Integer.parseInt(role[i]);
-			userRole.substring(index-1);
-			System.out.println(userRole);
+		StringBuilder userRole = new StringBuilder();
+		if(role != null) {
+			for(int i = 0; i < 10; i++) {
+				for(int k = 0; k < role.length; k++) {
+					//一致した場合
+					int index=i+1;
+					if((index+"").equals(role[k])) {
+						userRole.append("1");
+						break;
+					}
+					if((k+1)==role.length) {
+						userRole.append("0");
+					}
+				}
+				if((i+1)==10) {
+					//反転させる
+					reverseRole= userRole.reverse().toString();
+				}
+			}
+		}else {
+			reverseRole="0000000000";
 		}
 		//反転させる
-		StringBuilder sb = new StringBuilder(userRole);
-		userRole = sb.reverse().toString();
-		System.out.println(userRole);
+		System.out.println(reverseRole);
 		
 		if(empNo == "" || empNo == null) {
-			empNo = getLastEmpNumber()+"";
+			empNo = (getLastEmpNumber()+1)+"";
 			System.out.println(empNo);
 		}
 		
-		if(branchId == "") {
+		if(branchId == "" || branchId==null) {
 			branchId ="0";
 		}
 		
-		if(departmentId =="" ) {
+		if(departmentId =="" || departmentId== null) {
 			departmentId ="0";
 		}
 		
@@ -160,7 +202,7 @@ public class EmployeeLogic {
 		emp.setBranchId(Integer.parseInt(branchId));
 		emp.setDepartmentId(Integer.parseInt(departmentId));
 		emp.setBossId(Integer.parseInt(bossId));
-		emp.setUserRole(userRole);
+		emp.setUserRole(reverseRole);
 		emp.setPassword(password);	
 		
 		session.setAttribute("employee",emp);

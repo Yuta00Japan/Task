@@ -257,7 +257,19 @@ function formCheck(event){
 	let empId = document.getElementById('empId').textContent;
 	let empNo = document.getElementById('empNo').value;
 	
+	//上司IDと上司名が一致するかどうかをチェックする
+	let bossId = document.getElementById('bossId').textContent;
+	let bossName = document.getElementById('bossName').value;
+	
 	let userRole = '';
+	
+	//新規登録
+		if(empId=="" || empId== null){
+			document.getElementById('submit').value="add"
+		}else{
+		//編集
+			document.getElementById('submit').value="update";
+		}
 	
 	//もしどちらか入力されていなければ
 	if(loginId=="" || password==""){
@@ -278,6 +290,13 @@ function formCheck(event){
 		error.textContent='mailは半角英数字・記号で入力してください';
 		return ;
 	}
+	
+	if(bossName=="" || bossName ==null){
+		document.getElementById('bossId').textContent ="";
+	}else{
+		document.getElementById('bossName').value=bossId;
+	}
+	
 	//入力されたEMPNOを送信し重複してないかを判定する
 	new Promise(resolve =>{
 
@@ -307,9 +326,6 @@ function formCheck(event){
 		})
 		
 	}).then(()=>{
-		//上司IDと上司名が一致するかどうかをチェックする
-		let bossId = document.getElementById('bossId').textContent;
-		let bossName = document.getElementById('bossName').value;
 		
 		return new Promise(resolve =>{
 			
@@ -380,12 +396,10 @@ function formCheck(event){
 					}
 				}
 				
-			});
+			})
 		}
 		
 	})
-		
-	
 }
 
 

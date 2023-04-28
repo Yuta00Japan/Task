@@ -107,7 +107,7 @@ public class EmployeeController extends HttpServlet {
 					//従業員登録
 				case "add":
 					if(LoginCheck.check(session)) {
-						
+						proc_Add(request,response,session);
 					}else {
 						proc_SessionError(request,response,session);
 					}
@@ -120,6 +120,14 @@ public class EmployeeController extends HttpServlet {
 						proc_SessionError(request,response,session);
 					}
 					break;
+					//既存従業員更新
+				case "update":
+					if(LoginCheck.check(session)) {
+						proc_Update(request,response,session);
+					}else {
+						proc_SessionError(request,response,session);
+					}
+					break;
 					//上司選択
 				case "selectBoss":
 					if(LoginCheck.check(session)) {
@@ -128,6 +136,8 @@ public class EmployeeController extends HttpServlet {
 						proc_SessionError(request,response,session);
 					}
 					break;
+				default:
+					proc_SessionError(request,response,session);
 				}
 				
 			}catch(Exception e) {
@@ -240,6 +250,9 @@ public class EmployeeController extends HttpServlet {
 	protected void proc_List(HttpServletRequest request, HttpServletResponse response,HttpSession session,String method) throws Exception {
 		System.out.println(getServletName()+"# list");
 		
+		//登録フォームの値を保持する
+		EmployeeLogic.setEmployeeFromRequest(request);
+		
 		//通常の閲覧であれば何もしない
 		if(method =="normal") {
 				
@@ -309,6 +322,13 @@ public class EmployeeController extends HttpServlet {
 	protected void proc_Add(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws Exception {
 		System.out.println(getServletName()+"# add");
 		EmployeeLogic.setEmployeeFromRequest(request);
+		Employee emp = (Employee)session.getAttribute("employee");
+		try {
+			EmployeeLogic.add(emp);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		getServletContext().getRequestDispatcher("/WEB-INF/menu/menu.jsp").forward(request, response);
 	}
 	
 	/**
@@ -330,6 +350,28 @@ public class EmployeeController extends HttpServlet {
 		session.setAttribute("boss", boss);
 		getServletContext().getRequestDispatcher("/WEB-INF/employee/new.jsp").forward(request, response);
 	}
+	
+	/**
+	 * 既存従業員情報を更新する
+	 * @param request HTTP request
+	 * @param response HTTP response
+	 * @param session 既存従業員情報を含むsession
+	 * @throws Exception 更新失敗
+	 */
+	protected void proc_Update(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws Exception {
+		System.out.println(getServletName()+"# update");
+		EmployeeLogic.setEmployeeFromRequest(request);
+		Employee emp = (Employee)session.getAttribute("employee");
+		
+		try {
+			EmployeeLogic.update(emp);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		getServletContext().getRequestDispatcher("/WEB-INF/menu/menu.jsp").forward(request, response);
+	}
+	
 	/**
 	 * 従業員IDをもとに上司を検索しセットする。
 	 * @param request HTTP request
@@ -341,6 +383,8 @@ public class EmployeeController extends HttpServlet {
 	protected void proc_BossSelect(HttpServletRequest request, HttpServletResponse response,HttpSession session,String employeeId) throws Exception {
 		System.out.println(getServletName()+"# bossSelect");
 		System.out.println( "bossID :"+employeeId);
+		
+		//上司を検索
 		Employee boss = EmployeeLogic.searchBoss(employeeId);
 		session.setAttribute("boss", boss);
 		getServletContext().getRequestDispatcher("/WEB-INF/employee/new.jsp").forward(request, response);

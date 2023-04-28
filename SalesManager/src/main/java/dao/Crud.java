@@ -8,9 +8,9 @@ package dao;
 public interface Crud {
 
 	//登録
-	void add(Object o);
+	void add(Object o) throws Exception;
 	//更新
-	void update(Object o);
+	void update(Object o) throws Exception;
 	//削除
-	void delete(Object o);
+	void delete(Object o) throws Exception;
 }
