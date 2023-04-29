@@ -423,21 +423,39 @@ function formCheck(event){
 		
 	});
 }
+/**
+--削除チェック　モーダル処理---
+*/
+const deleteBtn = document.getElementById('delete');
 
-document.getElementById('delete').addEventListener('click',createModal);
+const modal = document.getElementById('easyModal');
 
+const cancel = document.getElementById('cancel');
+
+const buttonClose = document.getElementsByClassName('modalClose')[0];
 /**
  * 削除ボタンをクリックしたときにモーダルを作成する
  */
- modalBtn.addEventListener('click', () => {
-     modalOverlay.style.display = 'block';
+ deleteBtn.addEventListener('click', () => {
+	 console.log('モーダル起動');
      modal.style.display = 'block';
+    
  });
 
- modalClose.addEventListener('click', () => {
-     modalOverlay.style.display = 'none';
-     modal.style.display = 'none';
- });
+// バツ印がクリックされた時
+buttonClose.addEventListener('click', modalClose);
+
+//Noボタンが押された場合
+cancel.addEventListener('click',modalClose);
+
+function modalClose() {
+  modal.style.display = 'none';
+}
+/**
+ * 削除モーダルのOKボタンがクリックされたら
+ */
+document.getElementById('exeDelete').addEventListener('click',);
+
 
 
 
