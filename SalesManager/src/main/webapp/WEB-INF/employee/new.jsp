@@ -73,7 +73,7 @@
 				
 				<%--非表示従業員ID　上司ID --%>
 				<label class="hidden" id="empId">${employee.empId }</label>
-				<br>
+					<br>
 				<label class="hidden" id="bossId">${boss.empId }</label>
 		</div>
 		

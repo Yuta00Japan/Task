@@ -162,7 +162,7 @@ public class EmployeeController extends HttpServlet {
 	public void sessionReset(HttpSession session) {
 		
 		System.out.println(getServletName()+"# sessionReset ");
-		
+		 session.removeAttribute("boss");
 		 session.removeAttribute("employee");
 		 session.removeAttribute("empList");
 		 session.removeAttribute("method");

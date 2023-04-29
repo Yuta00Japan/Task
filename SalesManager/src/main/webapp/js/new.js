@@ -296,6 +296,8 @@ function formCheck(event){
 	//一度画面遷移を停止
 	event.preventDefault();
 	
+	console.log("from form check empID: "+document.getElementById('empId').textContent);
+	
 	let pattern =  /^[a-zA-Z0-9]+$/;
 	
 	let loginId = document.getElementById('loginId').value;
@@ -313,9 +315,11 @@ function formCheck(event){
 	
 	//新規登録
 		if(empId==0 || empId== null || empId==""){
+			console.log('process # add')
 			document.getElementById('submit').value="add"
 		}else{
 	//編集
+			console.log('process # update');
 			document.getElementById('submit').value="update";
 		}
 	
