@@ -31,6 +31,7 @@ function setRole(){
 	.then(response => response.json())
 	.then(data =>{
 		let role = document.getElementById('role');
+		let rolevalue = role.value;
 		let content = '';
 		for(let i = 0; i < data.length; i++){
 			content += data[i].roleName+'<input type="checkbox" name="role" value="'+data[i].roleNo+'" id="'+data[i].roleNo+'">';
@@ -41,6 +42,7 @@ function setRole(){
 		role.innerHTML = content;
 	});
 }
+
 
  /*
   * 所属と従業員ごとに初期選択をセットする
@@ -358,6 +360,11 @@ function formCheck(event){
 		})
 		
 	}).then(()=>{
+		//新規登録の場合ここからさきは不要
+		if(document.getElementById('submit').value == 'add'){
+			return ;
+		}
+		
 		//システム管理者の情報を変更する場合　システム管理者がほかにいるかどうかをチェック
 		
 		//まず編集中の従業員権限情報を取得する
@@ -537,7 +544,51 @@ function deleteCheck(event){
 		
 	});
 }
+/**
+ * フォームの内容をリセットする
+ */
+function formReset(){
+	console.log('reset');
+	
+	let formContent = document.querySelectorAll('.form');
+	
+	for(let i = 0; i < formContent.length; i++){
+		formContent[i].value= "";
+	}
+	
+	document.getElementById('empId').textContent='';
+	document.getElementById('bossId').textContent='';
+	
+	//部署
+	let department= Main.department;
+	//所属
+	let branch = Main.branch;
+	//権限
+	let role = Main.role;
 
+	for(let i = 1; i < department.length; i++){
+		if(department[i].selected){
+			department[i].selected=false;
+			break;
+		}
+	}
+	
+	for(let i = 1; i < branch.length; i++){
+		if(branch[i].selected){
+			branch[i].selected=false;
+			break;
+		}
+	}
+	
+	for(let i = 0; i < role.length; i++){
+		if(role[i].checked){
+			role[i].checked=false;
+		}
+		
+	}
+	
+	
+}
 
 
 

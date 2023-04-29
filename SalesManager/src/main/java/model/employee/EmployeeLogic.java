@@ -152,7 +152,7 @@ public class EmployeeLogic {
 		String departmentId = request.getParameter("departmentId");
 		String [] role = request.getParameterValues("role");
 		
-		String bossId= AntiXss.antiXss(request.getParameter("txtBossId"));
+		String bossId= AntiXss.antiXss(request.getParameter("txtBoss"));
 		
 		System.out.println("入力値-> "+empNo +" "+fullName+" "+kanaName+" "+loginId+" "+mail+" "+password+" "+branchId+" "+departmentId+" "+ role+" "+bossId);
 		
@@ -195,9 +195,13 @@ public class EmployeeLogic {
 		if(departmentId =="" || departmentId== null) {
 			departmentId ="0";
 		}
-		
+		System.out.println("from EmployeeLogic bossID検査 "+ bossId);
 		if(bossId == null || bossId=="") {
 			bossId="0";
+		}else {
+			if(!bossId.matches("[0-9]+")) {
+				bossId="0";
+			}
 		}
 		
 		if(emp == null) {

@@ -9,22 +9,22 @@
 </head>
 <body>
 
-<form method="post" action="EmployeeController" id="Main"  >
+<form method="post" action="EmployeeController" id="Main" name="main"  >
 
 <h1><button class="button" name="state" value="logout" formaction="EmployeeController">ログアウト</button></h1>
 
 	<div id="container">
 		<div id="form">
 			<table>
-				<tr><td class="header">No</td><td class="content"><input type="text" name="txtEmpNo" value="${employee.empNo }" id="empNo"></td></tr>
-				<tr><td class="header">名前</td><td class="content"><input type="text" name="txtName" value="${employee.fullName }"></td>
+				<tr><td class="header">No</td><td class="content"><input type="text" name="txtEmpNo" value="${employee.empNo }" class="form" id="empNo"></td></tr>
+				<tr><td class="header">名前</td><td class="content"><input type="text" name="txtName" class="form" value="${employee.fullName }"></td>
 					<td><%--従業員検索 --%>
 						<button name="state" value="list,employee" formaction="EmployeeController" class="button">検索</button>
 					</td>
 				</tr>
-				<tr><td class="header">名前(カナ)</td><td class="content"><input type="text" name="txtKanaName" value="${employee.kanaName }"></td></tr>
-				<tr><td class="header">LogInID</td><td class="content"><input type="text" name="txtLogInID" value="${employee.loginId }" id="loginId"></td></tr>
-				<tr><td class="header">メール</td><td class="content"><input type="text" name="txtMail" value="${employee.email }" id="mail"></td></tr>
+				<tr><td class="header">名前(カナ)</td><td class="content"><input type="text" name="txtKanaName" class="form" value="${employee.kanaName }"></td></tr>
+				<tr><td class="header">LogInID</td><td class="content"><input type="text" name="txtLogInID" class="form"value="${employee.loginId }" id="loginId"></td></tr>
+				<tr><td class="header">メール</td><td class="content"><input type="text" name="txtMail" class="form" value="${employee.email }" id="mail"></td></tr>
 				<tr><td class="header">所属</td>
 					<td class="content">
 						<input type="hidden" id="branchValue" value="${employee.branchId }">
@@ -41,7 +41,7 @@
 					</select>
 					</td>
 				</tr><%--上司検索 --%>
-				<tr><td class="header">上司</td><td class="content"><input type="text" name="txtBoss" value="${ boss.fullName}" id="bossName"></td>
+				<tr><td class="header">上司</td><td class="content"><input type="text" name="txtBoss" value="${ boss.fullName}" class="form" id="bossName"></td>
 					<td>
 						<button name="state" value="list,boss" formaction="EmployeeController" class="button">上司検索</button>
 					</td>
@@ -51,18 +51,18 @@
 						権限
 					</td>
 					<td>
-						<span id="role"></span>
+						<span id="role" value="${employee.userRole }"></span>
 					</td>
 				</tr>
 				<tr><td class="header">パスワード</td>
-					<td><input type="text" name="txtPW" value="${employee.password }" id="passValue"></td>
+					<td><input type="text" name="txtPW" value="${employee.password }" class="form" id="passValue"></td>
 					<td><button class="button" type="button" id="password">パスワード登録</button></td>
 				</tr>
 			</table>
 			  	<div id="buttonPart">
 					<button class="button2"  name="state" value="" id="submit" formaction="EmployeeController">登録</button>
 					<button class="button2" type="button" id="delete">削除</button>
-					<input type="reset" class="button2" form="Main" value="リセット">
+					<button class="button2" type="button"  onclick="formReset();">リセット</button>
 				</div>
 				
 			
@@ -105,7 +105,6 @@
 	
 	
 </form>
-
 <script src="js/new.js"></script>
 </body>
 </html>

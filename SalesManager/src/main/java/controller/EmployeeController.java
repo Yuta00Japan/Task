@@ -139,7 +139,7 @@ public class EmployeeController extends HttpServlet {
 					//従業員削除		
 				case "deleteEmployee":
 					if(LoginCheck.check(session)) {
-						proc_Delete(request,response,state[1]);
+						proc_Delete(request,response,session,state[1]);
 					}else {
 						proc_SessionError(request,response,session);
 					}
@@ -154,6 +154,20 @@ public class EmployeeController extends HttpServlet {
 			}
 	
 	}
+	
+	/**
+	 * 不要なsessionをリセットする
+	 * @param session 不要なsessionデータ
+	 */
+	public void sessionReset(HttpSession session) {
+		
+		System.out.println(getServletName()+"# sessionReset ");
+		
+		 session.removeAttribute("employee");
+		 session.removeAttribute("empList");
+		 session.removeAttribute("method");
+	}
+	
 	/**
 	 * session切れによりユーザー情報が欠損していた場合ログイン画面に戻す
 	 * @param request HTTP request
@@ -318,6 +332,8 @@ public class EmployeeController extends HttpServlet {
 			//管理者の場合
 			getServletContext().getRequestDispatcher("/WEB-INF/employee/new.jsp").forward(request, response);
 		}else {
+			 sessionReset(session);
+			 
 			getServletContext().getRequestDispatcher("/WEB-INF/menu/menu.jsp").forward(request, response);
 		}
 	}
@@ -337,6 +353,8 @@ public class EmployeeController extends HttpServlet {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
+		sessionReset(session);
+		
 		getServletContext().getRequestDispatcher("/WEB-INF/menu/menu.jsp").forward(request, response);
 	}
 	
@@ -378,6 +396,8 @@ public class EmployeeController extends HttpServlet {
 			e.printStackTrace();
 		}
 		
+		sessionReset(session);
+		
 		getServletContext().getRequestDispatcher("/WEB-INF/menu/menu.jsp").forward(request, response);
 	}
 	
@@ -407,10 +427,12 @@ public class EmployeeController extends HttpServlet {
 	 * @param employeeId 削除対象従業員ID
 	 * @throws Exception 削除失敗
 	 */
-	protected void proc_Delete(HttpServletRequest request, HttpServletResponse response,String employeeId) throws Exception {
+	protected void proc_Delete(HttpServletRequest request, HttpServletResponse response,HttpSession session,String employeeId) throws Exception {
 		System.out.println(getServletName()+"# delete");
 		
 		EmployeeLogic.delete(employeeId);
+		
+		sessionReset(session);
 		
 		getServletContext().getRequestDispatcher("/WEB-INF/menu/menu.jsp").forward(request, response);
 	}
