@@ -30,16 +30,54 @@ function setRole(){
 	fetch('http://localhost:3000/setRole')
 	.then(response => response.json())
 	.then(data =>{
-		let role = document.getElementById('role');
-		let rolevalue = role.value;
+		let userRole = document.getElementById('role');
+		//ユーザーロールの値を取得
+		let role = document.getElementById('userRole').value;
+		console.log(role.value);
+		let roleNum = role.split("");
+		roleNum = roleNum.reverse();
+		//配列にして順番を反転させる 0000000001 -> 1000000000
+		
+		let roleIndex = [];
+		let index = 0;
+		//1のインデックスを保存する
+		for(let i = 0; i < roleNum.length; i++){
+			console.log(role[i]);
+			if(roleNum[i]=="1"){
+				console.log('match1');
+				roleIndex[index]= i;
+				index++;
+			}
+		}
+		
+		console.log('roleIndex length :'+roleIndex.length);
+			
 		let content = '';
 		for(let i = 0; i < data.length; i++){
-			content += data[i].roleName+'<input type="checkbox" name="role" value="'+data[i].roleNo+'" id="'+data[i].roleNo+'">';
+			//一つも権限がない場合
+			if(roleIndex.length <= 0){
+				content += data[i].roleName+'<input type="checkbox" name="role" value="'+data[i].roleNo+'" id="'+data[i].roleNo+'">';
+			}else{
+					
+				for(let k = 0; k < roleIndex.length; k++){
+					console.log(roleIndex[k]+" == "+(i));
+					if(roleIndex[k]==(i)){
+						console.log("match2");
+						content += data[i].roleName+'<input type="checkbox" name="role" value="'+data[i].roleNo+'" id="'+data[i].roleNo+'" checked>';
+						break;
+					}
+					//最後まで回り切った場合
+					if((k+1) == roleIndex.length){
+						content += data[i].roleName+'<input type="checkbox" name="role" value="'+data[i].roleNo+'" id="'+data[i].roleNo+'">';
+					}
+				}
+			}
+		
 			if((i +1) % 2 == 0 ){
 				content += '<br>';
 			}
 		}
-		role.innerHTML = content;
+		userRole.innerHTML = content;
 	});
 }
 

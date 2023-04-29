@@ -51,7 +51,8 @@
 						権限
 					</td>
 					<td>
-						<span id="role" value="${employee.userRole }"></span>
+						<input type="hidden" id="userRole" value="${employee.userRole }" >
+						<span id="role"></span>
 					</td>
 				</tr>
 				<tr><td class="header">パスワード</td>
