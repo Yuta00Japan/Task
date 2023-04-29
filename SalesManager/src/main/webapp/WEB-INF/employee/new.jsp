@@ -57,13 +57,13 @@
 				</tr>
 				<tr><td class="header">パスワード</td>
 					<td><input type="text" name="txtPW" value="${employee.password }" class="form" id="passValue"></td>
-					<td><button class="button" type="button" id="password">パスワード登録</button></td>
+					<td><input class="button" type="button" id="password" value="パスワード登録"></td>
 				</tr>
 			</table>
 			  	<div id="buttonPart">
 					<button class="button2"  name="state" value="" id="submit" formaction="EmployeeController">登録</button>
 					<button class="button2" type="button" id="delete">削除</button>
-					<button class="button2" type="button"  onclick="formReset();">リセット</button>
+					<button class="button2" name="state" value="formReset" formaction="EmployeeController" id="reset">リセット</button>
 				</div>
 				
 			

@@ -68,9 +68,9 @@ public class EmployeeController extends HttpServlet {
 		
 			try {
 				switch(state[0]) {
-				//ログインフォームを表示する
-				case "loginForm":
-					proc_LoginForm(request,response);
+				//従業員登録フォームの内容をリセットし表示する
+				case "formReset":
+					proc_formReset(request,response,session);
 					break;
 					//ログイン試行
 				case "try_Login":
@@ -160,12 +160,12 @@ public class EmployeeController extends HttpServlet {
 	 * @param session 不要なsessionデータ
 	 */
 	public void sessionReset(HttpSession session) {
-		
 		System.out.println(getServletName()+"# sessionReset ");
-		 session.removeAttribute("boss");
-		 session.removeAttribute("employee");
-		 session.removeAttribute("empList");
-		 session.removeAttribute("method");
+		
+		session.removeAttribute("boss");
+		session.removeAttribute("employee");
+		session.removeAttribute("empList");
+		session.removeAttribute("method");
 	}
 	
 	/**
@@ -187,16 +187,18 @@ public class EmployeeController extends HttpServlet {
 	}
 	
 	/**
-	 * ログインフォームへ遷移する
+	 * 従業員登録画面の情報をリセットする
 	 * @param request HTTP request
 	 * @param response HTTP response
 	 * @throws ServletException error
 	 * @throws IOException error
 	 */
-	protected void proc_LoginForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println(getServletName()+"# loginForm");
+	protected void proc_formReset(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws ServletException, IOException {
+		System.out.println(getServletName()+"#  resetForm");
+		//session削除
+		sessionReset(session);
 		//ログイン画面へ遷移する
-		getServletContext().getRequestDispatcher("/WEB-INF/login/login.jsp").forward(request, response);
+		getServletContext().getRequestDispatcher("/WEB-INF/employee/new.jsp").forward(request, response);
 	}
 	
 	/**

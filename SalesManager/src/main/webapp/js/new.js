@@ -17,9 +17,9 @@ const timeoutId = setTimeout(() => {
  * 画面ロード時に所属と部署をセットする
  */
  window.addEventListener('load',()=>{
+	setRole(); 
 	setBranch();
 	setDepartment();
-	setRole();
 });
 
 /**
@@ -56,19 +56,19 @@ function setRole(){
 		for(let i = 0; i < data.length; i++){
 			//一つも権限がない場合
 			if(roleIndex.length <= 0){
-				content += data[i].roleName+'<input type="checkbox" name="role" value="'+data[i].roleNo+'" id="'+data[i].roleNo+'">';
+				content += data[i].roleName+'<input type="checkbox" class="checkbox" name="role" value="'+data[i].roleNo+'" id="'+data[i].roleNo+'">';
 			}else{
 					
 				for(let k = 0; k < roleIndex.length; k++){
 					console.log(roleIndex[k]+" == "+(i));
 					if(roleIndex[k]==(i)){
 						console.log("match2");
-						content += data[i].roleName+'<input type="checkbox" name="role" value="'+data[i].roleNo+'" id="'+data[i].roleNo+'" checked>';
+						content += data[i].roleName+'<input type="checkbox" class="checkbox" name="role" value="'+data[i].roleNo+'" id="'+data[i].roleNo+'" checked>';
 						break;
 					}
 					//最後まで回り切った場合
 					if((k+1) == roleIndex.length){
-						content += data[i].roleName+'<input type="checkbox" name="role" value="'+data[i].roleNo+'" id="'+data[i].roleNo+'">';
+						content += data[i].roleName+'<input type="checkbox" class="checkbox" name="role" value="'+data[i].roleNo+'" id="'+data[i].roleNo+'">';
 					}
 				}
 			}
@@ -148,11 +148,21 @@ function setRole(){
  * パスワード設定フォームを表示させる
  */
 function appearForm(){
+	
 	//フォームを編集不可にする
 	form.disabled = true;
 	inputs.forEach((input) => {
   	input.disabled = true;
 	});
+	
+	//チェックボックスを編集不可にする
+	let checkbox = document.querySelectorAll('.checkbox');
+	for(let i = 0; i < checkbox.length; i++){
+		checkbox[i].disabled=true;
+	}
+	//リセットボタンを無効にする
+	document.getElementById('reset').disabled=true;
+	
 	
 	let table = document.getElementById('passTable');
 	let button1 = document.getElementById('passButton1');
@@ -182,6 +192,14 @@ function deleteForm(){
 	inputs.forEach((input) => {
  	 input.disabled = false;
 	});
+	
+	//チェックボックスを編集不可にする
+	let checkbox = document.querySelectorAll('.checkbox');
+	for(let i = 0; i < checkbox.length; i++){
+		checkbox[i].disabled=false;
+	}
+	//リセットボタンを無効にする
+	document.getElementById('reset').disabled=false;
 	
 	let table = document.getElementById('passTable');
 	let button1 = document.getElementById('passButton1');
@@ -585,51 +603,6 @@ function deleteCheck(event){
 		}
 		
 	});
-}
-/**
- * フォームの内容をリセットする
- */
-function formReset(){
-	console.log('reset');
-	
-	let formContent = document.querySelectorAll('.form');
-	
-	for(let i = 0; i < formContent.length; i++){
-		formContent[i].value= "";
-	}
-	
-	document.getElementById('empId').textContent='';
-	document.getElementById('bossId').textContent='';
-	
-	//部署
-	let department= Main.department;
-	//所属
-	let branch = Main.branch;
-	//権限
-	let role = Main.role;
-
-	for(let i = 1; i < department.length; i++){
-		if(department[i].selected){
-			department[i].selected=false;
-			break;
-		}
-	}
-	
-	for(let i = 1; i < branch.length; i++){
-		if(branch[i].selected){
-			branch[i].selected=false;
-			break;
-		}
-	}
-	
-	for(let i = 0; i < role.length; i++){
-		if(role[i].checked){
-			role[i].checked=false;
-		}
-		
-	}
-	
-	
 }
 
 
