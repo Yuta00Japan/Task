@@ -451,10 +451,92 @@ cancel.addEventListener('click',modalClose);
 function modalClose() {
   modal.style.display = 'none';
 }
+
+/**削除モーダルのOKボタン要素 */
+let deleteOKBtn = document.getElementById('exeDelete');
+
 /**
  * 削除モーダルのOKボタンがクリックされたら
  */
-document.getElementById('exeDelete').addEventListener('click',);
+
+deleteOKBtn.addEventListener('click',function(event){deleteCheck(event)});
+
+function deleteCheck(event){
+	
+	console.log('削除確認を開始');
+	
+	let empId = document.getElementById('empId').textContent;
+	
+	//画面遷移を停止
+	event.preventDefault();
+	
+	let userRole='';
+	
+	//システム管理者の情報を変更する場合　システム管理者がほかにいるかどうかをチェック
+		
+		//まず編集中の従業員権限情報を取得する
+		return new Promise(resolve =>{
+			
+			fetch('http://localhost:3000/getUserRole',{
+				method :'POST',
+				headers: { 'Content-Type': 'application/json' },
+	  			signal:signal,
+	  			body: JSON.stringify({empId:empId})
+			})
+			.then(response => response.json())
+			.then(data =>{
+				userRole = data[0].userRole;
+				//システム管理者かどうかをチェックする
+				console.log(userRole.charAt(9));
+				if(userRole.charAt(9)== '1'){
+					console.log('システム管理者');
+					resolve();
+				}else{
+					console.log('非システム管理者');
+					//フォーム送信を再開させる
+					document.querySelector('#Main').requestSubmit(deleteOKBtn);
+				}
+			})
+		}).then(()=>{
+			//システム管理者の場合　checkboxのIDがチェックされているか確認
+		let system = document.getElementById('1');
+		
+		//チェックされていなければほかにシステム管理者がいるかどうかを確認する
+		if(!(system.checked == true)){
+			
+			fetch('http://localhost:3000/allUserRole',{
+				method:'POST',
+				headers: { 'Content-Type': 'application/json' },
+	  			signal:signal,
+	  			body: JSON.stringify({empId:empId})
+			})
+			.then(response => response.json())
+			.then(data =>{
+				
+				for(let i = 0; i < data.length; i++){
+					
+					let output = data[i].userRole;
+					if(output.charAt(9)=="1"){
+						//フォーム送信を再開させる
+						document.querySelector('#Main').requestSubmit(deleteOKBtn);
+						break;
+					}
+					//最後までシステム管理者と一致しなかった場合エラーを出す
+					if(i== (data.length-1)){
+						error.textContent='他システム管理者が存在しないため削除不可';
+						modalClose();
+					}
+				}
+				
+			})
+		}else{
+			
+			//フォーム送信を再開させる
+			document.querySelector('#Main').requestSubmit(deleteOKBtn);
+		}
+		
+	});
+}
 
 
 

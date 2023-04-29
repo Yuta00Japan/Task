@@ -138,6 +138,11 @@ public class EmployeeController extends HttpServlet {
 					break;
 					//従業員削除		
 				case "deleteEmployee":
+					if(LoginCheck.check(session)) {
+						proc_Delete(request,response,state[1]);
+					}else {
+						proc_SessionError(request,response,session);
+					}
 					break;
 				default:
 					proc_SessionError(request,response,session);
@@ -145,6 +150,7 @@ public class EmployeeController extends HttpServlet {
 				
 			}catch(Exception e) {
 				e.printStackTrace();
+				getServletContext().getRequestDispatcher("/WEB-INF/menu/menu.jsp").forward(request, response);
 			}
 	
 	}
@@ -399,10 +405,14 @@ public class EmployeeController extends HttpServlet {
 	 * @param response HTTP response
 	 * @param session 従業員情報を含むsession
 	 * @param employeeId 削除対象従業員ID
+	 * @throws Exception 削除失敗
 	 */
-	protected void proc_Delete(HttpServletRequest request, HttpServletResponse response,HttpSession session,String employeeId) {
+	protected void proc_Delete(HttpServletRequest request, HttpServletResponse response,String employeeId) throws Exception {
 		System.out.println(getServletName()+"# delete");
 		
+		EmployeeLogic.delete(employeeId);
+		
+		getServletContext().getRequestDispatcher("/WEB-INF/menu/menu.jsp").forward(request, response);
 	}
 
 }

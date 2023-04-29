@@ -403,9 +403,14 @@ public class MST_EmployeeDao implements Crud{
 	 * @param o 削除対象従業員情報
 	 */
 	@Override
-	public void delete(Object o) {
+	public void delete(Object o) throws Exception{
 		// TODO 自動生成されたメソッド・スタブ
+		String employeeId = (String)o;
 		
+		try(Connection con = Pool.getConnection(); PreparedStatement pps = con.prepareStatement("update MST_Employee set enable=false where empId= ?")){
+			pps.setInt(1, Integer.parseInt(employeeId));
+			pps.executeUpdate();
+		}
 	}
 
 	

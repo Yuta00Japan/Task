@@ -120,7 +120,7 @@ public class EmployeeLogic {
 		dao.update(employee);
 	}
 	/**
-	 * 従業員を削除する　論理
+	 * 従業員を削除する
 	 * @param employeeId 従業員ID
 	 * @throws Exception 削除失敗
 	 */
@@ -128,7 +128,7 @@ public class EmployeeLogic {
 		
 		MST_EmployeeDao dao = new MST_EmployeeDao();
 		
-		
+		dao.delete(employeeId);
 	}
 	
 	/**
