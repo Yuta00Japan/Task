@@ -102,18 +102,22 @@ function formCheck(event){
 	
 	//入力されたデータが時間に関するものか検証
 	
-	/** 日付を数字のみで入力する場合　20230502　or 2023502 202352*/
-	let timePattern1 = /[1-9][0-9]{5,6,7}/;
 	/**文字で区切って入力する場合  2023/05/02  2023/5/2*/
-	let timePattern2 = /[1-9][0-9]{3}\/[0-9]{1,2}\/[0-9]{1,2}/;
+	let timePattern1 = /[1-9][0-9]{3}\/[0-9]{1,2}\/[0-9]{1,2}/;
 	
-	if(timePattern1.test(start.value) && timePattern1.test(end.value)){
-		
-	}else if(timePattern2.test(start.value) && timePattern2.test(end.value)){
-		
+	if(timePattern1.test(start.value)){
+			
 	}else{
 		event.preventDefault();
 		start.value="";
+		alert('正しい形式で入力してください　例）2023年5月2日ー＞ 2023/05/02 or 2023/5/2');
+	}
+	
+	
+	if(timePattern1.test(end.value)){
+			
+	}else{
+		event.preventDefault();
 		end.value="";
 		alert('正しい形式で入力してください　例）2023年5月2日ー＞ 2023/05/02 or 2023/5/2');
 	}
