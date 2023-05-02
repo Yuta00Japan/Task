@@ -1,0 +1,63 @@
+@charset "UTF-8";
+
+#container{
+	margin-top: 150px;
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+}
+
+#container > #select{
+	margin-top: 20px;
+	margin-left:200px;
+}
+
+#container > #form{
+	margin-right:300px;
+}
+
+#category{
+	width: 340px;
+	height: 20px;
+}
+
+#tableCenter{
+	margin-top: 40px;
+	margin-left:350px;
+}
+
+#table{
+	text-align: center;
+	width: 700px;
+}
+
+.itemName{
+	text-align: center;
+	width: 350px;
+}
+
+.quantity{
+	text-align: center;
+	width: 175px;
+}
+
+.total{
+	text-align: center;
+	width: 175px;
+}
+
+
+h1,h2{
+	font-size: 18px;
+	margin-bottom: 20px;
+}
+
+.button{
+	height: 25px;
+	width: 100px;
+	margin-left: 30px;
+}
+
+.label{
+	margin-right: 30px;
+}

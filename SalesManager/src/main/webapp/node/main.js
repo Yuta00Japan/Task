@@ -97,6 +97,20 @@ app.get('/setDepartment',(req,res)=>{
 		res.json(result);
 	});
 });
+
+/**
+ * カテゴリーをセットする
+ */
+app.get('/setCategory',(req,res)=>{
+	console.log('from setCategory');
+	connection.query('select categoryID,category from MsCategory',(err,result,field)=>{
+		if (err) throw err;
+		res.json(result);
+	});
+	
+});
+
+
 /**
  * 従業員IDを格納する
  */
@@ -113,7 +127,6 @@ app.get('/getPass',(req,res)=>{
 	console.log("from getPass  "+empId);
 	connection.query(`select password from MST_Employee where empId=${empId}`,(err,result,field)=>{
 		if (err) throw err;
-		console.log(result);
 		res.json(result);
 	})
 });
@@ -124,10 +137,9 @@ app.post('/getNewPass',(req,res)=>{
 	console.log('now /getNewPass');
 	let chPassword = req.body.changePass;
 	let empId = Number(localStorage.getItem('empId'));
-	console.log('new　password'+ chPassword + '->　empID '+ empId);
+	console.log('new　password'+ chPassword + '　empID '+ empId);
 	connection.query(`update MST_Employee set password='${chPassword}' where empId=${empId}`,(err,result,field)=>{
 		if (err) throw err;
-		console.log("from getNewPass"+result);
 		
 	});
 });
@@ -156,7 +168,6 @@ app.post('/checkBoss',(req,res)=>{
 	console.log(bossId);
 	connection.query(`select fullName from MST_Employee where empId=${bossId}`,(err,result,field)=>{
 		if (err) throw err;
-		console.log(" result "+result);
 		res.json(result);
 	})
 })
@@ -170,19 +181,22 @@ app.post('/allUserRole',(req,res)=>{
 	empId=Number(empId);
 	connection.query(`select userRole from MST_Employee where empId !=${empId}`,(err,result,field)=>{
 		if (err) throw err;
-		console.log(result);
 		res.json(result);
 	});
 });
 
+/**
+ * 受け取ったEMPIDをもとにそのIDの従業員権限を取得する
+ */
 app.post('/getUserRole',(req,res)=>{
 	console.log('from getUserRole');
 	let empId = req.body.empId;
 	empId=Number(empId);
 	connection.query(`select userRole from MST_Employee where empId=${empId}`,(err,result,field)=>{
 		if (err) throw err;
-		console.log(result)
 		res.json(result);
 	});
 });
+
+
 

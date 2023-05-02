@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import model.item.ItemLogic;
+import model.item.TrSalesList;
 import model.util.LoginCheck;
 
 /**
@@ -47,6 +49,9 @@ public class ItemController extends HttpServlet {
 		if(LoginCheck.check(session)) {
 			try {
 				switch(state) {
+				case "search":
+					proc_Search(request,response,session);
+					break;
 				//商品新規登録フォーム
 				case "new":
 					proc_New(request,response);
@@ -73,6 +78,30 @@ public class ItemController extends HttpServlet {
 	 */
 	protected void proc_New(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println(getServletName()+"# new");
+		getServletContext().getRequestDispatcher("/WEB-INF/item/new.jsp").forward(request, response);
+	}
+	
+	/**
+	 * 商品検索を実行し結果を表示する
+	 * @param request HTTP request
+	 * @param response HTTP response
+	 * @param session 商品情報を含むsession
+	 * @throws Exception 検索失敗
+	 */
+	protected void proc_Search(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws Exception {
+		System.out.println(getServletName()+"# search");
+		
+		String start = request.getParameter("txtStartDate");
+		String end = request.getParameter("txtEndDate");
+		String category = request.getParameter("category");
+		String select = request.getParameter("rdoSelect");
+		
+		System.out.println("入力値-> "+start +" ～ "+ end +" | "+category+" | "+ select);
+		
+		TrSalesList list = ItemLogic.search(start, end, category, select);
+		
+		session.setAttribute("trSalesList", list);
+		
 		getServletContext().getRequestDispatcher("/WEB-INF/item/new.jsp").forward(request, response);
 	}
 
