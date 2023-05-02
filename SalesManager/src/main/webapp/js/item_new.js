@@ -13,7 +13,9 @@ const timeoutId = setTimeout(() => {
 window.addEventListener('load',()=>{
 	setTime(); 
 	setCategory();
+	decimalDelete();
 })
+
 
 /**
  * 集計期間の開始終了時間をセットする
@@ -32,6 +34,8 @@ function setTime(){
 	
 	start.value=`${year}/${month+1}/1`;
 	end.value=`${year}/${month+1}/${lastDate.getDate()}`;
+	
+	
 }
 
 
@@ -68,6 +72,25 @@ function setCategory(){
 
 }
 
+/**
+ * 小数点以下の表示を削除する
+ */
+function decimalDelete(){
+	
+	console.log('decimal Delete');
+	
+	let num = document.querySelectorAll('.number');
+	
+	let value = '';
+	for(let i = 0; i < num.length; i++){
+		value = num[i].textContent;
+		value  = value.split('.');
+		value = value[0];
+		num[i].textContent = value;
+	}
+}
+
+
 let submitBtn = document.getElementById('search');
 
 submitBtn.addEventListener('click',function(event){formCheck(event)});
@@ -90,9 +113,13 @@ function formCheck(event){
 		
 	}else{
 		event.preventDefault();
-		alert('正しい形式で入力してください　例）2023年5月2日ー＞　20230502 or 202352  or 2023/05/02 or 2023/5/2');
+		start.value="";
+		end.value="";
+		alert('正しい形式で入力してください　例）2023年5月2日ー＞ 2023/05/02 or 2023/5/2');
 	}
 	
 }
+
+
 
 

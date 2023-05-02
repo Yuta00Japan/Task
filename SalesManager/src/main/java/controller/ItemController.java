@@ -78,6 +78,8 @@ public class ItemController extends HttpServlet {
 	 */
 	protected void proc_New(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println(getServletName()+"# new");
+		
+		request.setAttribute("action", "商品名");
 		getServletContext().getRequestDispatcher("/WEB-INF/item/new.jsp").forward(request, response);
 	}
 	
@@ -91,10 +93,21 @@ public class ItemController extends HttpServlet {
 	protected void proc_Search(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws Exception {
 		System.out.println(getServletName()+"# search");
 		
+		//セッションをリセット
+		session.removeAttribute("trSalesList");
+		
 		String start = request.getParameter("txtStartDate");
 		String end = request.getParameter("txtEndDate");
 		String category = request.getParameter("category");
 		String select = request.getParameter("rdoSelect");
+		
+		//カテゴリ検索の場合
+		if(select.equals("categorySales")) {
+			request.setAttribute("action","カテゴリ");
+		}else {
+		//それ以外	
+			request.setAttribute("action","商品名");
+		}
 		
 		System.out.println("入力値-> "+start +" ～ "+ end +" | "+category+" | "+ select);
 		

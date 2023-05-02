@@ -59,23 +59,50 @@
 </div>
 
 <div id="tableCenter">
-
+	
 	<table id="table" border="1">
-		<tr><th class="itemName">商品名</th><th class="quantity">個数</th><th class="total">合計金額</th></tr>
-		<c:choose>
-			<c:when test="${trSalesList.list.get(i).size() > 0 }">
-				<forEach var="i" begin="0" end="0">
-					<tr>
-						<td class="itemName">${trSalesList.list.get(i).itemName }</td>
-						<td class="quantity">${trSalesList.list.get(i).quantity }</td>
-						<td class="total">${trSalesList.list.get(i).unitprice }</td></tr>
-				</forEach>
+		<tr>
+			<%--検索の内容で表示内容を変更する --%>
+			<th class="itemNameOrCategory">${action}</span></th>
+			<th class="quantity">個数</th>
+			<th class="total">合計金額</th>
+		</tr>
+	
+	<c:choose>
+			<c:when test="${trSalesList.list.size() <= 0 }">
+				
 			</c:when>
 			
 			<c:otherwise>
-			
+				<c:choose>
+					<%--カテゴリ別の検索の場合 --%>
+					<c:when test="${trSalesList.detail.size() > 0 }">
+						
+						<c:forEach var="detail" items="${trSalesList.detail }" >
+							<tr>
+								<td class="itemNameOrCategory">${detail.categoryName }</td>
+								<td class="total number">${detail.categoryAmount}</td>
+								<td class="quantity number">${detail.categorySales }</td>
+							</tr>
+						</c:forEach>
+						
+					</c:when>
+					<%--それ以外 --%>
+					<c:otherwise>
+						
+						<c:forEach var="item" items="${trSalesList.list }" >
+							<tr>
+								<td class="itemName">${item.itemName }</td>
+								<td class="quantity number">${item.quantity }</td>
+								<td class="total number">${item.unitPrice * item.quantity}</td>
+							</tr>
+						</c:forEach>
+					</c:otherwise>
+				</c:choose>
+										
 			</c:otherwise>
-		</c:choose>
+	</c:choose>
+	
 	</table>
 </div>
 
