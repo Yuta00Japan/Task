@@ -94,7 +94,7 @@
 							<tr>
 								<td class="itemName">${item.itemName }</td>
 								<td class="quantity number">${item.quantity }</td>
-								<td class="total number">${item.unitPrice * item.quantity}</td>
+								<td class="total number">${item.unitPrice * item.quantity }</td>
 							</tr>
 						</c:forEach>
 					</c:otherwise>

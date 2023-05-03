@@ -24,7 +24,7 @@ public class TrSalesDao implements Crud{
 	public String createSQL(String start,String end,String category,String select) {
 		
 		String selectPart =
-			"select salesId,tr.categoryId, itemName,unitPrice,quantity,salesDate,updateTime, ms.category " ;
+			"select salesId,tr.categoryId, itemName,salesDate,updateTime, ms.category " ;
 		
 		String fromPart = " from Trsales as tr inner join MSCategory as ms on tr.categoryId = ms.categoryId";
 		
@@ -38,51 +38,51 @@ public class TrSalesDao implements Crud{
 		
 		//集計日、アイテム別のみで検索した場合
 		if(start !="" && end !="" && category.equals("") && select.equals("itemSales")) {
-			return selectPart + fromPart +String.format(" where salesDate between '%s' and '%s'",start,end);
+			return selectPart+", sum(unitPrice) as unitprice,sum(quantity) /count(unitprice) as quantity " + fromPart +String.format(" where salesDate between '%s' and '%s' group by itemName",start,end);
 		}
 		//集計日カテゴリ別
 		else if(start !="" && end !="" && category.equals("") && select.equals("categorySales")) {
-			return selectPart+", sum(unitprice*quantity) as categorySales, sum(quantity)as categoryAmount "+fromPart+String.format(" where salesDate between '%s' and '%s' group by tr.categoryId",start,end);	
+			return selectPart+",unitprice,quantity ,sum(unitprice*quantity) as categorySales, sum(quantity)as categoryAmount "+fromPart+String.format(" where salesDate between '%s' and '%s' group by tr.categoryId",start,end);	
 		}
 		//集計日平均単価以上
 		else if(start !="" && end !="" && category.equals("") && select.equals("popularItem") ){
-			return selectPart+fromPart+String.format(" where salesDate between '%s' and '%s' and  unitprice > (select sum(unitprice* quantity)/ sum(quantity) from TrSales) ",start,end);
+			return selectPart+", unitprice,quantity "+fromPart+String.format(" where salesDate between '%s' and '%s' and  unitprice > (select sum(unitprice* quantity)/ sum(quantity) from TrSales) ",start,end);
 		}
 		//カテゴリ、アイテム別のみ
 		else if(start=="" && end=="" && category != "" && select.equals("itemSales")) {
-			return selectPart+fromPart+String.format(" where tr.categoryId=%s",category);
+			return selectPart+", sum(unitPrice) as unitprice,sum(quantity) /count(unitprice) as quantity "+fromPart+String.format(" where tr.categoryId=%s group by itemName",category);
 		}
 		//カテゴリ、カテゴリ別のみ
 		else if(start=="" && end=="" && category != "" && select.equals("categorySales")) {
-			return selectPart+", sum(unitprice*quantity) as categorySales,sum(quantity)as categoryAmount "+fromPart+String.format(" where tr.categoryId=%s  group by tr.categoryId",category);
+			return selectPart+",unitprice,quantity, sum(unitprice*quantity) as categorySales,sum(quantity)as categoryAmount "+fromPart+String.format(" where tr.categoryId=%s  group by tr.categoryId",category);
 		}
 		//カテゴリ、平均単価以上
 		else if(start=="" && end=="" && category != "" && select.equals("popularItem")) {
-			return selectPart+fromPart+String.format(" where tr.categoryId=%s and  unitprice > (select sum(unitprice* quantity)/ sum(quantity) from TrSales)",category);
+			return selectPart+", unitprice,quantity "+fromPart+String.format(" where tr.categoryId=%s and  unitprice > (select sum(unitprice* quantity)/ sum(quantity) from TrSales)",category);
 		}
 		//選択のみでアイテム別検索した場合
 		else if(start =="" && end=="" && category.equals("") && select.equals("itemSales")) {
-			return selectPart+fromPart;
+			return selectPart+", sum(unitPrice) as unitprice,sum(quantity) /count(unitprice) as quantity "+fromPart+" group by itemName";
 		}
 		//選択のみでカテゴリ別検索した場合
 		else if(start=="" && end=="" && category.equals("") && select.equals("categorySales")) {
-			return selectPart+", sum(unitprice*quantity) as categorySales,sum(quantity)as categoryAmount "+fromPart+" where  group by tr.categoryId ";
+			return selectPart+",unitprice,quantity, sum(unitprice*quantity) as categorySales,sum(quantity)as categoryAmount "+fromPart+" where  group by tr.categoryId ";
 		}
 		//選択のみで平均単価以上検索した場合
 		else if(start=="" && end=="" && category.equals("") && select.equals("popularItem")) {
-			return selectPart+fromPart+" where  unitprice > (select sum(unitprice* quantity)/ sum(quantity) from TrSales) ";
+			return selectPart+", unitprice,quantity "+fromPart+" where  unitprice > (select sum(unitprice* quantity)/ sum(quantity) from TrSales) ";
 		}
 		//集計日、カテゴリ、アイテム別で検索した場合
 		else if(start !="" && end != "" && category!= "" && select.equals("itemSales")) {
-			return selectPart+fromPart +String.format(" where tr.salesDate between '%s' and '%s' and tr.categoryId=%s",start,end,category);
+			return selectPart+", sum(unitPrice) as unitprice,sum(quantity)  /count(unitprice) as quantity "+fromPart +String.format(" where tr.salesDate between '%s' and '%s' and tr.categoryId=%s group by itemName",start,end,category);
 		}
 		//集計日、カテゴリとカテゴリ別で検索した場合
 		else if(start !="" && end != "" && category!= "" && select.equals("categorySales")) {
-			return selectPart+", sum(unitprice*quantity) as categorySales,sum(quantity)as categoryAmount "+fromPart+String.format(" where tr.salesDate between '%s' and '%s' and tr.categoryId=%s group by tr.categoryId",start,end,category);
+			return selectPart+",unitprice,quantity, sum(unitprice*quantity) as categorySales,sum(quantity)as categoryAmount "+fromPart+String.format(" where tr.salesDate between '%s' and '%s' and tr.categoryId=%s group by tr.categoryId",start,end,category);
 		}
 		//集計日、カテゴリ、平均単価で検索した場合
 		else {
-			return selectPart+fromPart+String.format(" where tr.salesDate between '%s' and '%s' and tr.categoryId=%s and unitprice > (select sum(unitprice* quantity)/ sum(quantity) from TrSales)",start,end,category);
+			return selectPart+", unitprice,quantity "+fromPart+String.format(" where tr.salesDate between '%s' and '%s' and tr.categoryId=%s and unitprice > (select sum(unitprice* quantity)/ sum(quantity) from TrSales where categoryId=%s)",start,end,category,category);
 		}
 		
 	}
