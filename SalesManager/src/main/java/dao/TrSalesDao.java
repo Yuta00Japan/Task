@@ -132,7 +132,6 @@ public class TrSalesDao implements Crud{
 					list.add(tr);
 					detail.add(trd);
 				}catch(Exception e) {
-					System.out.println("カテゴリ別検索ではないため中断しました");
 					list.add(tr);
 				}
 				

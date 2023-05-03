@@ -77,8 +77,6 @@ function setCategory(){
  */
 function decimalDelete(){
 	
-	console.log('decimal Delete');
-	
 	let num = document.querySelectorAll('.number');
 	
 	let value = '';
@@ -95,31 +93,53 @@ let submitBtn = document.getElementById('search');
 
 submitBtn.addEventListener('click',function(event){formCheck(event)});
 
+
+/**
+ * 入力された日付が有効かどうかを判定する
+ */
+function isValidDate(dateString) {
+  
+  const pattern = /^\d{4}\/\d{1,2}\/\d{1,2}$/;
+  if (!pattern.test(dateString)) {
+    return false; // 日付の形式が正しくない場合はfalseを返す
+  }
+  
+  const [year, month, day] = dateString.split('/');
+  const date = new Date(year, month - 1, day);
+  return date.getFullYear() == year && date.getMonth() == month - 1 && date.getDate() == day;
+}
+
+/**
+ * 抽出ボタンをクリックした際に入力内容をチェックする
+ */
 function formCheck(event){
 	
 	let start = document.getElementById('txtStartDate');
 	let end = document.getElementById('txtEndDate');
 	
-	//入力されたデータが時間に関するものか検証
-	
-	/**文字で区切って入力する場合  2023/05/02  2023/5/2*/
-	let timePattern1 = /[1-9][0-9]{3}\/[0-9]{1,2}\/[0-9]{1,2}/;
-	
-	if(timePattern1.test(start.value)){
-			
+	//集計期間を使用しない検索の場合は検証を行わない
+	if(start.value !="" && start.value != null && end.value !="" && end.value != null){
+		console.log('検証開始');
+		//入力された日付が有効かどうかを検証
+		if(isValidDate(start.value)){
+			console.log('集計開始日検証終了');
+		}else{
+			event.preventDefault();
+			alert('正しい形式で入力してください');
+			return ;
+		}
+		
+		if(isValidDate(end.value)){
+			cnosole.log('集計終了日検証終了');
+		}else{
+			event.preventDefault();
+			alert('正しい形式で入力してください');
+			return ;
+		}
+		
 	}else{
-		event.preventDefault();
 		start.value="";
-		alert('正しい形式で入力してください　例）2023年5月2日ー＞ 2023/05/02 or 2023/5/2');
-	}
-	
-	
-	if(timePattern1.test(end.value)){
-			
-	}else{
-		event.preventDefault();
 		end.value="";
-		alert('正しい形式で入力してください　例）2023年5月2日ー＞ 2023/05/02 or 2023/5/2');
 	}
 	
 }
