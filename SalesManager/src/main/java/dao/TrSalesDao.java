@@ -29,7 +29,6 @@ public class TrSalesDao implements Crud{
 		String fromPart = " from Trsales as tr inner join MSCategory as ms on tr.categoryId = ms.categoryId";
 		
 		if(category=="" || category==null) {
-			System.out.println("OK");
 			category="";
 		}
 		
@@ -42,11 +41,11 @@ public class TrSalesDao implements Crud{
 		}
 		//集計日カテゴリ別
 		else if(start !="" && end !="" && category.equals("") && select.equals("categorySales")) {
-			return selectPart+",unitprice,quantity ,sum(unitprice*quantity) as categorySales, sum(quantity)as categoryAmount "+fromPart+String.format(" where salesDate between '%s' and '%s' group by tr.categoryId",start,end);	
+			return selectPart+", unitprice,quantity,sum(unitprice*quantity) as categorySales, sum(quantity)as categoryAmount "+fromPart+String.format(" where salesDate between '%s' and '%s' group by tr.categoryId ",start,end);	
 		}
 		//集計日平均単価以上
 		else if(start !="" && end !="" && category.equals("") && select.equals("popularItem") ){
-			return selectPart+", unitprice,quantity "+fromPart+String.format(" where salesDate between '%s' and '%s' and  unitprice > (select sum(unitprice* quantity)/ sum(quantity) from TrSales) ",start,end);
+			return selectPart+", sum(unitPrice) / count(unitprice)  as unitprice,sum(quantity) as quantity  "+fromPart+String.format(" where salesDate between '%s' and '%s' and  unitprice > (select sum(unitprice* quantity)/ sum(quantity) from TrSales) group by itemName ",start,end);
 		}
 		//カテゴリ、アイテム別のみ
 		else if(start=="" && end=="" && category != "" && select.equals("itemSales")) {
@@ -58,7 +57,7 @@ public class TrSalesDao implements Crud{
 		}
 		//カテゴリ、平均単価以上
 		else if(start=="" && end=="" && category != "" && select.equals("popularItem")) {
-			return selectPart+", unitprice,quantity "+fromPart+String.format(" where tr.categoryId=%s and  unitprice > (select sum(unitprice* quantity)/ sum(quantity) from TrSales)",category);
+			return selectPart+", sum(unitPrice) / count(unitprice)  as unitprice,sum(quantity) as quantity  "+fromPart+String.format(" where tr.categoryId=%s and  unitprice > (select sum(unitprice* quantity)/ sum(quantity) from TrSales) group by itemName",category);
 		}
 		//選択のみでアイテム別検索した場合
 		else if(start =="" && end=="" && category.equals("") && select.equals("itemSales")) {
@@ -70,7 +69,7 @@ public class TrSalesDao implements Crud{
 		}
 		//選択のみで平均単価以上検索した場合
 		else if(start=="" && end=="" && category.equals("") && select.equals("popularItem")) {
-			return selectPart+", unitprice,quantity "+fromPart+" where  unitprice > (select sum(unitprice* quantity)/ sum(quantity) from TrSales) ";
+			return selectPart+", sum(unitPrice) / count(unitprice)  as unitprice,sum(quantity) as quantity  "+fromPart+" where  unitprice > (select sum(unitprice* quantity)/ sum(quantity) from TrSales) group by itemName";
 		}
 		//集計日、カテゴリ、アイテム別で検索した場合
 		else if(start !="" && end != "" && category!= "" && select.equals("itemSales")) {
@@ -82,7 +81,7 @@ public class TrSalesDao implements Crud{
 		}
 		//集計日、カテゴリ、平均単価で検索した場合
 		else {
-			return selectPart+", unitprice,quantity "+fromPart+String.format(" where tr.salesDate between '%s' and '%s' and tr.categoryId=%s and unitprice > (select sum(unitprice* quantity)/ sum(quantity) from TrSales where categoryId=%s)",start,end,category,category);
+			return selectPart+", sum(unitPrice) / count(unitprice)  as unitprice,sum(quantity) as quantity  "+fromPart+String.format(" where tr.salesDate between '%s' and '%s' and tr.categoryId=%s and unitprice > (select sum(unitprice* quantity)/ sum(quantity) from TrSales where categoryId=%s) group by itemName",start,end,category,category);
 		}
 		
 	}
