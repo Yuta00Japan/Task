@@ -65,7 +65,7 @@ public class TrSalesDao implements Crud{
 		}
 		//選択のみでカテゴリ別検索した場合
 		else if(start=="" && end=="" && category.equals("") && select.equals("categorySales")) {
-			return selectPart+",unitprice,quantity, sum(unitprice*quantity) as categorySales,sum(quantity)as categoryAmount "+fromPart+" where  group by tr.categoryId ";
+			return selectPart+",unitprice,quantity, sum(unitprice*quantity) as categorySales,sum(quantity)as categoryAmount "+fromPart+"  group by tr.categoryId ";
 		}
 		//選択のみで平均単価以上検索した場合
 		else if(start=="" && end=="" && category.equals("") && select.equals("popularItem")) {

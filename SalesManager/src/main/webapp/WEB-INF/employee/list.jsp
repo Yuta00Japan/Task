@@ -36,7 +36,7 @@
 	<h2>(名前、仮名の部分一致)</h2>
 	
 	<div id="result">
-		<table>
+		<table id="table">
 			<tr>
 				<th class="start"></th>
 				<th class="head">No</th>
