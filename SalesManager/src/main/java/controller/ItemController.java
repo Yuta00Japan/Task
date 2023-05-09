@@ -83,6 +83,10 @@ public class ItemController extends HttpServlet {
 				case "updateItem01":
 					proc_UpdateItem01(request,response,session,state[1],state[2]);
 					break;
+				//既存分類削除
+				case "deleteItem01":
+					proc_DeleteItem01(request,response,session,state[1],state[2]);
+					break;
 				}
 			}catch(Exception e) {
 				e.printStackTrace();
@@ -215,10 +219,25 @@ public class ItemController extends HttpServlet {
 		proc_ReflectUpdate(request,response,session,from);
 	}
 	
+	/**
+	 * 対象IDの商品０１を削除する
+	 * @param request HTTP request
+	 * @param response HTTP response
+	 * @param session 商品０１を含むsession
+	 * @param shouhin01ID 商品０１ID
+	 * @param from 遷移元
+	 * @throws Exception 削除失敗
+	 */
+	protected void proc_DeleteItem01(HttpServletRequest request, HttpServletResponse response,HttpSession session,String shouhin01ID,String from) throws Exception {
+		System.out.println(getServletName()+"# delete item01");
+		ItemLogic.deleteItem01(shouhin01ID);
+		//削除をsessionに反映
+		proc_ReflectUpdate(request,response,session,from);
+	}
+	
 	
 	protected void proc_Item01Detail(HttpServletRequest request, HttpServletResponse response,HttpSession session,String shouhin01ID,String from) throws Exception {
 		System.err.println(getServletName()+" # item01 detail");
-		
 		
 	}
 	

@@ -35,7 +35,7 @@
 
 			<button class="button update" name="state"  value="updateItem01,${item.shouhin01ID },major">変更</button>
 
-			<button class="button delete" name="state" value="delete,${item.shouhin01ID },major">削除</button>
+			<button class="button delete" name="state" value="deleteItem01,${item.shouhin01ID },major">削除</button>
 			
 		</form>
 			

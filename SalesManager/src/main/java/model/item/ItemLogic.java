@@ -79,7 +79,7 @@ public class ItemLogic {
 	public static void addItem01(Item01 item) throws Exception {
 		
 		MST_Shouhin01Dao dao = new MST_Shouhin01Dao();
-		dao.addItem01(item);
+		dao.add(item);
 	}
 	
 	/**
@@ -90,7 +90,18 @@ public class ItemLogic {
 	public static void updateItem01(Item01 item) throws Exception{
 		
 		MST_Shouhin01Dao dao = new MST_Shouhin01Dao();
-		dao.updateItem01(item);
+		dao.update(item);
+	}
+	
+	/**
+	 * 対象IDの商品０１を削除する
+	 * @param shouhin01ID 商品０１ID
+	 * @throws Exception 
+	 */
+	public static void deleteItem01(String shouhin01ID) throws Exception {
+		
+		MST_Shouhin01Dao dao = new MST_Shouhin01Dao();
+		dao.delete(shouhin01ID);
 	}
 	
 	/**

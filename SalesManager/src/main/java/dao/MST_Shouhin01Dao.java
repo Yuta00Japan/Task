@@ -10,7 +10,7 @@ import model.connectionPool.Pool;
 import model.item.Item01;
 import model.item.Item01List;
 
-public class MST_Shouhin01Dao {
+public class MST_Shouhin01Dao implements Crud{
 
 	
 	/**
@@ -70,12 +70,16 @@ public class MST_Shouhin01Dao {
 		}
 	}
 	
+	
 	/**
 	 * 商品０１の情報を登録する
 	 * @param item 登録したい商品０１情報
 	 * @throws Exception 登録失敗
 	 */
-	public void addItem01(Item01 item) throws Exception{
+	@Override
+	public void add(Object o) throws Exception {
+		// TODO 自動生成されたメソッド・スタブ
+		Item01 item = (Item01)o;
 		
 		String sql =String.format("insert into MST_Shouhin01(parentId,rowNo,shouhin01Name)"
 				+ " values(%d,%d,'%s')",item.getParentID(),item.getRowNo(),item.getShouhin01Name());
@@ -91,11 +95,30 @@ public class MST_Shouhin01Dao {
 	 * @param item 更新情報
 	 * @throws Exception 更新失敗
 	 */
-	public void updateItem01(Item01 item) throws Exception{
+	@Override
+	public void update(Object o) throws Exception {
+		// TODO 自動生成されたメソッド・スタブ
+		Item01 item = (Item01)o;
 		
 		String sql = 
-			String.format
-			("update MST_Shouhin01 set rowNo=%d,shouhin01Name='%s' where shouhin01Id=%d",item.getRowNo(),item.getShouhin01Name(),item.getShouhin01ID());
+				String.format
+				("update MST_Shouhin01 set rowNo=%d,shouhin01Name='%s' where shouhin01Id=%d",item.getRowNo(),item.getShouhin01Name(),item.getShouhin01ID());
+			System.out.println(sql);
+			
+		try(Connection con = Pool.getConnection();
+		PreparedStatement pps = con.prepareStatement(sql)){
+			pps.executeUpdate();
+		}
+	}
+	/**
+	 * 既存の商品０１を削除する
+	 * @param o 削除対象ID
+	 */
+	@Override
+	public void delete(Object o) throws Exception {
+		// TODO 自動生成されたメソッド・スタブ
+		String shouhin01ID = (String)o;
+		String sql=String.format("delete from MST_Shouhin01 where shouhin01ID=%s",shouhin01ID);
 		System.out.println(sql);
 		
 		try(Connection con = Pool.getConnection();
@@ -103,4 +126,5 @@ public class MST_Shouhin01Dao {
 			pps.executeUpdate();
 		}
 	}
+	
 }
