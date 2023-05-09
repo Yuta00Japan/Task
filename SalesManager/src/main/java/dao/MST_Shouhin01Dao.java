@@ -43,4 +43,21 @@ public class MST_Shouhin01Dao {
 			return list;
 		}
 	}
+	
+	/**
+	 * 商品０１の情報を登録する
+	 * @param item 登録したい商品０１情報
+	 * @throws Exception 登録失敗
+	 */
+	public void addItem01(Item01 item) throws Exception{
+		
+		String sql =String.format("insert into MST_Shouhin01(parentId,rowNo,shouhin01Name)"
+				+ " values(%d,%d,'%s')",item.getParentID(),item.getRowNo(),item.getShouhin01Name());
+		System.out.println(sql);
+		
+		try(Connection con = Pool.getConnection();
+		PreparedStatement pps = con.prepareStatement(sql)){
+			pps.executeUpdate();
+		}
+	}
 }

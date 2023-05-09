@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import model.item.Item01;
 import model.item.Item01List;
 import model.item.ItemLogic;
 import model.item.TrSalesList;
@@ -42,14 +43,14 @@ public class ItemController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String state = request.getParameter("state");
+		String []state = request.getParameter("state").split(",");
 		
 		HttpSession session = request.getSession();
 		
 		//sessionがユーザー情報を保持しているかどうかを確認する
 		if(LoginCheck.check(session)) {
 			try {
-				switch(state) {
+				switch(state[0]) {
 				//商品登録フォーム
 				case "new":
 					proc_New(request,response);
@@ -74,9 +75,14 @@ public class ItemController extends HttpServlet {
 				case "detailedCategory":
 					
 					break;
+				//分類登録
+				case "newItem01":
+					proc_Item01Add(request,response,session,state[1],state[2]);
+					break;
 				}
 			}catch(Exception e) {
 				e.printStackTrace();
+				getServletContext().getRequestDispatcher("/WEB-INF/menu/menu.jsp").forward(request, response);
 			}
 		}else {
 			session.invalidate();
@@ -155,10 +161,44 @@ public class ItemController extends HttpServlet {
 	 * @throws Exception error
 	 */
 	protected void proc_MajorItem(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws Exception {
-		System.out.println(getServletName()+"# major category");
+		System.out.println(getServletName()+"# major item");
 		Item01List list = ItemLogic.majorItem();
 		session.setAttribute("majorItem", list);
 		getServletContext().getRequestDispatcher("/WEB-INF/item/majorItem.jsp").forward(request, response);
 	}
+	
+	/**
+	 * 大分類、中分類、小分類を登録する
+	 * @param request HTTP request
+	 * @param response HTTP response
+	 * @param session 分類を含むsession
+	 * @param parentID 親ID
+	 * @param from どこから登録したのか確認
+	 * @throws Exception 登録失敗
+	 */
+	protected void proc_Item01Add(HttpServletRequest request, HttpServletResponse response,HttpSession session,String parentID,String from) throws Exception {
+		System.out.println(getServletName()+" item01 add");
+		ItemLogic.setItem01FromRequest(request, parentID);
+		
+		Item01 item = (Item01)session.getAttribute("item01");
+		ItemLogic.addItem01(item);
+		
+		//登録内容を反映しつつ登録した分類の画面へ遷移する
+		switch(from) {
+		//大分類
+		case "major":
+			proc_MajorItem(request,response,session);
+			break;
+		//中分類、
+		case "minor":
+			break;
+		//小分類
+		case "detailed":
+			break;
+		}
+		
+	}
+	
+	
 
 }

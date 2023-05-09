@@ -22,24 +22,34 @@
 	
 		<c:forEach var="item" items="${majorItem.list }">
 		
+		<form action="ItemController" method="post">	
 			
 			<input type="textbox" name="txtAddNo" class="txtAddNo" value="${item.rowNo }">
 
-			<input type="textbox" name="txtAddName" class="txtAddName" value="${item.shouhin01Name }">
+			<input type="textbox" name="txtName" class="txtAddName" value="${item.shouhin01Name }">
 
 			<button class="button" name="state" value="detail,${item.parentID }">詳細</button>
 
 			<button class="button" name="state" value="update,${item.shouhin01ID }">変更</button>
 
 			<button class="button" name="state" value="delete,${item.shouhin01ID }">削除</button>
+		
+		</form>
 			
 			<br>
 			
 		</c:forEach>
 		
 			<div id="new">
-				<input type="textbox" name="txtAddName" class="txtAddName"> 
-				<button class="button" name="state" value="new,major">追加</button>
+			<form action="ItemController" method="post">
+			
+				<input type="textbox" name="txtAddNo" class="txtAddNo">
+			
+				<input type="textbox" name="txtAddName" class="txtAddName">
+			 
+				<button class="button" name="state" value="newItem01,0,major">追加</button>
+				
+			</form>
 			</div>
 	</div>
 			
@@ -59,9 +69,10 @@
       				<button name="state" value="deleteEmployee,${employee.empId }" id="exeDelete" class="button2">OK</button>
       				<button id="cancel" type="button" class="button2">NO</button>
       			</div>
+      			
     		</div>
 		</div>
-
+		
 
 </body>
 </html>
