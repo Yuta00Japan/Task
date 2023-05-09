@@ -21,9 +21,11 @@
 #name{
 	padding-left: 180px;
 }
-
-#new{
-	margin-left:0px;
+#buttonPart{
+	text-align: center;
+}
+#msg{
+	text-align: center;
 }
 
 .txtAddNo{

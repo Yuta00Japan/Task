@@ -25,7 +25,7 @@
 	
 		<c:forEach var="item" items="${majorItem.list }">
 		
-		<form action="ItemController" method="post">	
+		<form action="ItemController" method="post" class="form">	
 			
 			<input type="textbox" name="txtAddNo" class="txtAddNo" value="${item.rowNo }">
 
@@ -33,9 +33,9 @@
 
 			<button class="button" name="state" value="detail,${item.parentID },major">詳細</button>
 
-			<button class="button" name="state" value="updateItem01,${item.shouhin01ID },major">変更</button>
+			<button class="button update" name="state"  value="updateItem01,${item.shouhin01ID },major">変更</button>
 
-			<button class="button" name="state" value="delete,${item.shouhin01ID },major">削除</button>
+			<button class="button delete" name="state" value="delete,${item.shouhin01ID },major">削除</button>
 			
 		</form>
 			
@@ -44,38 +44,41 @@
 		</c:forEach>
 		
 			<div id="new">
-			<form action="ItemController" method="post">
+			<form  action="ItemController" method="post" id="newForm">
 			
 				<input type="textbox" name="txtAddNo" class="txtAddNo">
 			
 				<input type="textbox" name="txtAddName" class="txtAddName">
-			 
-				<button class="button" name="state" value="newItem01,0,major">追加</button>
+			 	
+			 	<button class="button"  name="state" id="newBtn" value="newItem01,0,major">追加</button>
 				
-			</form>
+			</form>	
 			</div>
 	</div>
 			
 </div>
 
 <%--モーダルのもと --%>
-		<div id="easyModal" class="modal">
-    		<div class="modal-content">
-      			<div class="modal-header">
-        			<h2>警告</h2>
-        			<span class="modalClose">×</span>
-      			</div>
-      			<div class="modal-body">
-       				<p>削除します。よろしいですか？</p>
-      			</div>
-      			<div id="buttonPart2">
-      				<button name="state" value="deleteEmployee,${employee.empId }" id="exeDelete" class="button2">OK</button>
-      				<button id="cancel" type="button" class="button2">NO</button>
-      			</div>
+<div id="easyModal" class="modal">
+    <div class="modal-content">
+      	<div class="modal-header">
+        	<h2>確認</h2>
+        	<span class="modalClose">×</span>
+      	</div>
+      	<div class="modal-body">
+       		<p id="msg"></p>
+      	</div>
+      	
+      	<div id="buttonPart">
+      				
+      		<button class="button" id="ok">OK</button>
+      		<button id="cancel" type="button" class="button">NO</button>
+      		
+      	</div>
       			
-    		</div>
-		</div>
+    </div>
+</div>
 		
-
+<script  src="js/item01.js"></script>
 </body>
 </html>
