@@ -24,6 +24,9 @@
 
 <h3><button class="button" name="state" value="new" formaction="ItemController">商品登録</button></h3>
 
+<%--仮 --%>
+<h3><button class="button" name="state" value="achievement" formaction="ItemController">商品販売実績　仮</button></h3>
+
 
 <h4><button class="button" name="state" value="logout" formaction="EmployeeController">ログアウト</button></h4>
 

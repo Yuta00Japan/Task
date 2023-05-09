@@ -1,5 +1,6 @@
 package model.item;
 
+import dao.MST_Shouhin01Dao;
 import dao.TrSalesDao;
 
 /**
@@ -27,5 +28,18 @@ public class ItemLogic {
 		TrSalesDao dao = new TrSalesDao();
 		
 		return dao.search(start, end, category, select);
+	}
+	
+	/**
+	 * 大分類の情報を取得する
+	 * @return 商品大分類
+	 * @exception 大分類取りだし失敗
+	 */
+	public static Item01List majorItem() throws Exception {
+		
+		MST_Shouhin01Dao dao = new MST_Shouhin01Dao();
+		
+		return dao.findAllMejor();
+		
 	}
 }

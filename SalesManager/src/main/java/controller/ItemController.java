@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import model.item.Item01List;
 import model.item.ItemLogic;
 import model.item.TrSalesList;
 import model.util.LoginCheck;
@@ -49,12 +50,29 @@ public class ItemController extends HttpServlet {
 		if(LoginCheck.check(session)) {
 			try {
 				switch(state) {
-				case "search":
-					proc_Search(request,response,session);
-					break;
-				//商品新規登録フォーム
+				//商品登録フォーム
 				case "new":
 					proc_New(request,response);
+					break;
+				//商品販売実績ー検索
+				case "achievementSearch":
+					proc_AchievementSearch(request,response,session);
+					break;
+				//商品販売実績ー　一覧
+				case "achievement":
+					proc_Achievement(request,response);
+					break;
+				//大分類
+				case "majorCategory":
+					proc_MajorItem(request,response,session);
+					break;
+				//中分類
+				case "minorCategory":
+					
+					break;
+				//小分類
+				case "detailedCategory":
+					
 					break;
 				}
 			}catch(Exception e) {
@@ -69,18 +87,31 @@ public class ItemController extends HttpServlet {
 			getServletContext().getRequestDispatcher("/WEB-INF/login/login.jsp").forward(request, response);
 		}
 	}
+	
 	/**
 	 * 商品登録フォームを表示する
+	 * @param request HTTP request
+	 * @param response HTTP response
+	 * @throws ServletException error
+	 * @throws IOException error
+	 */
+	protected void proc_New(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println(getServletName()+"# new");
+		getServletContext().getRequestDispatcher("/WEB-INF/item/new.jsp").forward(request, response);
+	}
+	
+	/**
+	 * 商品販売実績フォームを表示する
 	 * @param request HTTP request
 	 * @param response HTTP response
 	 * @throws IOException error
 	 * @throws ServletException error
 	 */
-	protected void proc_New(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println(getServletName()+"# new");
+	protected void proc_Achievement(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println(getServletName()+"# achievement");
 		
 		request.setAttribute("action", "商品名");
-		getServletContext().getRequestDispatcher("/WEB-INF/item/new.jsp").forward(request, response);
+		getServletContext().getRequestDispatcher("/WEB-INF/item/achievement.jsp").forward(request, response);
 	}
 	
 	/**
@@ -90,9 +121,8 @@ public class ItemController extends HttpServlet {
 	 * @param session 商品情報を含むsession
 	 * @throws Exception 検索失敗
 	 */
-	protected void proc_Search(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws Exception {
-		System.out.println(getServletName()+"# search");
-		
+	protected void proc_AchievementSearch(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws Exception {
+		System.out.println(getServletName()+"# achievement search");
 		//セッションをリセット
 		session.removeAttribute("trSalesList");
 		
@@ -115,7 +145,20 @@ public class ItemController extends HttpServlet {
 		
 		session.setAttribute("trSalesList", list);
 		
-		getServletContext().getRequestDispatcher("/WEB-INF/item/new.jsp").forward(request, response);
+		getServletContext().getRequestDispatcher("/WEB-INF/item/achievement.jsp").forward(request, response);
+	}
+	
+	/**
+	 * 大分類画面を表示する
+	 * @param request HTTP request
+	 * @param response HTTP response 
+	 * @throws Exception error
+	 */
+	protected void proc_MajorItem(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws Exception {
+		System.out.println(getServletName()+"# major category");
+		Item01List list = ItemLogic.majorItem();
+		session.setAttribute("majorItem", list);
+		getServletContext().getRequestDispatcher("/WEB-INF/item/majorItem.jsp").forward(request, response);
 	}
 
 }
