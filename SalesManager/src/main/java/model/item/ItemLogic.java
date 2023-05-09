@@ -48,6 +48,30 @@ public class ItemLogic {
 	}
 	
 	/**
+	 * 選択した商品０１の中分類、小分類を表示する
+	 * @param parentId
+	 * @return
+	 */
+	public static Item01List detail(String parentId) {
+		
+		MST_Shouhin01Dao dao = new MST_Shouhin01Dao();
+		
+		return null;
+	}
+	
+	/**
+	 * shouhin01IDをもとに商品０１情報を取得する
+	 * @param shouhin01ID 商品０１ID
+	 * @return 商品０１情報
+	 * @throws Exception ロード失敗
+	 */
+	public static Item01 loadSingle(String shouhin01ID) throws Exception {
+		
+		MST_Shouhin01Dao dao = new MST_Shouhin01Dao();
+		return dao.loadSingle(shouhin01ID);
+	}
+	
+	/**
 	 * 商品０１の情報を登録する
 	 * @param item 登録情報
 	 * @throws Exception 失敗
@@ -57,12 +81,24 @@ public class ItemLogic {
 		MST_Shouhin01Dao dao = new MST_Shouhin01Dao();
 		dao.addItem01(item);
 	}
+	
+	/**
+	 * 商品０１の情報を登録する
+	 * @param item 更新情報
+	 * @throws Exception 更新失敗
+	 */
+	public static void updateItem01(Item01 item) throws Exception{
+		
+		MST_Shouhin01Dao dao = new MST_Shouhin01Dao();
+		dao.updateItem01(item);
+	}
+	
 	/**
 	 * 商品０１の情報をBEANにセットする
 	 * @param request フォーム入力内容
 	 * @param parentId 親ID
 	 */
-	public static void setItem01FromRequest(HttpServletRequest request,String parentId) {
+	public static void setItem01FromRequest(HttpServletRequest request) {
 		
 		HttpSession session = request.getSession();
 		
@@ -75,7 +111,7 @@ public class ItemLogic {
 			item = new Item01();
 		}
 		
-		System.out.println("入力値ー＞  "+parentId+" | "+rowNo+" | "+item01Name);
+		System.out.println("入力値ー＞  | "+rowNo+" | "+item01Name);
 		
 		
 		if(rowNo != null) {
@@ -88,7 +124,6 @@ public class ItemLogic {
 			item.setRowNo(0);
 		}
 		
-		item.setParentID(Integer.parseInt(parentId));
 		item.setShouhin01Name(item01Name);
 		
 		session.setAttribute("item01", item);

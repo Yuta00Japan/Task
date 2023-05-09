@@ -16,6 +16,9 @@
 	
 	<div id="left">
 		<h2>大分類</h2>
+		
+		<%--分類ID --%>
+		<label></label>
 	</div>
 
 	<div id="right">
@@ -26,14 +29,14 @@
 			
 			<input type="textbox" name="txtAddNo" class="txtAddNo" value="${item.rowNo }">
 
-			<input type="textbox" name="txtName" class="txtAddName" value="${item.shouhin01Name }">
+			<input type="textbox" name="txtAddName" class="txtAddName" value="${item.shouhin01Name }">
 
-			<button class="button" name="state" value="detail,${item.parentID }">詳細</button>
+			<button class="button" name="state" value="detail,${item.parentID },major">詳細</button>
 
-			<button class="button" name="state" value="update,${item.shouhin01ID }">変更</button>
+			<button class="button" name="state" value="updateItem01,${item.shouhin01ID },major">変更</button>
 
-			<button class="button" name="state" value="delete,${item.shouhin01ID }">削除</button>
-		
+			<button class="button" name="state" value="delete,${item.shouhin01ID },major">削除</button>
+			
 		</form>
 			
 			<br>

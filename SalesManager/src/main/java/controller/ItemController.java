@@ -79,6 +79,10 @@ public class ItemController extends HttpServlet {
 				case "newItem01":
 					proc_Item01Add(request,response,session,state[1],state[2]);
 					break;
+				//既存分類更新
+				case "updateItem01":
+					proc_UpdateItem01(request,response,session,state[1],state[2]);
+					break;
 				}
 			}catch(Exception e) {
 				e.printStackTrace();
@@ -178,11 +182,56 @@ public class ItemController extends HttpServlet {
 	 */
 	protected void proc_Item01Add(HttpServletRequest request, HttpServletResponse response,HttpSession session,String parentID,String from) throws Exception {
 		System.out.println(getServletName()+" item01 add");
-		ItemLogic.setItem01FromRequest(request, parentID);
+		ItemLogic.setItem01FromRequest(request);
 		
 		Item01 item = (Item01)session.getAttribute("item01");
+		item.setParentID(Integer.parseInt(parentID));
 		ItemLogic.addItem01(item);
 		
+		//登録情報を反映
+		proc_ReflectUpdate(request,response,session,from);
+		
+	}
+	
+	/**
+	 * 
+	 * @param request HTTP request
+	 * @param response HTTP response
+	 * @param session 商品０１情報を含むsession
+	 * @param shouhin01ID 商品０１ID
+	 * @param from 遷移元
+	 * @throws Exception 更新失敗
+	 */
+	protected void proc_UpdateItem01(HttpServletRequest request, HttpServletResponse response,HttpSession session,String shouhin01ID,String from) throws Exception {
+		System.out.println(getServletName()+" update item01");
+		//更新対象の商品IDをもとにロード
+		Item01 item = ItemLogic.loadSingle(shouhin01ID);
+		session.setAttribute("item01", item);
+		//更新情報を加えてsessionにセットしなおす
+		ItemLogic.setItem01FromRequest(request);
+		//更新処理を実行する
+		ItemLogic.updateItem01(item);
+		//更新情報をsessionに反映
+		proc_ReflectUpdate(request,response,session,from);
+	}
+	
+	
+	protected void proc_Item01Detail(HttpServletRequest request, HttpServletResponse response,HttpSession session,String shouhin01ID,String from) throws Exception {
+		System.err.println(getServletName()+" # item01 detail");
+		
+		
+	}
+	
+	/**
+	 * 登録、更新、削除後に情報を更新し遷移もとに画面を遷移させる
+	 * @param request HTTP request
+	 * @param response HTTP response
+	 * @param session 更新情報を含むsession
+	 * @param from 遷移元
+	 * @throws Exception 情報更新失敗
+	 */
+	protected void proc_ReflectUpdate(HttpServletRequest request, HttpServletResponse response,HttpSession session,String from) throws Exception {
+		System.out.println(getServletName()+"# reflectUpdate");
 		//登録内容を反映しつつ登録した分類の画面へ遷移する
 		switch(from) {
 		//大分類
@@ -194,11 +243,12 @@ public class ItemController extends HttpServlet {
 			break;
 		//小分類
 		case "detailed":
+			
+			break;
+		default:
+			getServletContext().getRequestDispatcher("/WEB-INF/menu/menu.jsp").forward(request, response);
 			break;
 		}
-		
 	}
-	
-	
 
 }
