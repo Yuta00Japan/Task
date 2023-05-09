@@ -10,13 +10,18 @@ import model.connectionPool.Pool;
 import model.item.Item01;
 import model.item.Item01List;
 
+/**
+ * 分類に関する処理を行う
+ * @author yuta
+ *
+ */
 public class MST_Shouhin01Dao implements Crud{
 
 	
 	/**
 	 * 大分類のカテゴリを取りだす
-	 * @return
-	 * @throws Exception
+	 * @return 全大分類
+	 * @throws Exception ロード失敗
 	 */
 	public Item01List findAllMejor() throws Exception{
 		
@@ -43,6 +48,41 @@ public class MST_Shouhin01Dao implements Crud{
 			return list;
 		}
 	}
+	/**
+	 * すべての中分類を取りだす
+	 * @return 全中分類
+	 * @throws Exception ロード失敗
+	 */
+	public Item01List findAllMinor() throws Exception{
+		
+		Item01 item = null;
+		Item01List list = new Item01List();
+		
+		List<Item01> result = new ArrayList<>();
+		
+		String sql =
+			"select ms1.shouhin01ID,ms1.parentId,ms1.shouhin01Name,ms1.rowno,ms1.upd_dt, ms2.parentId from MST_Shouhin01 as ms1 "
+			+ " inner join MST_Shouhin01 as ms2 on   ms1.parentId=ms2.shouhin01ID "
+			+ " where ms1.parentId != 0 and ms2.parentID = 0";
+		
+		try(Connection con = Pool.getConnection();
+		PreparedStatement pps = con.prepareStatement(sql)){
+			ResultSet rs = pps.executeQuery();
+			while(rs.next()) {
+				item = new Item01();
+				item.setShouhin01ID(rs.getInt("ms1.shouhin01ID"));
+				item.setShouhin01Name(rs.getString("ms1.shouhin01Name"));
+				item.setParentID(rs.getInt("ms1.parentId"));
+				item.setRowNo(rs.getInt("ms1.rowno"));
+				item.setUpd_Dt(rs.getTimestamp("ms1.upd_dt"));
+				result.add(item);
+			}
+			list.setList(result);
+			
+			return list;
+		}
+	}
+	
 	/**
 	 * 商品ID０１から商品情報を取得する
 	 * @param shouhin01ID 商品０１ID

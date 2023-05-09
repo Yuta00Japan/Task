@@ -13,7 +13,7 @@
 <%--仮　 --%>
 <button name="state" value="majorCategory">大分類</button>
 <%--仮　 --%>
-<button>中分類</button>
+<button name="state" value="minorCategory">中分類</button>
 <%--仮　 --%>
 <button>小分類</button>
 

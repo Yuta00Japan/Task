@@ -69,7 +69,7 @@ public class ItemController extends HttpServlet {
 					break;
 				//中分類
 				case "minorCategory":
-					
+					proc_MinorItemAll(request,response,session);
 					break;
 				//小分類
 				case "detailedCategory":
@@ -163,16 +163,29 @@ public class ItemController extends HttpServlet {
 	}
 	
 	/**
-	 * 大分類画面を表示する
+	 * すべての大分類を画面に表示する
 	 * @param request HTTP request
 	 * @param response HTTP response 
-	 * @throws Exception error
+	 * @throws Exception 大分類取得失敗
 	 */
 	protected void proc_MajorItem(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws Exception {
 		System.out.println(getServletName()+"# major item");
-		Item01List list = ItemLogic.majorItem();
+		Item01List list = ItemLogic.majorItemAll();
 		session.setAttribute("majorItem", list);
 		getServletContext().getRequestDispatcher("/WEB-INF/item/majorItem.jsp").forward(request, response);
+	}
+	/**
+	 * すべての中分類を画面に表示する
+	 * @param request HTTP  request
+	 * @param response HTTP response
+	 * @param session 中分類商品
+	 * @throws Exception 中分類取得失敗 
+	 */
+	protected void proc_MinorItemAll(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws Exception {
+		System.out.println(getServletName()+"# minor item");
+		Item01List list = ItemLogic.minorItemAll();
+		session.setAttribute("minorItem",list);
+		getServletContext().getRequestDispatcher("/WEB-INF/item/minorItem.jsp").forward(request, response);
 	}
 	
 	/**
@@ -259,6 +272,7 @@ public class ItemController extends HttpServlet {
 			break;
 		//中分類、
 		case "minor":
+			proc_MinorItemAll(request,response,session);
 			break;
 		//小分類
 		case "detailed":

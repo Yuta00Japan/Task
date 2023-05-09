@@ -36,16 +36,29 @@ public class ItemLogic {
 	
 	/**
 	 * 大分類の情報を取得する
-	 * @return 商品大分類
+	 * @return 商品全大分類
 	 * @exception 大分類取りだし失敗
 	 */
-	public static Item01List majorItem() throws Exception {
+	public static Item01List majorItemAll() throws Exception {
 		
 		MST_Shouhin01Dao dao = new MST_Shouhin01Dao();
 		
 		return dao.findAllMejor();
 		
 	}
+	
+	/**
+	 * 中分類の情報を取得する
+	 * @return 商品全中分類
+	 * @throws Exception 中分類取りだし失敗
+	 */
+	public static Item01List minorItemAll() throws Exception{
+		
+		MST_Shouhin01Dao dao = new MST_Shouhin01Dao();
+		
+		return dao.findAllMinor();
+	}
+	
 	
 	/**
 	 * 選択した商品０１の中分類、小分類を表示する
