@@ -64,6 +64,7 @@ public class MST_Shouhin01Dao implements Crud{
 			"select ms1.shouhin01ID,ms1.parentId,ms1.shouhin01Name,ms1.rowno,ms1.upd_dt, ms2.parentId from MST_Shouhin01 as ms1 "
 			+ " inner join MST_Shouhin01 as ms2 on   ms1.parentId=ms2.shouhin01ID "
 			+ " where ms1.parentId != 0 and ms2.parentID = 0";
+		System.out.println(sql);
 		
 		try(Connection con = Pool.getConnection();
 		PreparedStatement pps = con.prepareStatement(sql)){
@@ -81,6 +82,11 @@ public class MST_Shouhin01Dao implements Crud{
 			
 			return list;
 		}
+	}
+	
+	public Item01List findAllDetailed() throws Exception{
+		
+		return null;
 	}
 	
 	/**
@@ -108,6 +114,39 @@ public class MST_Shouhin01Dao implements Crud{
 			}
 			return  item;
 		}
+	}
+	
+	/**
+	 * 対象IDを親IDとする分類を取りだす
+	 * @param shouhin01ID 商品０１ID
+	 * @return 商品分類情報
+	 * @throws Exception 商品分類取りだし失敗
+	 */
+	public Item01List detail(String shouhin01ID) throws Exception{
+		
+		Item01 item = null;
+		Item01List list = new Item01List();
+		List<Item01> result = new ArrayList<>();
+		
+		String sql = String.format("select * from MST_shouhin01 where parentId=%s",shouhin01ID);
+		System.out.println(sql);
+		
+		try(Connection con = Pool.getConnection();
+		PreparedStatement pps = con.prepareStatement(sql)){
+			ResultSet rs = pps.executeQuery();
+			while(rs.next()) {
+				item = new Item01();
+				item.setShouhin01ID(rs.getInt("shouhin01ID"));
+				item.setShouhin01Name(rs.getString("shouhin01Name"));
+				item.setParentID(rs.getInt("parentId"));
+				item.setRowNo(rs.getInt("rowno"));
+				item.setUpd_Dt(rs.getTimestamp("upd_dt"));
+				result.add(item);
+			}
+			list.setList(result);
+			return list;
+		}
+		
 	}
 	
 	
@@ -141,8 +180,8 @@ public class MST_Shouhin01Dao implements Crud{
 		Item01 item = (Item01)o;
 		
 		String sql = 
-				String.format
-				("update MST_Shouhin01 set rowNo=%d,shouhin01Name='%s' where shouhin01Id=%d",item.getRowNo(),item.getShouhin01Name(),item.getShouhin01ID());
+			String.format
+			("update MST_Shouhin01 set rowNo=%d,shouhin01Name='%s' where shouhin01Id=%d",item.getRowNo(),item.getShouhin01Name(),item.getShouhin01ID());
 			System.out.println(sql);
 			
 		try(Connection con = Pool.getConnection();

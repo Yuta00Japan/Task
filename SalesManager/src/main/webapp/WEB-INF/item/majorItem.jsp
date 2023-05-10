@@ -31,7 +31,7 @@
 
 			<input type="textbox" name="txtAddName" class="txtAddName" value="${item.shouhin01Name }">
 
-			<button class="button" name="state" value="detail,${item.parentID },major">詳細</button>
+			<button class="button" name="state" value="detail,${item.shouhin01ID },major,${item.shouhin01Name}">詳細</button>
 
 			<button class="button update" name="state"  value="updateItem01,${item.shouhin01ID },major">変更</button>
 
@@ -66,10 +66,10 @@
         	<span class="modalClose">×</span>
       	</div>
       	<div class="modal-body">
-       		<p id="msg"></p>
+       		<p id="center"></p>
       	</div>
       	
-      	<div id="buttonPart">
+      	<div id="center">
       				
       		<button class="button" id="ok">OK</button>
       		<button id="cancel" type="button" class="button">NO</button>

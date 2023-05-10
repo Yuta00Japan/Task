@@ -22,7 +22,6 @@ window.addEventListener('load',()=>{
 		console.log(updateBtn.length);
 
 		for(let i = 0; i < updateBtn.length; i++){
-			console.log('event 付与')
 			updateBtn[i].addEventListener('click',function(event){updateAndDelete(event,'update',i)});
 			deleteBtn[i].addEventListener('click',function(event){updateAndDelete(event,'delete',i)});
 		}
@@ -59,6 +58,7 @@ function updateAndDelete(event,method,index){
 		form[index].requestSubmit(select);
 	})
 }
+
 
 
 newBtn.addEventListener('click', (event) => {

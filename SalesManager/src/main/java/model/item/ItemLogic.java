@@ -62,14 +62,15 @@ public class ItemLogic {
 	
 	/**
 	 * 選択した商品０１の中分類、小分類を表示する
-	 * @param parentId
-	 * @return
+	 * @param shouhin01ID 親商品０１ID
+	 * @return 中分類、小分類
+	 * @throws Exception ロード失敗
 	 */
-	public static Item01List detail(String parentId) {
+	public static Item01List detail(String shouhin01ID) throws Exception {
 		
 		MST_Shouhin01Dao dao = new MST_Shouhin01Dao();
 		
-		return null;
+		return dao.detail(shouhin01ID);
 	}
 	
 	/**

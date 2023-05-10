@@ -34,7 +34,7 @@ public class ItemController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		response.setContentType("text/html; charset=UTF-8");
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
@@ -74,6 +74,10 @@ public class ItemController extends HttpServlet {
 				//小分類
 				case "detailedCategory":
 					
+					break;
+				//中分類、小分類抽出
+				case "detail":
+					proc_Item01Detail(request,response,session,state[1],state[2],state[3]);
 					break;
 				//分類登録
 				case "newItem01":
@@ -174,6 +178,7 @@ public class ItemController extends HttpServlet {
 		session.setAttribute("majorItem", list);
 		getServletContext().getRequestDispatcher("/WEB-INF/item/majorItem.jsp").forward(request, response);
 	}
+	
 	/**
 	 * すべての中分類を画面に表示する
 	 * @param request HTTP  request
@@ -186,6 +191,17 @@ public class ItemController extends HttpServlet {
 		Item01List list = ItemLogic.minorItemAll();
 		session.setAttribute("minorItem",list);
 		getServletContext().getRequestDispatcher("/WEB-INF/item/minorItem.jsp").forward(request, response);
+	}
+	
+	/**
+	 * すべての小分類を画面に表示する
+	 * @param request HTTP request
+	 * @param response HTTP response
+	 * @param session 小分類商品を入れるsession
+	 */
+	protected void proc_DetailedItemAll(HttpServletRequest request, HttpServletResponse response,HttpSession session) {
+		System.out.println(getServletName()+"# detailed item");
+		
 	}
 	
 	/**
@@ -248,10 +264,40 @@ public class ItemController extends HttpServlet {
 		proc_ReflectUpdate(request,response,session,from);
 	}
 	
-	
-	protected void proc_Item01Detail(HttpServletRequest request, HttpServletResponse response,HttpSession session,String shouhin01ID,String from) throws Exception {
-		System.err.println(getServletName()+" # item01 detail");
-		
+	/**
+	 * そのshouhin01IDを親IDとする分類を表示する
+	 * @param request HTTP request
+	 * @param response HTTP response
+	 * @param session shouhin01を含むsession
+	 * @param shouhin01ID 親shouhin01ID
+	 * @param from 遷移元
+	 * @param parentName 親分類の名称
+	 * @throws Exception 詳細取得失敗
+	 */
+	protected void proc_Item01Detail(HttpServletRequest request, HttpServletResponse response,HttpSession session,String shouhin01ID,String from,String parentName) throws Exception {
+		System.err.print(getServletName()+" # item01 detail");
+		Item01List list = ItemLogic.detail(shouhin01ID);
+		switch(from) {
+		//大分類から
+		case "major":
+			System.out.println(" from major");
+			session.setAttribute("minorItem", list);
+			session.setAttribute("majorName",parentName);
+			getServletContext().getRequestDispatcher("/WEB-INF/item/minorItem.jsp").forward(request, response);
+			break;
+		//中分類から
+		case "minor":
+			System.out.println(" from minor");
+			session.setAttribute("detailedItem", list);
+			session.setAttribute("minorName", parentName);
+			getServletContext().getRequestDispatcher("/WEB-INF/item/detailedItem.jsp").forward(request, response);
+			break;
+		//小分類から
+		case "detailed":
+			System.out.println(" from detailed");
+			getServletContext().getRequestDispatcher("/WEB-INF/item/detailedItem.jsp").forward(request, response);
+			break;
+		}
 	}
 	
 	/**

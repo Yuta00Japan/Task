@@ -18,8 +18,19 @@
 	<div id="left">
 		<h2>中分類</h2>
 		
-		<%--分類ID --%>
-		<label></label>
+		<%--大分類内容表示 --%>
+		<c:choose>
+			<c:when test="${majorItem != null }">
+				<p id="center"><a href="ItemController">大分類</a></p>
+				<%--書き込み不可 --%>
+				<p id="center"><input type="textbox" id="txtLargeClass" readonly="readonly"  value="${majorName }"></p>
+					<%--非表示分類ID --%>
+				<label id="hidClassState">${minorItem.list.get(0).parentID }</label>
+			</c:when>
+			<c:otherwise>
+				<%--大分類のsessionがない場合表示しない --%>
+			</c:otherwise>
+		</c:choose>
 	</div>
 
 	<div id="right">
@@ -32,7 +43,7 @@
 
 			<input type="textbox" name="txtAddName" class="txtAddName" value="${item.shouhin01Name }">
 
-			<button class="button" name="state" value="detail,${item.parentID },minor">詳細</button>
+			<button class="button" name="state" value="detail,${item.shouhin01ID },minor">詳細</button>
 
 			<button class="button update" name="state"  value="updateItem01,${item.shouhin01ID },minor">変更</button>
 
@@ -51,7 +62,7 @@
 			
 				<input type="textbox" name="txtAddName" class="txtAddName">
 			 	
-			 	<button class="button"  name="state" id="newBtn" value="newItem01,0,minor">追加</button>
+			 	<button class="button"  name="state" id="newBtn" value="newItem01,${item.parentID},minor">追加</button>
 				
 			</form>	
 			</div>
@@ -67,10 +78,10 @@
         	<span class="modalClose">×</span>
       	</div>
       	<div class="modal-body">
-       		<p id="msg"></p>
+       		<p id="center"></p>
       	</div>
       	
-      	<div id="buttonPart">
+      	<div id="center">
       				
       		<button class="button" id="ok">OK</button>
       		<button id="cancel" type="button" class="button">NO</button>
