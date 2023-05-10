@@ -35,7 +35,7 @@ public class ItemLogic {
 	}
 	
 	/**
-	 * 大分類の情報を取得する
+	 * すべての大分類の情報を取得する
 	 * @return 商品全大分類
 	 * @exception 大分類取りだし失敗
 	 */
@@ -48,7 +48,7 @@ public class ItemLogic {
 	}
 	
 	/**
-	 * 中分類の情報を取得する
+	 * すべての中分類の情報を取得する
 	 * @return 商品全中分類
 	 * @throws Exception 中分類取りだし失敗
 	 */
@@ -57,6 +57,18 @@ public class ItemLogic {
 		MST_Shouhin01Dao dao = new MST_Shouhin01Dao();
 		
 		return dao.findAllMinor();
+	}
+	
+	/**
+	 * すべての小分類を取得する
+	 * @return 商品全小分類
+	 * @throws Exception 小分類取りだし失敗
+	 */
+	public static Item01List detailedItemAll() throws Exception{
+		
+		MST_Shouhin01Dao dao = new MST_Shouhin01Dao();
+		
+		return dao.findAllDetailed();
 	}
 	
 	

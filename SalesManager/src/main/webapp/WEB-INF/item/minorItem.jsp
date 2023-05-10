@@ -21,9 +21,18 @@
 		<%--大分類内容表示 --%>
 		<c:choose>
 			<c:when test="${majorItem != null }">
-				<p id="center"><a href="ItemController">大分類</a></p>
+			
+			<%--大分類画面へ戻す --%>
+				<p class="center">
+					<a href="javascript:major.submit();">大分類</a>
+				</p>
+				<form action="ItemController" name="major" method="post">
+					<input type="hidden" name="state" value="majorCategory">
+				</form>
+				
+				
 				<%--書き込み不可 --%>
-				<p id="center"><input type="textbox" id="txtLargeClass" readonly="readonly"  value="${majorName }"></p>
+				<p class="center"><input type="textbox" id="txtLargeClass" readonly="readonly"  value="${majorName }"></p>
 					<%--非表示分類ID --%>
 				<label id="hidClassState">${minorItem.list.get(0).parentID }</label>
 			</c:when>
@@ -43,7 +52,7 @@
 
 			<input type="textbox" name="txtAddName" class="txtAddName" value="${item.shouhin01Name }">
 
-			<button class="button" name="state" value="detail,${item.shouhin01ID },minor">詳細</button>
+			<button class="button" name="state" value="detail,${item.shouhin01ID },minor,${item.shouhin01Name}">詳細</button>
 
 			<button class="button update" name="state"  value="updateItem01,${item.shouhin01ID },minor">変更</button>
 
@@ -62,7 +71,7 @@
 			
 				<input type="textbox" name="txtAddName" class="txtAddName">
 			 	
-			 	<button class="button"  name="state" id="newBtn" value="newItem01,${item.parentID},minor">追加</button>
+			 	<button class="button"  name="state" id="newBtn" value="newItem01,${minorItem.list.get(i).parentID},minor">追加</button>
 				
 			</form>	
 			</div>
@@ -78,10 +87,10 @@
         	<span class="modalClose">×</span>
       	</div>
       	<div class="modal-body">
-       		<p id="center"></p>
+       		<p id="msg"></p>
       	</div>
       	
-      	<div id="center">
+      	<div class="center">
       				
       		<button class="button" id="ok">OK</button>
       		<button id="cancel" type="button" class="button">NO</button>

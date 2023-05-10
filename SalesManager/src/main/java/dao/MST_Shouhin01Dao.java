@@ -19,7 +19,7 @@ public class MST_Shouhin01Dao implements Crud{
 
 	
 	/**
-	 * 大分類のカテゴリを取りだす
+	 * すべての大分類のカテゴリを取りだす
 	 * @return 全大分類
 	 * @throws Exception ロード失敗
 	 */
@@ -84,9 +84,38 @@ public class MST_Shouhin01Dao implements Crud{
 		}
 	}
 	
+	/**
+	 * すべての小分類を取得する
+	 * @return 全小分類
+	 * @throws Exception 小分類取りだし失敗
+	 */
 	public Item01List findAllDetailed() throws Exception{
 		
-		return null;
+		Item01 item = null;
+		Item01List list = new Item01List();
+		
+		List<Item01> result = new ArrayList<>();
+		
+		String sql = "select ms1.shouhin01ID,ms1.parentId,ms1.shouhin01Name,ms1.rowno,ms1.upd_dt, ms2.parentId"
+				+ " from MST_Shouhin01 as ms1 inner join MST_Shouhin01 as ms2 on ms1.parentId=ms2.shouhin01ID "
+				+ " where ms1.parentId != 0 and ms2.parentID != 0";
+		
+		try(Connection con = Pool.getConnection();
+		PreparedStatement pps = con.prepareStatement(sql)){
+			ResultSet rs = pps.executeQuery();
+			while(rs.next()) {
+				item = new Item01();
+				item.setShouhin01ID(rs.getInt("ms1.shouhin01ID"));
+				item.setShouhin01Name(rs.getString("ms1.shouhin01Name"));
+				item.setParentID(rs.getInt("ms1.parentId"));
+				item.setRowNo(rs.getInt("ms1.rowno"));
+				item.setUpd_Dt(rs.getTimestamp("ms1.upd_dt"));
+				result.add(item);
+			}
+			list.setList(result);
+		}
+		
+		return list;
 	}
 	
 	/**

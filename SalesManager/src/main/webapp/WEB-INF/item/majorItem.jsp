@@ -66,10 +66,10 @@
         	<span class="modalClose">×</span>
       	</div>
       	<div class="modal-body">
-       		<p id="center"></p>
+       		<p id="msg"></p>
       	</div>
       	
-      	<div id="center">
+      	<div class="center">
       				
       		<button class="button" id="ok">OK</button>
       		<button id="cancel" type="button" class="button">NO</button>

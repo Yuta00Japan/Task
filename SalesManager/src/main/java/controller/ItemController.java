@@ -73,7 +73,7 @@ public class ItemController extends HttpServlet {
 					break;
 				//小分類
 				case "detailedCategory":
-					
+					proc_DetailedItemAll(request,response,session);
 					break;
 				//中分類、小分類抽出
 				case "detail":
@@ -198,10 +198,13 @@ public class ItemController extends HttpServlet {
 	 * @param request HTTP request
 	 * @param response HTTP response
 	 * @param session 小分類商品を入れるsession
+	 * @throws Exception 小分類取得失敗
 	 */
-	protected void proc_DetailedItemAll(HttpServletRequest request, HttpServletResponse response,HttpSession session) {
+	protected void proc_DetailedItemAll(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws Exception {
 		System.out.println(getServletName()+"# detailed item");
-		
+		Item01List list = ItemLogic.detailedItemAll();
+		session.setAttribute("detailedItem", list);
+		getServletContext().getRequestDispatcher("/WEB-INF/item/detailedItem.jsp").forward(request, response);
 	}
 	
 	/**
@@ -280,14 +283,14 @@ public class ItemController extends HttpServlet {
 		switch(from) {
 		//大分類から
 		case "major":
-			System.out.println(" from major");
+			System.out.println(" from major to minor");
 			session.setAttribute("minorItem", list);
 			session.setAttribute("majorName",parentName);
 			getServletContext().getRequestDispatcher("/WEB-INF/item/minorItem.jsp").forward(request, response);
 			break;
 		//中分類から
 		case "minor":
-			System.out.println(" from minor");
+			System.out.println(" from minor to detailed");
 			session.setAttribute("detailedItem", list);
 			session.setAttribute("minorName", parentName);
 			getServletContext().getRequestDispatcher("/WEB-INF/item/detailedItem.jsp").forward(request, response);
@@ -322,7 +325,7 @@ public class ItemController extends HttpServlet {
 			break;
 		//小分類
 		case "detailed":
-			
+			proc_DetailedItemAll(request,response,session);
 			break;
 		default:
 			getServletContext().getRequestDispatcher("/WEB-INF/menu/menu.jsp").forward(request, response);

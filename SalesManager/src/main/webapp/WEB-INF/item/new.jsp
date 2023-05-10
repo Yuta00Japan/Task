@@ -15,7 +15,7 @@
 <%--仮　 --%>
 <button name="state" value="minorCategory">中分類</button>
 <%--仮　 --%>
-<button>小分類</button>
+<button name="state" value="detailedCategory">小分類</button>
 
 </form>
 
