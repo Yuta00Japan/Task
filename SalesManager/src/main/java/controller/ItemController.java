@@ -53,7 +53,7 @@ public class ItemController extends HttpServlet {
 				switch(state[0]) {
 				//商品登録フォーム
 				case "new":
-					proc_New(request,response);
+					proc_New(request,response,session);
 					break;
 				//商品販売実績ー検索
 				case "achievementSearch":
@@ -77,19 +77,19 @@ public class ItemController extends HttpServlet {
 					break;
 				//中分類、小分類抽出
 				case "detail":
-					proc_Item01Detail(request,response,session,state[1],state[2],state[3]);
+					proc_Item01Detail(request,response,session,state[1],state[2]);
 					break;
 				//分類登録
 				case "newItem01":
-					proc_Item01Add(request,response,session,state[1],state[2]);
+					proc_Item01Add(request,response,session,state[1],state[2],state[3]);
 					break;
 				//既存分類更新
 				case "updateItem01":
-					proc_UpdateItem01(request,response,session,state[1],state[2]);
+					proc_UpdateItem01(request,response,session,state[1],state[2],state[3]);
 					break;
 				//既存分類削除
 				case "deleteItem01":
-					proc_DeleteItem01(request,response,session,state[1],state[2]);
+					proc_DeleteItem01(request,response,session,state[1],state[2],state[3]);
 					break;
 				}
 			}catch(Exception e) {
@@ -107,14 +107,28 @@ public class ItemController extends HttpServlet {
 	}
 	
 	/**
+	 * sessionリセット
+	 * @param session 不要なsession情報
+	 */
+	protected void proc_SessionReset(HttpSession session) {
+		System.out.println(getServletName()+"# sessionReset");
+		session.removeAttribute("majorItem");
+		session.removeAttribute("minorItem");
+		session.removeAttribute("detailedItem");
+		session.removeAttribute("item01");
+	}
+	
+	/**
 	 * 商品登録フォームを表示する
 	 * @param request HTTP request
 	 * @param response HTTP response
 	 * @throws ServletException error
 	 * @throws IOException error
 	 */
-	protected void proc_New(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void proc_New(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws ServletException, IOException {
 		System.out.println(getServletName()+"# new");
+		
+		proc_SessionReset(session);
 		getServletContext().getRequestDispatcher("/WEB-INF/item/new.jsp").forward(request, response);
 	}
 	
@@ -213,10 +227,11 @@ public class ItemController extends HttpServlet {
 	 * @param response HTTP response
 	 * @param session 分類を含むsession
 	 * @param parentID 親ID
+	 * @param classificationID 分類ID
 	 * @param from どこから登録したのか確認
 	 * @throws Exception 登録失敗
 	 */
-	protected void proc_Item01Add(HttpServletRequest request, HttpServletResponse response,HttpSession session,String parentID,String from) throws Exception {
+	protected void proc_Item01Add(HttpServletRequest request, HttpServletResponse response,HttpSession session,String parentID,String classificationID ,String from) throws Exception {
 		System.out.println(getServletName()+" item01 add");
 		ItemLogic.setItem01FromRequest(request);
 		
@@ -225,7 +240,7 @@ public class ItemController extends HttpServlet {
 		ItemLogic.addItem01(item);
 		
 		//登録情報を反映
-		proc_ReflectUpdate(request,response,session,from);
+		proc_ReflectUpdate(request,response,session,classificationID,from);
 		
 	}
 	
@@ -238,7 +253,7 @@ public class ItemController extends HttpServlet {
 	 * @param from 遷移元
 	 * @throws Exception 更新失敗
 	 */
-	protected void proc_UpdateItem01(HttpServletRequest request, HttpServletResponse response,HttpSession session,String shouhin01ID,String from) throws Exception {
+	protected void proc_UpdateItem01(HttpServletRequest request, HttpServletResponse response,HttpSession session,String shouhin01ID,String classificationID,String from) throws Exception {
 		System.out.println(getServletName()+" update item01");
 		//更新対象の商品IDをもとにロード
 		Item01 item = ItemLogic.loadSingle(shouhin01ID);
@@ -248,7 +263,7 @@ public class ItemController extends HttpServlet {
 		//更新処理を実行する
 		ItemLogic.updateItem01(item);
 		//更新情報をsessionに反映
-		proc_ReflectUpdate(request,response,session,from);
+		proc_ReflectUpdate(request,response,session,classificationID,from);
 	}
 	
 	/**
@@ -260,11 +275,11 @@ public class ItemController extends HttpServlet {
 	 * @param from 遷移元
 	 * @throws Exception 削除失敗
 	 */
-	protected void proc_DeleteItem01(HttpServletRequest request, HttpServletResponse response,HttpSession session,String shouhin01ID,String from) throws Exception {
+	protected void proc_DeleteItem01(HttpServletRequest request, HttpServletResponse response,HttpSession session,String shouhin01ID,String classificationID,String from) throws Exception {
 		System.out.println(getServletName()+"# delete item01");
 		ItemLogic.deleteItem01(shouhin01ID);
 		//削除をsessionに反映
-		proc_ReflectUpdate(request,response,session,from);
+		proc_ReflectUpdate(request,response,session,classificationID,from);
 	}
 	
 	/**
@@ -277,7 +292,7 @@ public class ItemController extends HttpServlet {
 	 * @param parentName 親分類の名称
 	 * @throws Exception 詳細取得失敗
 	 */
-	protected void proc_Item01Detail(HttpServletRequest request, HttpServletResponse response,HttpSession session,String shouhin01ID,String from,String parentName) throws Exception {
+	protected void proc_Item01Detail(HttpServletRequest request, HttpServletResponse response,HttpSession session,String shouhin01ID,String from) throws Exception {
 		System.err.print(getServletName()+" # item01 detail");
 		Item01List list = ItemLogic.detail(shouhin01ID);
 		switch(from) {
@@ -285,14 +300,14 @@ public class ItemController extends HttpServlet {
 		case "major":
 			System.out.println(" from major to minor");
 			session.setAttribute("minorItem", list);
-			session.setAttribute("majorName",parentName);
+			session.setAttribute("majorId",shouhin01ID);
 			getServletContext().getRequestDispatcher("/WEB-INF/item/minorItem.jsp").forward(request, response);
 			break;
 		//中分類から
 		case "minor":
 			System.out.println(" from minor to detailed");
 			session.setAttribute("detailedItem", list);
-			session.setAttribute("minorName", parentName);
+			session.setAttribute("minorId",shouhin01ID);
 			getServletContext().getRequestDispatcher("/WEB-INF/item/detailedItem.jsp").forward(request, response);
 			break;
 		//小分類から
@@ -311,7 +326,7 @@ public class ItemController extends HttpServlet {
 	 * @param from 遷移元
 	 * @throws Exception 情報更新失敗
 	 */
-	protected void proc_ReflectUpdate(HttpServletRequest request, HttpServletResponse response,HttpSession session,String from) throws Exception {
+	protected void proc_ReflectUpdate(HttpServletRequest request, HttpServletResponse response,HttpSession session,String classificationID,String from) throws Exception {
 		System.out.println(getServletName()+"# reflectUpdate");
 		//登録内容を反映しつつ登録した分類の画面へ遷移する
 		switch(from) {
@@ -321,13 +336,22 @@ public class ItemController extends HttpServlet {
 			break;
 		//中分類、
 		case "minor":
-			proc_MinorItemAll(request,response,session);
+			if(classificationID == null || classificationID== "") {
+				proc_MinorItemAll(request,response,session);
+			}else {
+				proc_Item01Detail(request,response,session,classificationID,from);
+			}
 			break;
 		//小分類
 		case "detailed":
-			proc_DetailedItemAll(request,response,session);
+			if(classificationID == null || classificationID=="") {
+				proc_DetailedItemAll(request,response,session);
+			}else {
+				proc_Item01Detail(request,response,session,classificationID,from);
+			}
 			break;
 		default:
+			proc_SessionReset(session);
 			getServletContext().getRequestDispatcher("/WEB-INF/menu/menu.jsp").forward(request, response);
 			break;
 		}

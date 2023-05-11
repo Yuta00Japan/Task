@@ -11,6 +11,7 @@ const bodyParser = require('body-parser');
 
 const app = express();
 app.use(bodyParser.json());
+
 //8080へのアクセス許可を設定する
 app.use(function(req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
@@ -110,7 +111,6 @@ app.get('/setCategory',(req,res)=>{
 	
 });
 
-
 /**
  * 従業員IDを格納する
  */
@@ -193,6 +193,18 @@ app.post('/getUserRole',(req,res)=>{
 	let empId = req.body.empId;
 	empId=Number(empId);
 	connection.query(`select userRole from MST_Employee where empId=${empId}`,(err,result,field)=>{
+		if (err) throw err;
+		res.json(result);
+	});
+});
+
+app.post('/setMajorName',(req,res)=>{
+	console.log('from setMajorName');
+	let parentId = req.body.parentId;
+	console.log("parentID value : "+parentId);
+	parentId = Number(parentId);
+	console.log(parentId);
+	connection.query(`select shouhin01Name from MST_shouhin01 where shouhin01ID=${parentId}`,(err,result,field)=>{
 		if (err) throw err;
 		res.json(result);
 	});

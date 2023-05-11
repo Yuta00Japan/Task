@@ -33,8 +33,9 @@
 				
 				<%--書き込み不可 --%>
 				<p class="center"><input type="textbox" id="txtLargeClass" readonly="readonly"  value="${majorName }"></p>
-					<%--非表示分類ID --%>
-				<label id="hidClassState">${minorItem.list.get(0).parentID }</label>
+				
+					<%--非表示分類ID 大分類　このIDをもとに大分類名を抽出し表示する--%>
+				<label id="hidClassState">${majorId }</label>
 			</c:when>
 			<c:otherwise>
 				<%--大分類のsessionがない場合表示しない --%>
@@ -52,11 +53,11 @@
 
 			<input type="textbox" name="txtAddName" class="txtAddName" value="${item.shouhin01Name }">
 
-			<button class="button" name="state" value="detail,${item.shouhin01ID },minor,${item.shouhin01Name}">詳細</button>
+			<button class="button" name="state" value="detail,${item.shouhin01ID },minor">詳細</button>
 
-			<button class="button update" name="state"  value="updateItem01,${item.shouhin01ID },minor">変更</button>
+			<button class="button update" name="state"  value="updateItem01,${item.shouhin01ID },${item.parentID },minor">変更</button>
 
-			<button class="button delete" name="state" value="deleteItem01,${item.shouhin01ID },minor">削除</button>
+			<button class="button delete" name="state" value="deleteItem01,${item.shouhin01ID },${item.parentID },minor">削除</button>
 			
 		</form>
 			
@@ -71,7 +72,7 @@
 			
 				<input type="textbox" name="txtAddName" class="txtAddName">
 			 	
-			 	<button class="button"  name="state" id="newBtn" value="newItem01,${minorItem.list.get(i).parentID},minor">追加</button>
+			 	<button class="button"  name="state" id="newBtn" value="newItem01,${majorId},${majorId },minor">追加</button>
 				
 			</form>	
 			</div>

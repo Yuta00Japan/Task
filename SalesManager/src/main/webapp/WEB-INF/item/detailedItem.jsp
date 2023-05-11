@@ -39,17 +39,18 @@
 					<a href="javascript:minor.submit();">中分類</a>
 				</p>
 				<form action="ItemController" name="minor" method="post">
-					<input type="hidden" name="state" value="detail,${minorItem.list.get(0).parentID},major,${majorName}">
+					<input type="hidden" name="state" value="detail,${majorId},major,${majorName}">
 				</form>
 				
 				
 				<%--書き込み不可 --%>
 				<p class="center">
-					<input type="textbox" id="txtLargeClass" readonly="readonly"  value="${minorName }">
+					<input type="textbox" id="txtLargeClass2" readonly="readonly"  value="${minorName }">
 				</p>
 				
 					<%--非表示分類ID --%>
-				<label id="hidClassState">${minorItem.list.get(0).parentID }</label>
+				<label id="hidClassState">${majorId}</label>
+				<label id="hidClassState2">${minorId}</label>
 			</c:when>
 			
 			<c:otherwise>
@@ -72,9 +73,9 @@
 
 			<button class="button" name="state" value="detail,${item.shouhin01ID },minor">詳細</button>
 
-			<button class="button update" name="state"  value="updateItem01,${item.shouhin01ID },minor">変更</button>
+			<button class="button update" name="state"  value="updateItem01,${item.shouhin01ID },${item.parentID },minor">変更</button>
 
-			<button class="button delete" name="state" value="deleteItem01,${item.shouhin01ID },minor">削除</button>
+			<button class="button delete" name="state" value="deleteItem01,${item.shouhin01ID },${item.parentID },minor">削除</button>
 			
 		</form>
 			
@@ -89,7 +90,7 @@
 			
 				<input type="textbox" name="txtAddName" class="txtAddName">
 			 	
-			 	<button class="button"  name="state" id="newBtn" value="newItem01,${item.parentID},minor">追加</button>
+			 	<button class="button"  name="state" id="newBtn" value="newItem01,${minorId},${minorId },minor">追加</button>
 				
 			</form>	
 			</div>

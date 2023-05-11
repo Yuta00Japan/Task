@@ -226,7 +226,13 @@ public class MST_Shouhin01Dao implements Crud{
 	public void delete(Object o) throws Exception {
 		// TODO 自動生成されたメソッド・スタブ
 		String shouhin01ID = (String)o;
-		String sql=String.format("delete from MST_Shouhin01 where shouhin01ID=%s",shouhin01ID);
+		String sql=
+				String.format("DELETE FROM mst_shouhin01 "
+					+ " WHERE shouhin01Id = %s "
+					+ "   OR parentId = %s"
+					+ "   OR parentId IN (SELECT t1.shouhin01Id "
+					+ " FROM (SELECT shouhin01Id FROM mst_shouhin01 WHERE parentid = %s OR shouhin01id = %s) AS t1); "
+					+ "",shouhin01ID,shouhin01ID,shouhin01ID,shouhin01ID);
 		System.out.println(sql);
 		
 		try(Connection con = Pool.getConnection();

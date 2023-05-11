@@ -31,11 +31,11 @@
 
 			<input type="textbox" name="txtAddName" class="txtAddName" value="${item.shouhin01Name }">
 
-			<button class="button" name="state" value="detail,${item.shouhin01ID },major,${item.shouhin01Name}">詳細</button>
+			<button class="button" name="state" value="detail,${item.shouhin01ID },major">詳細</button>
 
-			<button class="button update" name="state"  value="updateItem01,${item.shouhin01ID },major">変更</button>
+			<button class="button update" name="state"  value="updateItem01,${item.shouhin01ID },none,major">変更</button>
 
-			<button class="button delete" name="state" value="deleteItem01,${item.shouhin01ID },major">削除</button>
+			<button class="button delete" name="state" value="deleteItem01,${item.shouhin01ID },none,major">削除</button>
 			
 		</form>
 			
@@ -50,7 +50,7 @@
 			
 				<input type="textbox" name="txtAddName" class="txtAddName">
 			 	
-			 	<button class="button"  name="state" id="newBtn" value="newItem01,0,major">追加</button>
+			 	<button class="button"  name="state" id="newBtn" value="newItem01,0,none,major">追加</button>
 				
 			</form>	
 			</div>

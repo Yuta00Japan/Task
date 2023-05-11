@@ -28,10 +28,19 @@
 #hidClassState{
 	display: none;
 }
+#hidClassState2{
+	display: none;
+}
+
 #txtLargeClass{
 	height: 30px;
 	width: 55px;
 }
+#txtLargeClass2{
+	height: 30px;
+	width: 55px;
+}
+
 .txtAddNo{
 	margin-bottom: 50px;
 	margin-right: 40px;
