@@ -81,7 +81,7 @@ public class ItemController extends HttpServlet {
 					break;
 				//分類登録
 				case "newItem01":
-					proc_Item01Add(request,response,session,state[1],state[2],state[3]);
+					proc_Item01Add(request,response,session,state[1],state[2]);
 					break;
 				//既存分類更新
 				case "updateItem01":
@@ -112,10 +112,7 @@ public class ItemController extends HttpServlet {
 	 */
 	protected void proc_SessionReset(HttpSession session) {
 		System.out.println(getServletName()+"# sessionReset");
-		session.removeAttribute("majorItem");
-		session.removeAttribute("minorItem");
-		session.removeAttribute("detailedItem");
-		session.removeAttribute("item01");
+		
 	}
 	
 	/**
@@ -189,8 +186,9 @@ public class ItemController extends HttpServlet {
 	protected void proc_MajorItem(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws Exception {
 		System.out.println(getServletName()+"# major item");
 		Item01List list = ItemLogic.majorItemAll();
-		session.setAttribute("majorItem", list);
-		getServletContext().getRequestDispatcher("/WEB-INF/item/majorItem.jsp").forward(request, response);
+		session.setAttribute("item01List", list);
+		request.setAttribute("nowLocation","大分類");
+		getServletContext().getRequestDispatcher("/WEB-INF/item/classification.jsp").forward(request, response);
 	}
 	
 	/**
@@ -203,8 +201,9 @@ public class ItemController extends HttpServlet {
 	protected void proc_MinorItemAll(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws Exception {
 		System.out.println(getServletName()+"# minor item");
 		Item01List list = ItemLogic.minorItemAll();
-		session.setAttribute("minorItem",list);
-		getServletContext().getRequestDispatcher("/WEB-INF/item/minorItem.jsp").forward(request, response);
+		session.setAttribute("item01List",list);
+		request.setAttribute("nowLocation","中分類");
+		getServletContext().getRequestDispatcher("/WEB-INF/item/classification.jsp").forward(request, response);
 	}
 	
 	/**
@@ -217,8 +216,9 @@ public class ItemController extends HttpServlet {
 	protected void proc_DetailedItemAll(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws Exception {
 		System.out.println(getServletName()+"# detailed item");
 		Item01List list = ItemLogic.detailedItemAll();
-		session.setAttribute("detailedItem", list);
-		getServletContext().getRequestDispatcher("/WEB-INF/item/detailedItem.jsp").forward(request, response);
+		session.setAttribute("item01List", list);
+		request.setAttribute("nowLocation","小分類");
+		getServletContext().getRequestDispatcher("/WEB-INF/item/classification.jsp").forward(request, response);
 	}
 	
 	/**
@@ -226,17 +226,16 @@ public class ItemController extends HttpServlet {
 	 * @param request HTTP request
 	 * @param response HTTP response
 	 * @param session 分類を含むsession
-	 * @param parentID 親ID
 	 * @param classificationID 分類ID
 	 * @param from どこから登録したのか確認
 	 * @throws Exception 登録失敗
 	 */
-	protected void proc_Item01Add(HttpServletRequest request, HttpServletResponse response,HttpSession session,String parentID,String classificationID ,String from) throws Exception {
+	protected void proc_Item01Add(HttpServletRequest request, HttpServletResponse response,HttpSession session,String classificationID ,String from) throws Exception {
 		System.out.println(getServletName()+" item01 add");
 		ItemLogic.setItem01FromRequest(request);
 		
 		Item01 item = (Item01)session.getAttribute("item01");
-		item.setParentID(Integer.parseInt(parentID));
+		item.setParentID(Integer.parseInt(classificationID));
 		ItemLogic.addItem01(item);
 		
 		//登録情報を反映
@@ -293,29 +292,36 @@ public class ItemController extends HttpServlet {
 	 * @throws Exception 詳細取得失敗
 	 */
 	protected void proc_Item01Detail(HttpServletRequest request, HttpServletResponse response,HttpSession session,String shouhin01ID,String from) throws Exception {
-		System.err.print(getServletName()+" # item01 detail");
+		System.err.println(getServletName()+" # item01 detail");
+		
+		System.out.println("from "+ from);
+		
 		Item01List list = ItemLogic.detail(shouhin01ID);
 		switch(from) {
-		//大分類から
-		case "major":
-			System.out.println(" from major to minor");
-			session.setAttribute("minorItem", list);
-			session.setAttribute("majorId",shouhin01ID);
-			getServletContext().getRequestDispatcher("/WEB-INF/item/minorItem.jsp").forward(request, response);
+		case "大分類":
+			System.out.println("major ");
+			
+			request.setAttribute("nowLocation", "中分類");
+			session.setAttribute("majorId", shouhin01ID);
+			
+			session.setAttribute("item01List", list);
+			session.setAttribute("classificationId",shouhin01ID);
 			break;
-		//中分類から
-		case "minor":
-			System.out.println(" from minor to detailed");
-			session.setAttribute("detailedItem", list);
-			session.setAttribute("minorId",shouhin01ID);
-			getServletContext().getRequestDispatcher("/WEB-INF/item/detailedItem.jsp").forward(request, response);
+		case "中分類":
+			System.out.println("minor "+ shouhin01ID);
+			
+			request.setAttribute("nowLocation", "小分類");
+			session.setAttribute("minorId", shouhin01ID);
+			
+			session.setAttribute("item01List", list);
+			session.setAttribute("classificationId",shouhin01ID);
 			break;
-		//小分類から
-		case "detailed":
-			System.out.println(" from detailed");
-			getServletContext().getRequestDispatcher("/WEB-INF/item/detailedItem.jsp").forward(request, response);
+		case "小分類":
+			request.setAttribute("nowLocation", "小分類");
+			System.out.println("これ以上分類することはできません");
 			break;
 		}
+		getServletContext().getRequestDispatcher("/WEB-INF/item/classification.jsp").forward(request, response);
 	}
 	
 	/**
@@ -330,28 +336,22 @@ public class ItemController extends HttpServlet {
 		System.out.println(getServletName()+"# reflectUpdate");
 		//登録内容を反映しつつ登録した分類の画面へ遷移する
 		switch(from) {
-		//大分類
-		case "major":
-			if(classificationID.equals("none")) {
+		
+		case "大分類":
 				proc_MajorItem(request,response,session);
-			}else {
-				proc_Item01Detail(request,response,session,classificationID,from);
-			}
 			break;
-		//中分類、
-		case "minor":
+		case "中分類":
 			if(classificationID == null || classificationID== "") {
 				proc_MinorItemAll(request,response,session);
 			}else {
-				proc_Item01Detail(request,response,session,classificationID,from);
+				proc_Item01Detail(request,response,session,classificationID,"大分類");
 			}
 			break;
-		//小分類
-		case "detailed":
+		case "小分類":
 			if(classificationID == null || classificationID=="") {
 				proc_DetailedItemAll(request,response,session);
 			}else {
-				proc_Item01Detail(request,response,session,classificationID,from);
+				proc_Item01Detail(request,response,session,classificationID,"中分類");
 			}
 			break;
 		default:

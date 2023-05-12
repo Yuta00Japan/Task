@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>小分類</title>
+<title>分類</title>
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/category.css">
 </head>
 <body>
@@ -16,13 +16,13 @@
 <div id="container">
 	
 	<div id="left">
-		<h2 id="center">小分類</h2>
-		
-		<%--大分類、中分類内容表示 --%>
-		<c:choose>
-			<c:when test="${minorItem != null }">
+		<%--現在の分類を表示する --%>
+		<h2 id="center">${nowLocation }</h2>
 			
-			<%--大分類画面へ戻す --%>
+			<c:if test="${(nowLocation=='中分類' || nowLocation=='小分類') && majorId !='' && majorId !=null  }">
+			
+			<%--大分類 --%>
+			
 				<p class="center">
 					<a href="javascript:major.submit();">大分類</a>
 				</p>
@@ -34,36 +34,36 @@
 				<p class="center">
 					<input type="textbox" id="txtLargeClass" readonly="readonly"  value="${majorName }">
 				</p>
-					
+			<%--大分類ここまで --%>	
+			
+			</c:if>
+			
+			<c:if test="${nowLocation=='小分類' && minorId !='' && minorId !=null}">
+			
+			<%--中分類 --%>		
 				<p class="center">
 					<a href="javascript:minor.submit();">中分類</a>
 				</p>
 				<form action="ItemController" name="minor" method="post">
-					<input type="hidden" name="state" value="detail,${majorId},major,${majorName}">
+					<input type="hidden" name="state" value="detail,${majorId},大分類">
 				</form>
 				
-				
-				<%--書き込み不可 --%>
 				<p class="center">
 					<input type="textbox" id="txtLargeClass2" readonly="readonly"  value="${minorName }">
 				</p>
-				
-					<%--非表示分類ID --%>
-				<label id="hidClassState">${majorId}</label>
-				<label id="hidClassState2">${minorId}</label>
-			</c:when>
+			<%--中分類ここまで --%>
 			
-			<c:otherwise>
+			</c:if>	
 			
-				<%--中分類のsessionがない場合表示しない --%>
-				
-			</c:otherwise>
-		</c:choose>
+			
+				<%--非表示分類ID --%>
+				<label id="hidClassState">${majorId }</label>
+				<label id="hidClassState2">${minorId }</label>
 	</div>
 
 	<div id="right">
 	
-		<c:forEach var="item" items="${detailedItem.list }">
+		<c:forEach var="item" items="${item01List.list }">
 		
 		<form action="ItemController" method="post" class="form">	
 			
@@ -71,11 +71,11 @@
 
 			<input type="textbox" name="txtAddName" class="txtAddName" value="${item.shouhin01Name }">
 
-			<button class="button" name="state" value="detail,${item.shouhin01ID },minor">詳細</button>
+			<button class="button" name="state" value="detail,${item.shouhin01ID },${nowLocation}">詳細</button>
 
-			<button class="button update" name="state"  value="updateItem01,${item.shouhin01ID },${item.parentID },minor">変更</button>
+			<button class="button update" name="state"  value="updateItem01,${item.shouhin01ID },${item.parentID },${nowLocation}">変更</button>
 
-			<button class="button delete" name="state" value="deleteItem01,${item.shouhin01ID },${item.parentID },minor">削除</button>
+			<button class="button delete" name="state" value="deleteItem01,${item.shouhin01ID },${item.parentID },${nowLocation}">削除</button>
 			
 		</form>
 			
@@ -89,9 +89,14 @@
 				<input type="textbox" name="txtAddNo" class="txtAddNo">
 			
 				<input type="textbox" name="txtAddName" class="txtAddName">
-			 	
-			 	<button class="button"  name="state" id="newBtn" value="newItem01,${minorId},${minorId },minor">追加</button>
-				
+			 	<c:choose>
+			 		<c:when test="${nowLocation =='大分類' }">
+			 			<button class="button"  name="state" id="newBtn" value="newItem01,0,${nowLocation}">追加</button>
+			 		</c:when>
+			 		<c:otherwise>
+			 			<button class="button"  name="state" id="newBtn" value="newItem01,${classificationId},${nowLocation}">追加</button>
+			 		</c:otherwise>
+				</c:choose>
 			</form>	
 			</div>
 	</div>
