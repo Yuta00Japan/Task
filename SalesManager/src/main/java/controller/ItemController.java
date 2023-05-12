@@ -332,7 +332,11 @@ public class ItemController extends HttpServlet {
 		switch(from) {
 		//大分類
 		case "major":
-			proc_MajorItem(request,response,session);
+			if(classificationID.equals("none")) {
+				proc_MajorItem(request,response,session);
+			}else {
+				proc_Item01Detail(request,response,session,classificationID,from);
+			}
 			break;
 		//中分類、
 		case "minor":

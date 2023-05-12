@@ -55,9 +55,9 @@
 
 			<button class="button" name="state" value="detail,${item.shouhin01ID },minor">詳細</button>
 
-			<button class="button update" name="state"  value="updateItem01,${item.shouhin01ID },${item.parentID },minor">変更</button>
+			<button class="button update" name="state"  value="updateItem01,${item.shouhin01ID },${item.parentID },major">変更</button>
 
-			<button class="button delete" name="state" value="deleteItem01,${item.shouhin01ID },${item.parentID },minor">削除</button>
+			<button class="button delete" name="state" value="deleteItem01,${item.shouhin01ID },${item.parentID },major">削除</button>
 			
 		</form>
 			
@@ -72,7 +72,7 @@
 			
 				<input type="textbox" name="txtAddName" class="txtAddName">
 			 	
-			 	<button class="button"  name="state" id="newBtn" value="newItem01,${majorId},${majorId },minor">追加</button>
+			 	<button class="button"  name="state" id="newBtn" value="newItem01,${majorId},${majorId },major">追加</button>
 				
 			</form>	
 			</div>

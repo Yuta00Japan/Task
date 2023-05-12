@@ -43,7 +43,7 @@
 			
 		</c:forEach>
 		
-			<div id="new">
+		<div id="new">
 			<form  action="ItemController" method="post" id="newForm">
 			
 				<input type="textbox" name="txtAddNo" class="txtAddNo">
@@ -53,8 +53,10 @@
 			 	<button class="button"  name="state" id="newBtn" value="newItem01,0,none,major">追加</button>
 				
 			</form>	
-			</div>
+		</div>
+		
 	</div>
+	
 			
 </div>
 

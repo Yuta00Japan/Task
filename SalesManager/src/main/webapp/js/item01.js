@@ -103,39 +103,52 @@ function modalClose() {
 function setMajorName(){
 	console.log('setMajorName');
 	
-	let parentId = document.getElementById('hidClassState').textContent;
-	console.log(parentId);	
-	fetch('http://localhost:3000/setMajorName',{
-		method:'POST',
-		headers: { 'Content-Type': 'application/json' },
-	  	signal:signal,
-	  	body: JSON.stringify({parentId:parentId})
-	})
-	.then(response => response.json())
-	.then(data =>{
-		document.getElementById('txtLargeClass').value=data[0].shouhin01Name;
-	})
+	let parentId = '';
+	
+	try{
+		parentId= document.getElementById('hidClassState').textContent;
+		
+		console.log(parentId);	
+		
+		fetch('http://localhost:3000/setMajorName',{
+			method:'POST',
+			headers: { 'Content-Type': 'application/json' },
+	  		signal:signal,
+	  		body: JSON.stringify({parentId:parentId})
+		})
+		.then(response => response.json())
+		.then(data =>{
+			document.getElementById('txtLargeClass').value=data[0].shouhin01Name;
+		})
+		
+	}catch(Exception){
+		//errorの場合
+	}
 }
 
 /**
  * 中分類名をセットする
  */
 function setMinorName(){
+	let parentId = '';
 	
-	console.log('setMajorName');
+	try{
+		parentId = document.getElementById('hidClassState2').textContent;
+		
+		fetch('http://localhost:3000/setMajorName',{
+			method:'POST',
+			headers: { 'Content-Type': 'application/json' },
+	  		signal:signal,
+	  		body: JSON.stringify({parentId:parentId})
+		})
+		.then(response => response.json())
+		.then(data =>{
+			document.getElementById('txtLargeClass2').value=data[0].shouhin01Name;
+		})	
+	}catch(Exception){
+		
+	}
 	
-	let parentId = document.getElementById('hidClassState2').textContent;
-	console.log(parentId);	
-	fetch('http://localhost:3000/setMajorName',{
-		method:'POST',
-		headers: { 'Content-Type': 'application/json' },
-	  	signal:signal,
-	  	body: JSON.stringify({parentId:parentId})
-	})
-	.then(response => response.json())
-	.then(data =>{
-		document.getElementById('txtLargeClass2').value=data[0].shouhin01Name;
-	})
 }
 
 
