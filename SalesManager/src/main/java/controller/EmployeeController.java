@@ -215,8 +215,10 @@ public class EmployeeController extends HttpServlet {
 		String password = AntiXss.antiXss(request.getParameter("txtPASS"));
 		//ログインID、パスワードでユーザー情報を取得
 		Employee emp = EmployeeLogic.login(loginID, password);
-			
-		if(emp != null) {
+		
+		//ログインIDとパスワードで取りだせてかつ従業員が有効ならばログイン成功とみなす
+		System.out.println("emp.enable value: "+ emp.isEnable());
+		if(emp != null && emp.isEnable()==true) {
 			//ログイン成功
 			System.out.println("login Success");
 			session.setAttribute("user", emp);

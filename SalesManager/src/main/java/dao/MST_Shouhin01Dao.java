@@ -209,8 +209,8 @@ public class MST_Shouhin01Dao implements Crud{
 		Item01 item = (Item01)o;
 		
 		String sql = 
-			String.format
-			("update MST_Shouhin01 set rowNo=%d,shouhin01Name='%s' where shouhin01Id=%d",item.getRowNo(),item.getShouhin01Name(),item.getShouhin01ID());
+			String.format("update MST_Shouhin01 set rowNo=%d,shouhin01Name='%s' where shouhin01Id=%d",
+					item.getRowNo(),item.getShouhin01Name(),item.getShouhin01ID());
 			System.out.println(sql);
 			
 		try(Connection con = Pool.getConnection();

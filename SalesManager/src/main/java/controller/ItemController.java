@@ -328,7 +328,7 @@ public class ItemController extends HttpServlet {
 	 * 登録、更新、削除後に情報を更新し遷移もとに画面を遷移させる
 	 * @param request HTTP request
 	 * @param response HTTP response
-	 * @param session 更新情報を含むsession
+	 * @param session 情報更新前session
 	 * @param from 遷移元
 	 * @throws Exception 情報更新失敗
 	 */

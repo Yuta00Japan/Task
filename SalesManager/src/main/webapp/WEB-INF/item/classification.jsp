@@ -30,7 +30,6 @@
 					<input type="hidden" name="state" value="majorCategory">
 				</form>
 				
-				<%--書き込み不可 --%>
 				<p class="center">
 					<input type="textbox" id="txtLargeClass" readonly="readonly"  value="${majorName }">
 				</p>
