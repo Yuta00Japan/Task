@@ -217,7 +217,6 @@ public class EmployeeController extends HttpServlet {
 		Employee emp = EmployeeLogic.login(loginID, password);
 		
 		//ログインIDとパスワードで取りだせてかつ従業員が有効ならばログイン成功とみなす
-		System.out.println("emp.enable value: "+ emp.isEnable());
 		if(emp != null && emp.isEnable()==true) {
 			//ログイン成功
 			System.out.println("login Success");
@@ -228,17 +227,14 @@ public class EmployeeController extends HttpServlet {
 		}else {
 			//ログインに失敗した場合
 			request.setAttribute("lbError", "入力に誤りがあります");
-			
 			//カウントを＋１
-			int tryCount = (int)session.getAttribute("tryCount");
-			tryCount++;
+			session.setAttribute("tryCount",( (int)session.getAttribute("tryCount") + 1 ));
 			
-			System.out.println("試行回数"+(tryCount-1)+"->"+tryCount);
+			System.out.println("試行回数"+((int)session.getAttribute("tryCount")-1)+"->"+
+			(int)session.getAttribute("tryCount"));
 			
-			session.setAttribute("tryCount", tryCount);
-			
-			if(!(tryCount <= 5)) {
-				System.out.println("ログインエラー！");
+			if(!((int)session.getAttribute("tryCount") <= 5)) {
+				System.out.println("ログインエラー");
 				//ログインエラー画面を表示する
 				getServletContext().getRequestDispatcher("/WEB-INF/login/loginError.jsp").forward(request, response);
 			}else {
