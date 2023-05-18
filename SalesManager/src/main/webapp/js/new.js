@@ -213,14 +213,16 @@ function deleteForm(){
 	error.textContent ="";
 }
 /**現在編集中の従業員パスワード　変更前 */
-var truePass = 0;
 
  function changePassword(){
 	/**変更後パスワード */
 	let changePass = document.getElementById('chPassword').value;
 	/**確認パスワード */
 	let confirmPass = document.getElementById('confirmPass').value;
+	/**エラーメッセージ表示要素 */
 	let error = document.getElementById('passwordError');
+	
+	let empId = document.getElementById('empId').textContent;
 	
 	//パスワードと確認が同じかどうかを確認
 	if(changePass != confirmPass){
@@ -233,11 +235,11 @@ var truePass = 0;
 		error.textContent='半角英数字で入力してください';
 		return ;
 	}
-	//現在編集中の従業員IDを送信する
-	return new Promise(resolve =>{
-		let empId = document.getElementById('empId').textContent;
 	
-		fetch('http://localhost:3000/setEmpId',{
+	//現在編集中の従業員IDを送信しパスワードを取得する
+	return new Promise(resolve =>{
+		
+		fetch('http://localhost:3000/getPass',{
 	  		method: 'POST',
 	  		headers: { 'Content-Type': 'application/json' },
 	  		signal:signal,
@@ -245,41 +247,26 @@ var truePass = 0;
 		})
 		.then(response => response.json())
 		.then(data => {
-  			console.log('Success:', data);
+  			resolve(data[0].password);
 		})
-			clearTimeout(timeoutId); 
-			console.log("OK");
-			resolve();
-	}).then(()=>{
-		//送信した従業員IDから現在のパスワードを取得する
-            return new Promise(resolve => {
-
-               fetch('http://localhost:3000/getPass')
-                  .then(response => response.json())
-                  .then(data => {
-                       truePass = data[0].password;
-                       console.log(truePass);
-                       resolve(truePass);
-                  });
-                  clearTimeout(timeoutId);
-                });
 	}).then((truePass)=>{
 		return new Promise(resolve=>{
-				console.log('from checkPassword '+truePass+" "+changePass);
+				console.log('from checkPassword '+truePass+" -> "+changePass);
   			if(truePass == changePass) {
     			error.textContent = '前回と同じパスワードは設定できません';
     			return ;
-  			}
-  			resolve();
+  			}else{
+				resolve();	  
+			}
 		})
 	}).then(()=>{
 		return new Promise(resolve =>{
 			//新しい従業員パスワードに更新する
-		fetch('http://localhost:3000/getNewPass',{
+		fetch('http://localhost:3000/setNewPass',{
 	 	 	method: 'POST',
 	  		headers: { 'Content-Type': 'application/json' },
 	  		signal:signal,
-	  		body: JSON.stringify({changePass:changePass})
+	  		body: JSON.stringify({changePass:changePass,empId:empId})
 		})
 		.then(response => response.json())
 		.then(data => {
@@ -291,7 +278,6 @@ var truePass = 0;
   			console.error('Error:', error);
   			//失敗した場合
 		})
-			clearTimeout(timeoutId); 
 			deleteForm();
 			//変更後のパスに変更する
 			let pass = document.getElementById('passValue');
@@ -360,13 +346,13 @@ function formCheck(event){
 		error.textContent='mailは半角英数字・記号で入力してください';
 		return ;
 	}
-	
+	//上司名が入力されていなければBOSSIDを削除する
 	if(bossName=="" || bossName ==null){
-		document.getElementById('bossId').textContent ="";
+		bossId ="";
 	}else{
 		document.getElementById('bossName').value=bossId;
 	}
-	
+	console.log("bossId value: "+bossId);
 	//入力されたEMPNOを送信し重複してないかを判定する
 	return new Promise(resolve =>{
 
@@ -407,6 +393,7 @@ function formCheck(event){
 			.then(data =>{
 				//上司名が違っていた場合
 				if(data.length != 0){
+					console.log("bossName value: "+data[0].fullName);
 					if(!(data[0].fullName == bossName)){
 						error.textContent='上司名が不一致です';
 					}else{
@@ -424,7 +411,6 @@ function formCheck(event){
 		if(document.getElementById('submit').value == 'add'){
 			return ;
 		}
-		
 		//システム管理者の情報を変更する場合　システム管理者がほかにいるかどうかをチェック
 		
 		//まず編集中の従業員権限情報を取得する
@@ -456,8 +442,9 @@ function formCheck(event){
 		let system = document.getElementById('1');
 		
 		//チェックされていなければほかにシステム管理者がいるかどうかを確認する
-		if(!(system.checked == true)){
+		if(!system.checked){
 			
+			console.log('check false ');
 			fetch('http://localhost:3000/allUserRole',{
 				method:'POST',
 				headers: { 'Content-Type': 'application/json' },
@@ -467,9 +454,11 @@ function formCheck(event){
 			.then(response => response.json())
 			.then(data =>{
 				
+				console.log(data.length);
 				for(let i = 0; i < data.length; i++){
 					
 					let output = data[i].userRole;
+					console.log(output);
 					if(output.charAt(9)=="1"){
 						//フォーム送信を再開させる
 						document.querySelector('#Main').requestSubmit(submitButton);
@@ -528,6 +517,9 @@ let deleteOKBtn = document.getElementById('exeDelete');
 
 deleteOKBtn.addEventListener('click',function(event){deleteCheck(event)});
 
+/**
+ * 削除確認を行う
+ */
 function deleteCheck(event){
 	
 	console.log('削除確認を開始');
@@ -565,11 +557,7 @@ function deleteCheck(event){
 				}
 			})
 		}).then(()=>{
-			//システム管理者の場合　checkboxのIDがチェックされているか確認
-		let system = document.getElementById('1');
-		
-		//チェックされていなければほかにシステム管理者がいるかどうかを確認する
-		if(!(system.checked == true)){
+			//システム管理者の場合はほかにシステム管理者がいるかどうかをチェック
 			
 			fetch('http://localhost:3000/allUserRole',{
 				method:'POST',
@@ -596,11 +584,6 @@ function deleteCheck(event){
 				}
 				
 			})
-		}else{
-			
-			//フォーム送信を再開させる
-			document.querySelector('#Main').requestSubmit(deleteOKBtn);
-		}
 		
 	});
 }

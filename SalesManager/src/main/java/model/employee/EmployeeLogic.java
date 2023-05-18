@@ -156,7 +156,7 @@ public class EmployeeLogic {
 		
 		System.out.println("入力値->  | "+empNo +" | "+fullName+" | "+kanaName+" | "+loginId+" | "+mail+" | "+password+" | "+branchId+" | "+departmentId+" | "+ role+" | "+bossId);
 		
-		String reverseRole="";
+		String reverseRole="0000000000";
 		//権限を表す文字列を作成
 		StringBuilder userRole = new StringBuilder();
 		if(role != null) {
@@ -177,9 +177,8 @@ public class EmployeeLogic {
 					reverseRole= userRole.reverse().toString();
 				}
 			}
-		}else {
-			reverseRole="0000000000";
 		}
+		
 		System.out.println("UserRole ->"+reverseRole);
 		
 		if(empNo == "" || empNo == null) {

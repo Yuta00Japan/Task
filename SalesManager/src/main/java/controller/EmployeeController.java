@@ -166,6 +166,7 @@ public class EmployeeController extends HttpServlet {
 		session.removeAttribute("employee");
 		session.removeAttribute("empList");
 		session.removeAttribute("method");
+		session.removeAttribute("boss");
 	}
 	
 	/**
@@ -348,11 +349,8 @@ public class EmployeeController extends HttpServlet {
 		System.out.println(getServletName()+"# add");
 		EmployeeLogic.setEmployeeFromRequest(request);
 		Employee emp = (Employee)session.getAttribute("employee");
-		try {
-			EmployeeLogic.add(emp);
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
+		EmployeeLogic.add(emp);
+		//sessionリセット
 		sessionReset(session);
 		
 		getServletContext().getRequestDispatcher("/WEB-INF/menu/menu.jsp").forward(request, response);
@@ -389,14 +387,12 @@ public class EmployeeController extends HttpServlet {
 		System.out.println(getServletName()+"# update");
 		EmployeeLogic.setEmployeeFromRequest(request);
 		Employee emp = (Employee)session.getAttribute("employee");
-		
-		try {
-			EmployeeLogic.update(emp);
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		
+		EmployeeLogic.update(emp);
+		//session リセット
 		sessionReset(session);
+		//ログインユーザ情報を再度取得する
+		Employee user = (Employee)session.getAttribute("user");
+		session.setAttribute("user",EmployeeLogic.loadSingle(user.getEmpId()+""));
 		
 		getServletContext().getRequestDispatcher("/WEB-INF/menu/menu.jsp").forward(request, response);
 	}
@@ -434,7 +430,18 @@ public class EmployeeController extends HttpServlet {
 		
 		sessionReset(session);
 		
-		getServletContext().getRequestDispatcher("/WEB-INF/menu/menu.jsp").forward(request, response);
+		//ログインユーザが有効化どうかチェックする
+		Employee user = (Employee)session.getAttribute("user");
+		user = EmployeeLogic.loadSingle(user.getEmpId()+"");
+		if(user.isEnable()) {
+			getServletContext().getRequestDispatcher("/WEB-INF/menu/menu.jsp").forward(request, response);
+			return ;
+		}
+		//有効でない場合ログイン画面へ遷移する
+		session.invalidate();
+		session = request.getSession();
+		session.setAttribute("tryCount",0);
+		getServletContext().getRequestDispatcher("/WEB-INF/login/login.jsp").forward(request, response);
 	}
 
 }

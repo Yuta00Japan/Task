@@ -84,7 +84,6 @@ app.get('/setBranch',(req,res)=>{
 app.get('/setRole',(req,res)=>{
 	connection.query('select roleNo,roleName from MST_Role ',(err,result,field)=>{
 		if (err) throw err;
-		console.log(result);
 		res.json(result);
 	});
 });
@@ -112,31 +111,25 @@ app.get('/setCategory',(req,res)=>{
 });
 
 /**
- * 従業員IDを格納する
+ * 現在編集中の従業員パスワードを取得する
  */
-app.post('/setEmpId',(req,res)=>{
-	let empId = req.body.empId;
-	console.log("from setEmpId "+empId);
-	localStorage.setItem('empId',empId);
-});
-/**
- * 現在編集中のパスワードを取得する
- */
-app.get('/getPass',(req,res)=>{
-	let empId = Number(localStorage.getItem('empId'));
-	console.log("from getPass  "+empId);
-	connection.query(`select password from MST_Employee where empId=${empId}`,(err,result,field)=>{
-		if (err) throw err;
+app.post('/getPass',(req,res)=>{
+	let empId = Number(req.body.empId);
+	let sql = `select password from mst_employee where empid=${empId}`;
+	console.log(sql)
+	connection.query(sql,(err,result,field)=>{
+		if(err) throw err;
 		res.json(result);
-	})
+	});
+	
 });
 /**
- * パスワードを変更する
+ * 現在編集中の従業員のパスワードを変更する
  */
-app.post('/getNewPass',(req,res)=>{
+app.post('/setNewPass',(req,res)=>{
 	console.log('now /getNewPass');
 	let chPassword = req.body.changePass;
-	let empId = Number(localStorage.getItem('empId'));
+	let empId = Number(req.body.empId);
 	console.log('new　password'+ chPassword + '　empID '+ empId);
 	connection.query(`update MST_Employee set password='${chPassword}' where empId=${empId}`,(err,result,field)=>{
 		if (err) throw err;
@@ -173,13 +166,13 @@ app.post('/checkBoss',(req,res)=>{
 })
 
 /**
- * 編集中の従業員がシステム管理者かどうかを確認＋ほかにシステム管理者がいるかどうかをチェックする
+ * 編集中のユーザーのほかにシステム管理者がいるかどうかをチェックする
  */
 app.post('/allUserRole',(req,res)=>{
 	console.log('form allUserRole');
 	let empId= req.body.empId;
 	empId=Number(empId);
-	connection.query(`select userRole from MST_Employee where empId !=${empId}`,(err,result,field)=>{
+	connection.query(`select userRole from MST_Employee where empId !=${empId} and enable=true`,(err,result,field)=>{
 		if (err) throw err;
 		res.json(result);
 	});
@@ -192,7 +185,7 @@ app.post('/getUserRole',(req,res)=>{
 	console.log('from getUserRole');
 	let empId = req.body.empId;
 	empId=Number(empId);
-	connection.query(`select userRole from MST_Employee where empId=${empId}`,(err,result,field)=>{
+	connection.query(`select userRole from MST_Employee where empId=${empId} `,(err,result,field)=>{
 		if (err) throw err;
 		res.json(result);
 	});

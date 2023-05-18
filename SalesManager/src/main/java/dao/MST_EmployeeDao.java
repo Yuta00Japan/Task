@@ -136,7 +136,7 @@ public class MST_EmployeeDao implements Crud{
 			
 			if(emp != null) {
 				//大文字、小文字一致
-				if(loginID.equalsIgnoreCase(emp.getLoginId())&& password.equalsIgnoreCase(emp.getPassword())) {
+				if(loginID.equals(emp.getLoginId())&& password.equals(emp.getPassword())) {
 					return emp;
 				}else {
 				//大文字、小文字が不一致

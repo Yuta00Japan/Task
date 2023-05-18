@@ -12,8 +12,8 @@
 
 <form method="post">
 		
-		
-		<h1><button type="button" onClick='history.back()' class="button">戻る</button></h1>
+		<%--修正対象 仮修正20230517実施--%>
+		<h1><button  formaction="MenuController"  class="button">戻る</button></h1>
 		
 		
 	<div id="form">
@@ -28,7 +28,7 @@
 				<option value=""></option>
 			</select>
 		</span>
-						<%--おそらくenableが有効な人間を検索するものだと思われる --%>
+		
 		<span class="form">削除者<input type="radio" name="enable" value="true"></span>
 		<span class="form"><button class="button" name="state" value="search" formaction="EmployeeController">検索</button></span>
 	</div>
