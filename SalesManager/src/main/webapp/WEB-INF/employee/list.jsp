@@ -11,10 +11,17 @@
 <body>
 
 <form method="post">
-		
+
 		<%--修正対象 仮修正20230517実施--%>
-		<h1><button  formaction="MenuController"  class="button">戻る</button></h1>
-		
+		<c:choose>
+		<%--従業員登録画面からの場合 --%>
+			<c:when test="${from=='new' }">
+				<h1><button name="state" value="new" formaction="EmployeeController" class="button">戻る</button></h1>
+			</c:when>
+			<c:otherwise>
+				<h1><button  formaction="MenuController"  class="button">戻る</button></h1>
+			</c:otherwise>
+		</c:choose>
 		
 	<div id="form">
 		<span class="form">名前検索 <input type="textbox" name="name"  id="textBox"></span>

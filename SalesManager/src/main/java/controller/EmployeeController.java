@@ -278,15 +278,17 @@ public class EmployeeController extends HttpServlet {
 		EmployeeLogic.setEmployeeFromRequest(request);
 		
 		//通常の閲覧であれば何もしない
-		if(method =="normal") {
-				
+		if(method.equals("normal")) {
+			System.out.println("通常検索");	
 		}//従業員検索
 		else if(method.equals("employee")) {
+			request.setAttribute("from","new");
 			System.out.println("従業員検索開始");
 			session.setAttribute("method",method);
 		}//上司検索
 		else {
 			System.out.println("上司検索開始");
+			request.setAttribute("from","new");
 			session.setAttribute("method", method);
 		}
 		

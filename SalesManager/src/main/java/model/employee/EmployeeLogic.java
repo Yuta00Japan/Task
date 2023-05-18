@@ -154,7 +154,7 @@ public class EmployeeLogic {
 		
 		String bossId= AntiXss.antiXss(request.getParameter("txtBoss"));
 		
-		System.out.println("入力値->  | "+empNo +" | "+fullName+" | "+kanaName+" | "+loginId+" | "+mail+" | "+password+" | "+branchId+" | "+departmentId+" | "+ role+" | "+bossId);
+		System.out.println("入力値->  | "+empNo +" | "+fullName+" | "+kanaName+" | "+loginId+" | "+mail+" | "+password+" | "+branchId+" | "+departmentId+" | "+ role+" | "+bossId+" | ");
 		
 		String reverseRole="0000000000";
 		//権限を表す文字列を作成

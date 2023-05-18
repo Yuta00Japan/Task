@@ -88,7 +88,7 @@ function setRole(){
  function setBranch(){
 	 
 	 var branchValue = document.getElementById('branchValue').value;
-	 
+	 console.log("branchValue "+branchValue);
 	 fetch('http://localhost:3000/setBranch',{signal})
 	 .then(response => response.json())
 	 .then(data =>{
@@ -117,6 +117,7 @@ function setRole(){
  function setDepartment(){
 	 
 	 var departmentValue = document.getElementById('departmentValue').value;
+	 console.log("departmentValue "+departmentValue);
 	 
 	  fetch('http://localhost:3000/setDepartment',{signal})
 	 .then(response => response.json())

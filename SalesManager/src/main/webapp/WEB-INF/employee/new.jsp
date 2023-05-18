@@ -27,7 +27,9 @@
 				<tr><td class="header">メール</td><td class="content"><input type="text" name="txtMail" class="form" value="${employee.email }" id="mail"></td></tr>
 				<tr><td class="header">所属</td>
 					<td class="content">
+					
 						<input type="hidden" id="branchValue" value="${employee.branchId }">
+						
 						<select name="branchId" id="branch">
 							<option value=""></option>
 						</select>
@@ -50,6 +52,7 @@
 					<td class="header">
 						権限
 					</td>
+					
 					<td>
 						<input type="hidden" id="userRole" value="${employee.userRole }" >
 						<span id="role"></span>
@@ -67,9 +70,8 @@
 				</div>
 				
 			
-				<%--エラーなどを表示する領域 --%>
+				<%--エラーを表示する要素 --%>
 				<span id="formError"></span>
-				<%--ここまで --%>
 				
 				<%--非表示従業員ID　上司ID --%>
 				<label class="hidden" id="empId">${employee.empId }</label>
