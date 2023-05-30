@@ -10,7 +10,7 @@ public class EmployeeList {
 	
 	/**従業員検索結果*/
 	private List<Employee> list;
-	/**検索結果詳細*/
+	/**従業員検索結果詳細*/
 	private List<EmployeeDetail> detail;
 	
 	public EmployeeList() {

@@ -12,7 +12,6 @@ import javax.servlet.http.HttpSession;
 import model.employee.Employee;
 import model.employee.EmployeeList;
 import model.employee.EmployeeLogic;
-import model.node.NodeStart;
 import model.util.AntiXss;
 import model.util.LoginCheck;
 
@@ -37,23 +36,6 @@ public class EmployeeController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html; charset=UTF-8");
 		response.getWriter().append("Served at: ").append(request.getContextPath());
-		
-		HttpSession session = request.getSession();
-		//sessionにユーザー情報が保持されていた場合破棄しログオフ状態にする
-		if(session.getAttribute("user") != null) {
-			session.removeAttribute("user");
-		}
-		
-		//node express server 起動
-		Thread node = new NodeStart();
-		node.start();
-		
-		//ログイン回数記録用の値を保存
-		session.setAttribute("tryCount", 0);
-		
-		//ログイン画面へ遷移する
-		getServletContext().getRequestDispatcher("/WEB-INF/login/login.jsp").forward(request, response);
-		
 	}
 
 	/**
@@ -64,93 +46,57 @@ public class EmployeeController extends HttpServlet {
 		HttpSession session = request.getSession();
 		String state[] = request.getParameter("state").split(",");
 		
-		//sessionがユーザー情報を保持しているかどうかを確認する
-		
 			try {
-				switch(state[0]) {
-				//従業員登録フォームの内容をリセットし表示する
-				case "formReset":
-					proc_formReset(request,response,session);
-					break;
-					//ログイン試行
-				case "try_Login":
-					proc_Login(request,response,session);
-					break;
-					//ログアウト
-				case "logout":
-					proc_Logout(request,response,session);
-					break;
+				//sessionがユーザー情報を保持しているかどうかを確認する
+				if(LoginCheck.check(session)) {
+					switch(state[0]) {
+					//従業員登録フォームの内容をリセットし表示する
+					case "formReset":
+						proc_formReset(request,response,session);
+						break;
 					//従業員一覧
-				case "list":
-					if(LoginCheck.check(session)) {
+					case "list":
 						proc_List(request,response,session,state[1]);
-					}else {
-						proc_SessionError(request,response,session);
-					}
-					break;
+						break;
 					//従業員検索
-				case "search":
-					if(LoginCheck.check(session)) {
+					case "search":
 						proc_Search(request,response,session);
-					}else {
-					    proc_SessionError(request,response,session);
-					}
-					break;
+						break;
 					//従業員登録フォーム
-				case "new":
-					if(LoginCheck.check(session)) {
+					case "new":
 						proc_New(request,response,session);
-					}else {
-						proc_SessionError(request,response,session);
-					}
-					break;
+						break;
 					//従業員登録
-				case "add":
-					if(LoginCheck.check(session)) {
+					case "add":
 						proc_Add(request,response,session);
-					}else {
-						proc_SessionError(request,response,session);
-					}
-					break;
+						break;
 					//従業員詳細
-				case "detail":
-					if(LoginCheck.check(session)) {
+					case "detail":
 						proc_Detail(request,response,session,state[1]);
-					}else {
-						proc_SessionError(request,response,session);
-					}
-					break;
+						break;
 					//既存従業員更新
-				case "update":
-					if(LoginCheck.check(session)) {
+					case "update":
 						proc_Update(request,response,session);
-					}else {
-						proc_SessionError(request,response,session);
-					}
-					break;
+						break;
 					//上司選択
-				case "selectBoss":
-					if(LoginCheck.check(session)) {
+					case "selectBoss":
 						proc_BossSelect(request,response,session,state[1]);
-					}else {
-						proc_SessionError(request,response,session);
-					}
-					break;
+						break;
 					//従業員削除		
-				case "deleteEmployee":
-					if(LoginCheck.check(session)) {
+					case "deleteEmployee":
 						proc_Delete(request,response,session,state[1]);
-					}else {
-						proc_SessionError(request,response,session);
+						break;
+					default:
+						response.sendRedirect("SessionController?state=logout");
 					}
-					break;
-				default:
-					proc_SessionError(request,response,session);
+					return ;
 				}
+				//ユーザ情報のsessionが保持されていなかった場合ログイン画面へ戻す
+				response.sendRedirect("SessionController?state=logout");
 				
 			}catch(Exception e) {
 				e.printStackTrace();
-				getServletContext().getRequestDispatcher("/WEB-INF/menu/menu.jsp").forward(request, response);
+				response.sendRedirect("SessionController?state=logout");
 			}
 	
 	}
@@ -170,24 +116,6 @@ public class EmployeeController extends HttpServlet {
 	}
 	
 	/**
-	 * session切れによりユーザー情報が欠損していた場合ログイン画面に戻す
-	 * @param request HTTP request
-	 * @param response HTTP response
-	 * @param session ユーザー情報が欠損したsession
-	 * @throws ServletException error
-	 * @throws IOException error
-	 */
-	protected void proc_SessionError(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws ServletException, IOException {
-		System.out.println(getServletName()+"# session Error");
-		session.invalidate();
-		session = request.getSession();
-		//ログイン回数記録用の値を保存
-		session.setAttribute("tryCount", 0);
-		//ログイン画面へ遷移する
-		getServletContext().getRequestDispatcher("/WEB-INF/login/login.jsp").forward(request, response);
-	}
-	
-	/**
 	 * 従業員登録画面の情報をリセットする
 	 * @param request HTTP request
 	 * @param response HTTP response
@@ -200,68 +128,6 @@ public class EmployeeController extends HttpServlet {
 		sessionReset(session);
 		//ログイン画面へ遷移する
 		getServletContext().getRequestDispatcher("/WEB-INF/employee/new.jsp").forward(request, response);
-	}
-	
-	/**
-	 * ログイン処理を実行する
-	 * @param request HTTP request
-	 * @param response HTTP response 
-	 * @param session ユーザー情報を入れるsession
-	 * @throws Exception ログイン処理失敗
-	 */
-	protected void proc_Login(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws Exception {
-		System.out.println(getServletName()+"# try_Login");
-		
-		String loginID = AntiXss.antiXss(request.getParameter("txtID"));
-		String password = AntiXss.antiXss(request.getParameter("txtPASS"));
-		//ログインID、パスワードでユーザー情報を取得
-		Employee emp = EmployeeLogic.login(loginID, password);
-		
-		//ログインIDとパスワードで取りだせてかつ従業員が有効ならばログイン成功とみなす
-		if(emp != null && emp.isEnable()==true) {
-			//ログイン成功
-			System.out.println("login Success");
-			session.setAttribute("user", emp);
-			//メニュー画面へ遷移する
-			getServletContext().getRequestDispatcher("/WEB-INF/menu/menu.jsp").forward(request, response);
-			
-		}else {
-			//ログインに失敗した場合
-			request.setAttribute("lbError", "入力に誤りがあります");
-			//カウントを＋１
-			session.setAttribute("tryCount",( (int)session.getAttribute("tryCount") + 1 ));
-			
-			System.out.println("試行回数"+((int)session.getAttribute("tryCount")-1)+"->"+
-			(int)session.getAttribute("tryCount"));
-			
-			if(!((int)session.getAttribute("tryCount") <= 5)) {
-				System.out.println("ログインエラー");
-				//ログインエラー画面を表示する
-				getServletContext().getRequestDispatcher("/WEB-INF/login/loginError.jsp").forward(request, response);
-			}else {
-				//ログイン画面へ遷移する
-				getServletContext().getRequestDispatcher("/WEB-INF/login/login.jsp").forward(request, response);
-			}
-			
-		}
-	}
-	
-	/**
-	 * ログアウト処理を行う
-	 * @param request HTTP request
-	 * @param response HTTP response
-	 * @param session ユーザー情報を含むsession
-	 * @throws IOException error
-	 * @throws ServletException  error
-	 */
-	protected void proc_Logout(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws ServletException, IOException {
-		System.out.println(getServletName()+" # logout");
-		session.invalidate();
-	    session = request.getSession();
-		//ログイン回数記録用の値を保存
-		session.setAttribute("tryCount", 0);
-		//ログイン画面へ遷移する
-		getServletContext().getRequestDispatcher("/WEB-INF/login/login.jsp").forward(request, response);
 	}
 	
 	/**
@@ -331,14 +197,16 @@ public class EmployeeController extends HttpServlet {
 		System.out.println(getServletName()+"# new");
 		//システム管理者かどうかチェックする
 		Employee emp = (Employee) session.getAttribute("user");
-		if(Character.toString(emp.getUserRole().charAt(9)).equals("1")) {
-			//管理者の場合
-			getServletContext().getRequestDispatcher("/WEB-INF/employee/new.jsp").forward(request, response);
-		}else {
-			 sessionReset(session);
-			 
-			getServletContext().getRequestDispatcher("/WEB-INF/menu/menu.jsp").forward(request, response);
+		
+		if(emp != null) {
+			if(Character.toString(emp.getUserRole().charAt(9)).equals("1")) {
+				//管理者の場合
+				getServletContext().getRequestDispatcher("/WEB-INF/employee/new.jsp").forward(request, response);
+				return ;
+			}
 		}
+		response.sendRedirect("SessionController?state=menu");
+		
 	}
 	/**
 	 * 従業員を新規登録する
@@ -352,10 +220,7 @@ public class EmployeeController extends HttpServlet {
 		EmployeeLogic.setEmployeeFromRequest(request);
 		Employee emp = (Employee)session.getAttribute("employee");
 		EmployeeLogic.add(emp);
-		//sessionリセット
-		sessionReset(session);
-		
-		getServletContext().getRequestDispatcher("/WEB-INF/menu/menu.jsp").forward(request, response);
+		response.sendRedirect("SessionController?state=menu");
 	}
 	
 	/**
@@ -390,13 +255,10 @@ public class EmployeeController extends HttpServlet {
 		EmployeeLogic.setEmployeeFromRequest(request);
 		Employee emp = (Employee)session.getAttribute("employee");
 		EmployeeLogic.update(emp);
-		//session リセット
-		sessionReset(session);
 		//ログインユーザ情報を再度取得する
 		Employee user = (Employee)session.getAttribute("user");
 		session.setAttribute("user",EmployeeLogic.loadSingle(user.getEmpId()+""));
-		
-		getServletContext().getRequestDispatcher("/WEB-INF/menu/menu.jsp").forward(request, response);
+		response.sendRedirect("SessionController?state=menu");
 	}
 	
 	/**
@@ -410,7 +272,6 @@ public class EmployeeController extends HttpServlet {
 	protected void proc_BossSelect(HttpServletRequest request, HttpServletResponse response,HttpSession session,String employeeId) throws Exception {
 		System.out.println(getServletName()+"# bossSelect");
 		System.out.println( "bossID :"+employeeId);
-		
 		//上司を検索
 		Employee boss = EmployeeLogic.searchBoss(employeeId);
 		session.setAttribute("boss", boss);
@@ -430,20 +291,16 @@ public class EmployeeController extends HttpServlet {
 		
 		EmployeeLogic.delete(employeeId);
 		
-		sessionReset(session);
-		
 		//ログインユーザが有効化どうかチェックする
 		Employee user = (Employee)session.getAttribute("user");
+		//もしログインユーザが更新された場合sessionの情報が古いままなので最新にする
 		user = EmployeeLogic.loadSingle(user.getEmpId()+"");
 		if(user.isEnable()) {
-			getServletContext().getRequestDispatcher("/WEB-INF/menu/menu.jsp").forward(request, response);
+			response.sendRedirect("SessionController?state=menu");
 			return ;
 		}
 		//有効でない場合ログイン画面へ遷移する
-		session.invalidate();
-		session = request.getSession();
-		session.setAttribute("tryCount",0);
-		getServletContext().getRequestDispatcher("/WEB-INF/login/login.jsp").forward(request, response);
+		response.sendRedirect("SessionController?state=menu");
 	}
 
 }

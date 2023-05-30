@@ -19,7 +19,7 @@
 				<h1><button name="state" value="new" formaction="EmployeeController" class="button">戻る</button></h1>
 			</c:when>
 			<c:otherwise>
-				<h1><button  formaction="MenuController"  class="button">戻る</button></h1>
+				<h1><button class="button" name="state" value="menu"  formaction="SessionController">戻る</button></h1>
 			</c:otherwise>
 		</c:choose>
 		

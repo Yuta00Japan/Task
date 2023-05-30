@@ -11,7 +11,7 @@
 
 <h1><label id="header" for="txtID">ログイン</label></h1>
 
-<form action="EmployeeController" method="post">
+<form action="SessionController" method="post">
 
 <div id="container">
 

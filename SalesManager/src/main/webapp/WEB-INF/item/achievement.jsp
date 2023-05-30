@@ -49,7 +49,7 @@
 			</select>
 			
 			<%--メニュー画面に戻る --%>
-			<button class="button" formaction="MenuController">閉じる</button>
+			<button class="button" name="state" value="menu" formaction="SessionController">閉じる</button>
 		
 		</h2>
 		

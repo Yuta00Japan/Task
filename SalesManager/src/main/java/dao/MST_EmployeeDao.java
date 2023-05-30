@@ -52,7 +52,7 @@ public class MST_EmployeeDao implements Crud{
 		}
 		//削除者のみで検索
 		else if(trueFalse != null && name == "" && branchID== "" && departmentId=="" ) {
-			return baseSQL+" ";
+			return baseSQL+" where emp.enable=false ";
 		}
 		//氏名と支社ID
 		else if(name != "" && branchID !="" && trueFalse== null && departmentId== "") {
@@ -64,7 +64,7 @@ public class MST_EmployeeDao implements Crud{
 		}
 		//氏名と削除者
 		else if(name != "" && trueFalse != null && departmentId=="" && branchID=="") {
-			return baseSQL + String.format(" where (emp.fullName like '%%%s%%' or emp.kananame like '%%%s%%') ", name,name,departmentId);
+			return baseSQL + String.format(" where (emp.fullName like '%%%s%%' or emp.kananame like '%%%s%%') and emp.enable=false ", name,name,departmentId);
 		}
 		//支社IDと部署ID
 		else if(branchID != "" && departmentId != "" && name == "" && trueFalse == null) {
@@ -72,11 +72,11 @@ public class MST_EmployeeDao implements Crud{
 		}
 		//支社IDと削除者
 		else if(branchID != "" && trueFalse != null && departmentId == "" && name == "") {
-			return baseSQL +String.format(" where emp.branchId =%s ",branchID);
+			return baseSQL +String.format(" where emp.branchId =%s and emp.enable=false",branchID);
 		}
 		//部署IDと削除者
 		else if(departmentId != "" && trueFalse != null && name == "" && branchID == "") {
-			return baseSQL + String.format(" where emp.departmentId =%s", departmentId);
+			return baseSQL + String.format(" where emp.departmentId =%s and emp.enable=false", departmentId);
 		}
 		//氏名と部署と所属
 		else if(name != "" && departmentId != "" && branchID != "" && trueFalse ==null) {
@@ -84,19 +84,19 @@ public class MST_EmployeeDao implements Crud{
 		}
 		//氏名と部署と削除者
 		else if(name != "" && departmentId != "" && trueFalse !=null && branchID =="") {
-			return baseSQL+String.format(" where (emp.fullName like '%%%s%%' or emp.kananame like '%%%s%%') and emp.departmentId=%s",name,name,departmentId);
+			return baseSQL+String.format(" where (emp.fullName like '%%%s%%' or emp.kananame like '%%%s%%') and emp.departmentId=%s and emp.enable=false",name,name,departmentId);
 		}
 		//氏名と所属と削除者
 		else if(name != "" && branchID != "" && trueFalse != null && departmentId == "") {
-			return baseSQL+String.format(" where (emp.fullName like '%%%s%%' or emp.kananame like '%%%s%%') and emp.branchId=%s ",name,name,branchID);
+			return baseSQL+String.format(" where (emp.fullName like '%%%s%%' or emp.kananame like '%%%s%%') and emp.branchId=%s and emp.enable=false",name,name,branchID);
 		}
 		//部署と所属と削除者
 		else if(departmentId !="" && branchID != "" && trueFalse != null && name=="") {
-			return baseSQL+String.format(" where emp.departmentId=%s  and emp.branchId=%s",departmentId,branchID);
+			return baseSQL+String.format(" where emp.departmentId=%s  and emp.branchId=%s and emp.enable=false",departmentId,branchID);
 		}
 		//すべてで検索
 		else{
-			return baseSQL+String.format("where (emp.fullName like '%%%s%%' or emp.kananame like '%%%s%%') and emp.branchId=%s and emp.departmentId=%s ",name,name,branchID,departmentId);
+			return baseSQL+String.format("where (emp.fullName like '%%%s%%' or emp.kananame like '%%%s%%') and emp.branchId=%s and emp.departmentId=%s and emp.enable=false",name,name,branchID,departmentId);
 		}
 		
 	}

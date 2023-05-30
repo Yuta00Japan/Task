@@ -2,7 +2,7 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" id="WebApp_ID" version="4.0">
   <display-name>SalesManager</display-name>
   <welcome-file-list>
-    <welcome-file>EmployeeController</welcome-file>
+    <welcome-file>SessionController</welcome-file>
     <welcome-file>index.html</welcome-file>
     <welcome-file>index.jsp</welcome-file>
     <welcome-file>index.htm</welcome-file>
@@ -11,7 +11,7 @@
     <welcome-file>default.htm</welcome-file>
   </welcome-file-list>
   <servlet>
-    <servlet-name>Employee</servlet-name>
-    <servlet-class>controller.EmployeeController</servlet-class>
+    <servlet-name>Session</servlet-name>
+    <servlet-class>controller.SessionController</servlet-class>
   </servlet>
 </web-app>

@@ -13,6 +13,8 @@ import javax.servlet.http.HttpFilter;
 
 /**
  * Servlet Filter implementation class Character
+ * <br>
+ * post時の文字コードを指定します。
  */
 @WebFilter("/*")
 public class Character extends HttpFilter implements Filter {

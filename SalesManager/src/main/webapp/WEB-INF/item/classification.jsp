@@ -55,7 +55,7 @@
 			</c:if>	
 			
 			
-				<%--非表示分類ID --%>
+				<%--非表示分類ID 大分類、中分類--%>
 				<label id="hidClassState">${majorId }</label>
 				<label id="hidClassState2">${minorId }</label>
 	</div>
@@ -89,12 +89,14 @@
 			
 				<input type="textbox" name="txtAddName" class="txtAddName">
 			 	<c:choose>
+			 	
 			 		<c:when test="${nowLocation =='大分類' }">
 			 			<button class="button"  name="state" id="newBtn" value="newItem01,0,${nowLocation}">追加</button>
 			 		</c:when>
 			 		<c:otherwise>
 			 			<button class="button"  name="state" id="newBtn" value="newItem01,${classificationId},${nowLocation}">追加</button>
 			 		</c:otherwise>
+			 		
 				</c:choose>
 			</form>	
 			</div>

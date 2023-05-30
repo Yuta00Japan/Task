@@ -11,7 +11,9 @@
 
 <form method="post" action="EmployeeController" id="Main" name="main"  >
 
-<h1><button class="button" name="state" value="logout" formaction="EmployeeController">ログアウト</button></h1>
+	<h1>
+		<button class="button" name="state" value="logout" formaction="SessionController">ログアウト</button>
+	</h1>
 
 	<div id="container">
 		<div id="form">
@@ -45,7 +47,7 @@
 				</tr><%--上司検索 --%>
 				<tr><td class="header">上司</td><td class="content"><input type="text" name="txtBoss" value="${ boss.fullName}" class="form" id="bossName"></td>
 					<td>
-						<button name="state" value="list,boss" formaction="EmployeeController" class="button">上司検索</button>
+						<button name="state" value="list,boss" formaction="EmployeeController" class="button">検索</button>
 					</td>
 				</tr>
 				<tr>

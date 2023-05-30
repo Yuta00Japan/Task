@@ -102,7 +102,6 @@ app.get('/setDepartment',(req,res)=>{
  * カテゴリーをセットする
  */
 app.get('/setCategory',(req,res)=>{
-	console.log('from setCategory');
 	connection.query('select categoryID,category from MsCategory',(err,result,field)=>{
 		if (err) throw err;
 		res.json(result);
@@ -116,7 +115,6 @@ app.get('/setCategory',(req,res)=>{
 app.post('/getPass',(req,res)=>{
 	let empId = Number(req.body.empId);
 	let sql = `select password from mst_employee where empid=${empId}`;
-	console.log(sql)
 	connection.query(sql,(err,result,field)=>{
 		if(err) throw err;
 		res.json(result);
@@ -127,10 +125,8 @@ app.post('/getPass',(req,res)=>{
  * 現在編集中の従業員のパスワードを変更する
  */
 app.post('/setNewPass',(req,res)=>{
-	console.log('now /getNewPass');
 	let chPassword = req.body.changePass;
 	let empId = Number(req.body.empId);
-	console.log('new　password'+ chPassword + '　empID '+ empId);
 	connection.query(`update MST_Employee set password='${chPassword}' where empId=${empId}`,(err,result,field)=>{
 		if (err) throw err;
 		
@@ -140,12 +136,10 @@ app.post('/setNewPass',(req,res)=>{
  * empNoが重複してないかチェックする
  */
 app.post('/judgeEmpNo',(req,res)=>{
-	console.log('from / judgeEmpNo');
 	let empNo = req.body.empNo;
 	empNo = Number(empNo);
 	connection.query(`select empId from MST_Employee where empNo=${empNo}`,(err,result,field)=>{
 		if (err) throw err;
-		console.log(result);
 		res.json(result);
 	});
 	
@@ -155,10 +149,8 @@ app.post('/judgeEmpNo',(req,res)=>{
  * 上司IDと上司名が一致しているかどうかを検証する
  */
 app.post('/checkBoss',(req,res)=>{
-	console.log('from /checkBoss');
 	let bossId = req.body.bossId;
 	bossId=Number(bossId);
-	console.log(bossId);
 	connection.query(`select fullName from MST_Employee where empId=${bossId}`,(err,result,field)=>{
 		if (err) throw err;
 		res.json(result);
@@ -169,7 +161,6 @@ app.post('/checkBoss',(req,res)=>{
  * 編集中のユーザーのほかにシステム管理者がいるかどうかをチェックする
  */
 app.post('/allUserRole',(req,res)=>{
-	console.log('form allUserRole');
 	let empId= req.body.empId;
 	empId=Number(empId);
 	connection.query(`select userRole from MST_Employee where empId !=${empId} and enable=true`,(err,result,field)=>{
@@ -182,7 +173,6 @@ app.post('/allUserRole',(req,res)=>{
  * 受け取ったEMPIDをもとにそのIDの従業員権限を取得する
  */
 app.post('/getUserRole',(req,res)=>{
-	console.log('from getUserRole');
 	let empId = req.body.empId;
 	empId=Number(empId);
 	connection.query(`select userRole from MST_Employee where empId=${empId} `,(err,result,field)=>{
@@ -192,11 +182,8 @@ app.post('/getUserRole',(req,res)=>{
 });
 
 app.post('/setMajorName',(req,res)=>{
-	console.log('from setMajorName');
 	let parentId = req.body.parentId;
-	console.log("parentID value : "+parentId);
 	parentId = Number(parentId);
-	console.log(parentId);
 	connection.query(`select shouhin01Name from MST_shouhin01 where shouhin01ID=${parentId}`,(err,result,field)=>{
 		if (err) throw err;
 		res.json(result);

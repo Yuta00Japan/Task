@@ -25,20 +25,13 @@
 	text-align: center;
 }
 
-#hidClassState{
-	display: none;
-}
-#hidClassState2{
+#hidClassState,#hidClassState2{
 	display: none;
 }
 
-#txtLargeClass{
+#txtLargeClass,#txtLargeClass2{
 	height: 30px;
-	width: 55px;
-}
-#txtLargeClass2{
-	height: 30px;
-	width: 55px;
+	width: 70px;
 }
 
 .txtAddNo{

@@ -46,32 +46,6 @@ public class ItemLogic {
 		return dao.findAllMejor();
 		
 	}
-	
-	/**
-	 * すべての中分類の情報を取得する
-	 * @return 商品全中分類
-	 * @throws Exception 中分類取りだし失敗
-	 */
-	public static Item01List minorItemAll() throws Exception{
-		
-		MST_Shouhin01Dao dao = new MST_Shouhin01Dao();
-		
-		return dao.findAllMinor();
-	}
-	
-	/**
-	 * すべての小分類を取得する
-	 * @return 商品全小分類
-	 * @throws Exception 小分類取りだし失敗
-	 */
-	public static Item01List detailedItemAll() throws Exception{
-		
-		MST_Shouhin01Dao dao = new MST_Shouhin01Dao();
-		
-		return dao.findAllDetailed();
-	}
-	
-	
 	/**
 	 * 選択した商品０１の中分類、小分類を表示する
 	 * @param shouhin01ID 親商品０１ID
