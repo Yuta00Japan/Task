@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>商品登録</title>
-<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/item_new.css">
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/achievement.css">
 </head>
 <body>
 	
@@ -49,7 +49,7 @@
 			</select>
 			
 			<%--メニュー画面に戻る --%>
-			<button class="button" name="state" value="menu" formaction="SessionController">閉じる</button>
+			<button class="button" id="close" name="state" value="menu" formaction="SessionController">閉じる</button>
 		
 		</h2>
 		

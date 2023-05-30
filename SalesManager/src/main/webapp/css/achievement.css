@@ -31,6 +31,10 @@
 	width: 700px;
 }
 
+#close{
+	margin-left:35px;
+}
+
 .itemNameorCategory{
 	text-align: center;
 	width: 350px;

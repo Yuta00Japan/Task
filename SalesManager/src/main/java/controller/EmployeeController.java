@@ -143,19 +143,20 @@ public class EmployeeController extends HttpServlet {
 		//登録フォームの値を保持する
 		EmployeeLogic.setEmployeeFromRequest(request);
 		
-		//通常の閲覧であれば何もしない
-		if(method.equals("normal")) {
+		switch(method) {
+		case "normal":
 			System.out.println("通常検索");	
-		}//従業員検索
-		else if(method.equals("employee")) {
+			break;
+		case "employee":
+			System.out.println("従業員検索");
 			request.setAttribute("from","new");
-			System.out.println("従業員検索開始");
 			session.setAttribute("method",method);
-		}//上司検索
-		else {
-			System.out.println("上司検索開始");
+			break;
+		case "boss":
+			System.out.println("上司検索");
 			request.setAttribute("from","new");
 			session.setAttribute("method", method);
+			break;
 		}
 		
 		//全従業員情報を取りだす

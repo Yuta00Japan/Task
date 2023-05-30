@@ -242,7 +242,6 @@ public class ItemController extends HttpServlet {
 		Item01List list = ItemLogic.detail(shouhin01ID);
 		switch(from) {
 		case "大分類":
-			
 			request.setAttribute("nowLocation", "中分類");
 			session.setAttribute("majorId", shouhin01ID);
 			
