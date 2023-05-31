@@ -16,7 +16,7 @@
 <div id="container">
 
 	<div id="label">
-		<h2><label class="ID" for="txtID">LoginID</label></h2>
+		<h2><label class="ID" for="txtID">LogInID</label></h2>
 
 		<h3><label class="PASS" for="txtPASS">パスワード</label></h3>
 	</div>

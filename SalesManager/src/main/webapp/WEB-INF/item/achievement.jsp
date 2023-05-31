@@ -22,7 +22,7 @@
 		<input type="radio" name="rdoSelect" value="itemSales" checked>各商品の販売個数
 		<br>
 		<%--カテゴリー別販売数 --%>
-		<input type="radio" name="rdoSelect" value="categorySales">カテゴリーの販売個数
+		<input type="radio" name="rdoSelect" value="categorySales">各カテゴリーの販売個数
 		<br>
 		<%--平均単価以上の販売数 --%>
 		<input type="radio" name="rdoSelect" value="popularItem">平均単価以上の販売個数

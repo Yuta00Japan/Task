@@ -127,7 +127,7 @@ app.post('/getPass',(req,res)=>{
 app.post('/setNewPass',(req,res)=>{
 	let chPassword = req.body.changePass;
 	let empId = Number(req.body.empId);
-	connection.query(`update MST_Employee set password='${chPassword}' where empId=${empId}`,(err,result,field)=>{
+	connection.query(`update MST_Employee set password='${chPassword}', pwupday=now() where empId=${empId}`,(err,result,field)=>{
 		if (err) throw err;
 		
 	});

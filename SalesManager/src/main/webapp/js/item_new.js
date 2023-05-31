@@ -125,7 +125,9 @@ function formCheck(event){
 			console.log('集計開始日検証終了');
 		}else{
 			event.preventDefault();
-			alert('正しい形式で入力してください');
+			start.value="";
+			start.focus();
+			alert('正しい形式で入力してください　例）2001年２月２日→2001/2/2');
 			return ;
 		}
 		
@@ -133,11 +135,14 @@ function formCheck(event){
 			cnosole.log('集計終了日検証終了');
 		}else{
 			event.preventDefault();
-			alert('正しい形式で入力してください');
+			end.value="";
+			end.focus();
+			alert('正しい形式で入力してください　例）2001年２月２日→2001/2/2');
 			return ;
 		}
 		
 	}else{
+		//集計開始日、終了日のどちらかが入力されていない場合入力されているほうも削除する
 		start.value="";
 		end.value="";
 	}

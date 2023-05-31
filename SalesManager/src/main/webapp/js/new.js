@@ -213,8 +213,10 @@ function deleteForm(){
 	button2.innerHTML="";
 	error.textContent ="";
 }
-/**現在編集中の従業員パスワード　変更前 */
 
+/**現在編集中の従業員のパスワードを変更する 
+ * 
+*/
  function changePassword(){
 	/**変更後パスワード */
 	let changePass = document.getElementById('chPassword').value;
@@ -381,7 +383,7 @@ function formCheck(event){
 		})
 		
 	}).then(()=>{
-		
+		/**入力されている上司名が正しいかチェックする */
 		return new Promise(resolve =>{
 			
 		 	fetch('http://localhost:3000/checkBoss',{
@@ -445,7 +447,6 @@ function formCheck(event){
 		//チェックされていなければほかにシステム管理者がいるかどうかを確認する
 		if(!system.checked){
 			
-			console.log('check false ');
 			fetch('http://localhost:3000/allUserRole',{
 				method:'POST',
 				headers: { 'Content-Type': 'application/json' },
